@@ -1,0 +1,14 @@
+{
+  "core.cognito_missing_idc_username": "Cognito token is missing the IdC username (check the IdC SAML Subject configuration).",
+  "core.ws_admin_required": "Workspace admin or platform admin permission required.",
+  "core.ws_member_required": "Not allowed to access this Workspace (members or platform admin only).",
+  "core.display_name_ascii": "Only printable ASCII characters are allowed. Chinese and full-width characters are not allowed (put explanations in the description field).",
+  "core.name_not_client_supplied": "name is derived by the backend from display_name; do not pass it (pass display_name instead). After creation, read the actual task name from the name field of the response.",
+  "core.label_reserved_prefix": "Label key '{key}' uses the platform-reserved prefix '{prefix}'",
+  "core.label_prefix_invalid": "Label key prefix '{prefix}' is invalid (DNS subdomain, ≤253 chars).",
+  "core.label_name_invalid": "Label key '{name}' is invalid (≤63 chars, alphanumeric at both ends, hyphens, underscores and dots allowed in between).",
+  "core.label_value_invalid": "Value '{value}' of label '{key}' is invalid (≤63 chars, alphanumeric at both ends, hyphens, underscores and dots allowed in between).",
+  "core.label_too_many": "At most {max} custom labels allowed, got {actual}",
+  "core.label_key_empty": "Label key must not be empty.",
+  "core.terminal_unavailable": "[Platform] Unable to open a terminal in this Pod: the container is not running or has crashed, or the image has no bash/sh."
+}

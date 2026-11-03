@@ -1,0 +1,315 @@
+{
+  "nav": {
+    "workspace": "Workspace",
+    "training": "Training Job"
+  },
+  "fields": {
+    "spec": "Spec",
+    "creator": "Creator",
+    "queueStatus": "Queue status",
+    "image": "Image",
+    "instanceType": "Instance type",
+    "resourcePool": "Resource pool",
+    "resourceTemplate": "Resource template",
+    "nodeCount": "Node count",
+    "spares": "Spare nodes",
+    "envVars": "Environment variables",
+    "priority": "Priority",
+    "launchCommand": "Launch command"
+  },
+  "actions": {
+    "details": "Details",
+    "cloneConfig": "Clone config",
+    "share": "Share"
+  },
+  "spec": {
+    "memory": "Memory",
+    "unitCard_one": "card",
+    "unitCard_other": "cards",
+    "unitCore_one": "core",
+    "unitCore_other": "cores",
+    "unitAdapter_one": "adapter",
+    "unitAdapter_other": "adapters",
+    "gpuCount_one": "{{count}} GPU",
+    "gpuCount_other": "{{count}} GPUs"
+  },
+  "confirm": {
+    "stopTitle": "Stop training job?",
+    "stopDesc": "Deletes the K8s Job to release the GPUs. The record and config are kept: you can clone it and run it again, but it cannot be resumed.",
+    "deleteTitle": "Delete training job?",
+    "deleteDescList": "This also deletes the K8s Job and its Pods.",
+    "deleteDescDetail": "This also deletes the K8s Job and its Pods, and cannot be undone."
+  },
+  "messages": {
+    "stopped": "Training job stopped (GPUs released; the record and config are kept, so you can clone it to run again)",
+    "stopFailed": "Failed to stop: {{error}}",
+    "deleted": "Training job deleted",
+    "deleteFailed": "Failed to delete: {{error}}",
+    "loadFailed": "Failed to load: {{error}}"
+  },
+  "list": {
+    "description": "Multi-node GPU training jobs based on the HyperPod Training Operator, with Kueue queueing and topology-aware scheduling.",
+    "filter": "Filter",
+    "filterHint": "Filtering is limited to the latest 5000 items.",
+    "newButton": "New training job",
+    "tips": {
+      "status": "The training job's own runtime status (CR phase). Running: running; Suspended: held by Kueue while waiting for quota; Complete: training finished; Failed: failed; and so on. Click the magnifier for the full status details.",
+      "queueStatus": "The training job's status in the Kueue scheduling queue (separate from its own status). Queued: waiting for quota; Admitted: admitted by Kueue; Evicted: preempted and sent back to the queue; and so on.",
+      "spec": "Resources requested by the training job: number of nodes × GPUs per node. Hover over the tag to see the CPU cores and memory per node. Multi-node training communicates over NCCL/EFA."
+    },
+    "scope": {
+      "label": "Scope",
+      "all": "All",
+      "mine": "Mine"
+    },
+    "statusDetailTitle": "Training job status details",
+    "statusTip": {
+      "suspended": {
+        "label": "Suspended by Kueue",
+        "detail": "spec.suspend=true, so the Operator does not create Pods. Common right after submission when the quota is full. Once Kueue admits the job it is unsuspended automatically and moves to Created/Running."
+      },
+      "created": {
+        "label": "Created (Pods queued / starting)",
+        "detail": "The Operator has unsuspended the job and created its child resources (Pods / networking), but not all of them are Running yet. Pods may be pulling images, waiting for nodes, SchedulingGated, and so on."
+      },
+      "podsRunning": {
+        "label": "All Pods ready",
+        "detail": "A replica-check state set by the operator: all worker Pods are Running and ready. (Running is at the Job level; PodsRunning is at the Pod level.)"
+      },
+      "running": {
+        "detail": "All Pods are Running and the training process is running. Running is shown on its own only after the Operator has set Created to False."
+      },
+      "faulted": {
+        "label": "Faulted (HyperPod auto-resume in progress)",
+        "detail": "A Pod is unhealthy (node lost, OOM, CUDA error, and so on) and HyperPod is attempting auto-resume (3 retries by default). On success the job returns to Running; otherwise it moves to Failed."
+      },
+      "completed": {
+        "detail": "Same as Complete; an alias used by different Operator versions. The backend treats the two identically (the substring \"Complete\" marks either one as a terminal state)."
+      },
+      "failed": {
+        "detail": "Terminal state: auto-resume has used up its retries and the job still failed, or the training code exited with a non-zero exit code. Check the Pod logs, or the reason/message in the \"Status timeline\" card."
+      }
+    }
+  },
+  "detail": {
+    "title": "Training Job Details",
+    "crumbLoading": "Loading…",
+    "tabs": {
+      "overview": "Overview",
+      "monitoring": "Monitoring",
+      "logs": "Logs"
+    },
+    "summary": {
+      "crStatus": "Status (CR Phase)",
+      "kueueStatus": "Queue status (Kueue)"
+    },
+    "sparesSuffix": " (+{{count}} spare)",
+    "fields": {
+      "lastSync": "Last synced at",
+      "startedAt": "Started at"
+    },
+    "config": {
+      "title": "Run configuration",
+      "gpuPerNode": "GPUs per node",
+      "cpuPerNode": "CPU per node",
+      "memPerNode": "Memory per node",
+      "topologyMode": "Topology scheduling",
+      "topologyLevel": "Topology level",
+      "fsxMounts": "FSx mounts",
+      "s3Datasets": "S3 datasets",
+      "none": "None",
+      "runPolicy": "Run policy"
+    },
+    "pods": {
+      "title": "Current Pods ({{total}})",
+      "empty": "No Pods yet (the Job was just created and has not been scheduled)",
+      "restarts": "Restarts",
+      "reason": "Reason",
+      "node": "Node",
+      "logs": "Logs",
+      "terminal": "Terminal"
+    },
+    "liveLogsTitle": "Live logs · {{pod}}",
+    "viewInLogsTab": "View in Logs tab",
+    "terminalTitle": "Terminal · {{pod}}",
+    "timeline": "Status timeline (K8s Conditions)"
+  },
+  "logs": {
+    "pod": "Pod logs",
+    "all": "🔍 Task logs"
+  },
+  "create": {
+    "title": "New Training Job",
+    "breadcrumbNew": "New",
+    "loadingConfig": "Loading configuration…",
+    "submit": "Submit training job",
+    "sections": {
+      "basic": "Basic info",
+      "image": "Image",
+      "storage": "Shared storage",
+      "resource": "Compute resources",
+      "launch": "Launch configuration",
+      "preview": "Preview"
+    },
+    "access": {
+      "ro": "read-only",
+      "rw": "read-write"
+    },
+    "messages": {
+      "fsxNeed": "{{path}} (needs {{need}}, you only have {{have}})",
+      "fsxNoAccess": "{{path}} (you have no permission for this file system)",
+      "cloneFsxDropped_one": "Clone: you do not have the required permission for {{count}} FSx file system, so it is not preselected — {{details}}",
+      "cloneFsxDropped_other": "Clone: you do not have the required permission for {{count}} FSx file systems, so they are not preselected — {{details}}",
+      "cloneTemplateChanged": "Clone: the resource template for the original configuration has changed or been deleted. Select a resource template again.",
+      "cloneFetchFailed": "Clone: failed to load the source training job configuration — {{error}}",
+      "submitted": "Training job submitted · K8s Job: {{name}}",
+      "fieldInvalid": "Validation failed for field [{{field}}]: {{error}}",
+      "submitFailed": "Failed to submit: {{error}}"
+    },
+    "yamlComments": {
+      "runPolicyParseFailed": "# Failed to parse the runPolicy YAML:\n# {{error}}",
+      "renderFailed": "# Backend rendering failed (check runPolicy):\n# {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "Display name",
+      "displayNameTooltip": "Also used as the prefix of the K8s job name, so it must be a valid DNS name: start with a lowercase letter, be 3-29 characters long, contain only a-z, 0-9 and '-', and end with a letter or digit. For notes in other languages such as Chinese, use the \"Description\" field below. The final job name = this name + '-' + 10 random characters, generated by the backend at creation.",
+      "displayNameRequired": "Enter a display name.",
+      "displayNameAscii": "Chinese and full-width characters are not allowed. Put any notes in the \"Description\" field below.",
+      "displayNameLength": "Must be 3-29 characters.",
+      "displayNamePattern": "Must start with a lowercase letter, contain only a-z, 0-9 and '-', and end with a letter or digit.",
+      "displayNamePlaceholder": "e.g. ddp-smoke-test",
+      "descriptionTooltip": "A short description of this training job (optional), to help you recognize it later in the list and details.",
+      "descriptionPlaceholder": "e.g. Qwen 0.6B DDP smoke test, verifying multi-GPU communication"
+    },
+    "image": {
+      "help": "Choose from the images under \"Asset Management → Image\" whose purpose includes training, or type any full image URI (including the tag). Private ECR is only supported in the AWS account and Region this platform runs in; images from other accounts or Regions cannot be pulled.",
+      "label": "Image (full name, including tag)",
+      "loading": "Loading image list…",
+      "empty": "No images available for training. Register one under <registry>\"Asset Management → Image\"</registry> first, or type an image URI directly.",
+      "hint": "The dropdown lists images under \"Image\" whose purpose includes training; you can also type any image URI.",
+      "required": "Select or enter an image URI.",
+      "format": "Use the format <registry>/<repo>:<tag>",
+      "placeholder": "Select an image, or type public.ecr.aws/sagemaker/sagemaker-distribution:latest-gpu"
+    },
+    "resource": {
+      "poolTooltip": "Choose a GPU or CPU resource pool first. The instance type and resource template on the right are filtered by pool.",
+      "poolPlaceholder": "Select a resource pool",
+      "instanceTypeTooltip": "Instance types in this resource pool. A pool usually has a single type, so the first one is selected automatically; you can change it. The backend checks that the instance type is within your quota.",
+      "instanceTypeRequired": "Select an instance type.",
+      "instanceTypePlaceholder": "Select an instance type in this resource pool",
+      "noAssignedTypes": "No instance types are assigned to this Workspace (contact an admin to set up a quota)",
+      "noTypesInPool": "No instance types available in this resource pool",
+      "templateTooltip": "Per-node resources (GPU/CPU/memory) are governed by templates maintained by admins and cannot be entered manually.",
+      "templateRequired": "Select a resource template.",
+      "templatePlaceholder": "Select a resource template (maintained by admins)",
+      "noTemplates": "No resource templates yet · ask a Workspace admin to create one in Admin Console → Resource Template",
+      "nodeCountTooltip": "Multi-node distributed training (DDP); HyperPodPyTorchJob replicas. The number of nodes is not capped for thousand-GPU training; it is limited by quota and scheduling.",
+      "nodeCountRequired": "Required",
+      "sparesTooltip": "Request a few extra nodes to take over when a node fails (HyperPodPyTorchJob spares). These nodes are actually started and count against your quota; they are not idle standbys. Which nodes take part in training is decided by the training script reading NSPARES.",
+      "perNodeSpec": "Per-node spec · locked by template",
+      "perNodeSpecTooltip": "GPU/CPU/memory are governed by the resource template and cannot be entered manually; switching templates syncs them automatically.",
+      "quotaNeed_one": "This job needs {{count}} GPU",
+      "quotaNeed_other": "This job needs {{count}} GPUs",
+      "quotaRemaining_one": " · {{remaining}} remaining of {{count}} GPU",
+      "quotaRemaining_other": " · {{remaining}} remaining of {{count}} GPUs",
+      "quotaOver": " · over quota; it will wait for quota after you submit",
+      "quotaCollecting_one": " · {{count}} GPU in total · remaining quota is being collected",
+      "quotaCollecting_other": " · {{count}} GPUs in total · remaining quota is being collected",
+      "topology": {
+        "title": "Topology-aware scheduling (TAS · optional)",
+        "help": "g6 nodes are not on the TAS support list (only p3dn/p4d/p5+/trn take effect). Selecting an unsupported type such as g6.12xlarge does not raise an error; K8s silently ignores it and it simply has no effect.",
+        "annotation": "Corresponding Kueue annotation:",
+        "modeLabel": "Scheduling policy",
+        "modeTooltip": "preferred = prefer the same level and fall back to a higher one / required = must be the same level, wait until available / none = no constraint",
+        "modeNone": "No constraint",
+        "modePreferred": "Prefer same level (preferred)",
+        "modeRequired": "Require same level (required)",
+        "levelTooltip": "The available levels are determined by the Topology linked to the ResourceFlavor of this instance type (read from the cluster), listed from finest to coarsest.",
+        "queryFailed": "Query failed",
+        "levelQueryFailed": "Failed to query levels: {{error}}",
+        "noLevels": "This instance type has no selectable topology levels",
+        "pickModeFirst": "Select a scheduling policy first",
+        "noLevelsShort": "No selectable levels for this instance type",
+        "pickLevel": "Select a topology level",
+        "levelLabel": "Topology level"
+      },
+      "priorityDefault": "Default priority: <tag/>",
+      "priorityTooltip": "Only platform admins can change the priority class of a task.",
+      "quotaBreakdown_one": " ({{count}} node × {{gpu}})",
+      "quotaBreakdown_other": " ({{count}} nodes × {{gpu}})"
+    },
+    "launch": {
+      "scriptHeading": "Launch script",
+      "scriptHelp": "Write the entire launch script directly. The platform runs it as-is (you fully control the distributed launch and call hyperpodrun yourself). NNODES / NPROC_PER_NODE / JOB_NAME are already injected at the container level. See the examples on the right.",
+      "scriptLabel": "Script content (written directly; the whole script is the launch command)",
+      "scriptTooltip": "The platform runs the whole script as-is, and you fully control the distributed launch (call hyperpodrun yourself)<br/>You can also write a single line that runs a script on FSx, for example bash /fsx/.../run.sh<br/>NNODES / NPROC_PER_NODE / JOB_NAME are already injected into the container<br/>Two examples on the right (open the drawer to view them): \"hyperpodrun example\" shows how to write the distributed launch yourself; \"Wrapped command example\" puts your command into a payload and lets the platform host it",
+      "scriptRequired": "Script content is required.",
+      "exampleDefault": "hyperpodrun example",
+      "exampleWrap": "Wrapped command example",
+      "exampleWrapDesc": "Read-only reference · your command goes into a <code>PAYLOAD</code> heredoc, and the platform hosts it with hyperpodrun<code> --no-python</code> and passes the exit code through.<warn> Only tasks wrapped with hyperpodrun are supported for now.</warn>",
+      "exampleDefaultDesc": "Read-only reference · you fully control the distributed launch (call hyperpodrun yourself). NNODES / NPROC_PER_NODE / JOB_NAME are already injected at the container level.",
+      "envHeading": "Environment variables (optional, multiple allowed)",
+      "envHelp": "NNODES / NPROC_PER_NODE / JOB_NAME are injected automatically at the container level (use $JOB_NAME and so on directly in the script; do not set them here, because they are reserved by the operator and will be rejected). Enter your own variables here, such as WANDB_PROJECT.",
+      "envReserved": "NNODES/NPROC_PER_NODE/JOB_NAME are reserved by the operator; do not set them.",
+      "envAdd": "Add environment variable",
+      "secretHeading": "Inject environment variables from Secrets (optional)",
+      "secretHelp": "Pick keys you created in \"Secret management\"; they are injected as environment variables with the same name (values are never written into the config in plain text; they go through secretKeyRef). The env name equals the key name.",
+      "secretKeyRequired": "Select a key.",
+      "secretPlaceholder": "Select a Secret key (= environment variable name)",
+      "secretEmpty": "No keys available (add one on the Secret management page first)",
+      "secretAdd": "Add environment variable from Secret",
+      "scripts": {
+        "inline": "#!/bin/bash\n# ============================================================\n# Training launch script (inline) · the platform runs it as-is, and you fully control the distributed launch\n# Environment variables injected at the container level: NNODES / NPROC_PER_NODE / JOB_NAME\n# Change TRAIN_SCRIPT to your training entry point (a .py file on FSx)\n# ============================================================\nset -e\n\necho \"NPROC_PER_NODE: ${NPROC_PER_NODE}\"\necho \"NNODES:         ${NNODES}\"\necho \"JOB_NAME:       ${JOB_NAME}\"\necho \"Hostname:       $(hostname)\"\necho \"=============================================\"\n\n# Install the hyperpod elastic agent (provides hyperpodrun)\npip install --upgrade hyperpod-elastic-agent\n\nhyperpodrun \\\n    --nnodes=${NNODES} \\\n    --nproc-per-node=${NPROC_PER_NODE} \\\n    --server-host=0.0.0.0 \\\n    --server-port=8080 \\\n    --server-log-level=warning \\\n    --tee=3 \\\n    --log_dir=/tmp/hyperpod \\\n    ${TRAIN_SCRIPT} \\\n        --total-epochs 200 \\\n        --save-every 2 \\\n        --batch-size 32 \\\n        --snapshot-path /fsx/hyperpodrun-elastic-ddp/${JOB_NAME}.snapshot.pt\n",
+        "wrap": "set +e\nbash <<'PAYLOAD'\n# ↓↓↓ Your command ↓↓↓\necho \"hello from scientist\"\nsleep 20\n# ↑↑↑ End of your command; it may exit 0 or non-zero ↑↑↑\nPAYLOAD\nrc=$?\necho \"[platform] payload exited rc=$rc -> deliver completion signal\"\ncommand -v hyperpodrun >/dev/null || pip install -q hyperpod-elastic-agent\nexec hyperpodrun --nnodes=1 --nproc-per-node=1 \\\n  --server-host=0.0.0.0 --server-port=8080 \\\n  --no-python bash -c \"exit $rc\"\n"
+      }
+    },
+    "preview": {
+      "heading": "Rendered preview",
+      "refresh": "Refresh preview (backend rendering)",
+      "rendering": "# Rendering…",
+      "placeholder": "# Click \"Refresh preview\" to generate the final YAML rendered by the backend",
+      "runPolicyLabel": "runPolicy (editable · restart / retry / cleanup policy)",
+      "refDocs": "Reference docs ↗",
+      "runPolicyTooltip": "Only this section is editable; the platform locks all other CR fields. evalPeriodSeconds is required by the CRD. The backend validates against an allowlist and checks types. After editing, click \"Refresh preview\" above to see the effect."
+    }
+  },
+  "metrics": {
+    "banner": "Data comes from the in-cluster Prometheus · Three dimensions: Job (aggregate) / Pod (per-Pod lines) / GPUCard (per-card) · Charts refresh automatically every 20-30s"
+  },
+  "terminal": {
+    "disconnected": "[Disconnected] {{reason}}",
+    "close": {
+      "unauthorized": "Unauthorized",
+      "forbidden": "You do not have permission to access this Pod",
+      "notFound": "Training job not found",
+      "idleTimeout": "Idle timeout, connection closed",
+      "tooMany": "Too many terminal connections (max 3 per user)",
+      "noShell": "Unable to open a shell"
+    }
+  },
+  "logViewer": {
+    "pause": "Pause",
+    "live": "● Live",
+    "connecting": "○ Connecting",
+    "sseFailed": "✗ SSE failed · fell back to polling",
+    "history": "Log history (CloudWatch)",
+    "container": "Container",
+    "podAll": "All",
+    "keywordPlaceholder": "Filter by keyword (client-side)",
+    "reload": "Reload",
+    "downloaded_one": "Downloaded {{count}} line",
+    "downloaded_other": "Downloaded {{count}} lines",
+    "downloadFailed": "Failed to download: {{error}}",
+    "loadFailed": "Failed to load logs: {{error}}",
+    "pipelineDesc": "Data pipeline: Fluent Bit (HyperPod Obs Add-on) → CloudWatch Logs Insights. Check that the Obs Add-on is ACTIVE and that the cluster ARN has been written to the DB.",
+    "warmingUp": "Warming up · the Pod has just started or the Fluent Bit buffer has not been flushed yet; logs usually start flowing within 30s",
+    "fetching": "Fetching logs…",
+    "noMatch": "No logs match \"{{keyword}}\"",
+    "empty": "No logs yet",
+    "source": "Source: CloudWatch Logs Insights (Fluent Bit → /aws/sagemaker/Clusters/...)",
+    "shownLines_one": "Showing {{shown}}/{{count}} line",
+    "shownLines_other": "Showing {{shown}}/{{count}} lines",
+    "autoRefresh": "Auto-refresh every {{sec}}s",
+    "paused": "Paused"
+  }
+}

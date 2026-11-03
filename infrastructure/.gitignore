@@ -1,0 +1,7 @@
+.venv/
+cdk.out/
+__pycache__/
+*.pyc
+
+# 实际环境配置本地化, 只跟踪 cdk.json.example 模板 (换环境 cp cdk.json.example cdk.json 再改)
+cdk.json

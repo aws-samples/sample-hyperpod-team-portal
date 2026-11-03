@@ -1,0 +1,351 @@
+{
+  "status": {
+    "active": "运行中",
+    "suspended": "已挂起",
+    "deleting": "删除中",
+    "paused": "已暂停"
+  },
+  "list": {
+    "title": "工作空间",
+    "searchPlaceholder": "搜索名称 / namespace",
+    "createButton": "新建工作空间",
+    "description": "工作空间是平台的资源边界 · 一个团队 / 项目一个空间, 独占一份 GPU 配额, 三类任务都跑在自己的空间里。",
+    "descriptionAdmin": "当前: 管理员视图, 显示全平台工作空间。",
+    "descriptionMember": "当前: 显示我所属的工作空间。",
+    "loadFailed": "加载工作空间失败",
+    "notConfigured": "未配置",
+    "none": "无",
+    "noGpuQuota": "无 GPU 配额",
+    "noDescription": "尚未填写描述",
+    "currentGpuUsage": "当前 GPU 配额使用",
+    "cards_other": "{{count}} 卡",
+    "usedOfCards_other": "{{used}} / {{count}} 卡",
+    "peopleCount_other": "{{count}} 人",
+    "quotaCollecting_other": "配额 {{count}} 卡 · 用量采集中",
+    "createdAgo": "创建于 {{time}}",
+    "columns": {
+      "gpuUsage": "GPU 用量",
+      "members": "成员",
+      "quickEdit": "快捷编辑"
+    },
+    "quickEdit": {
+      "members": "编辑成员",
+      "membersShort": "成员",
+      "fsx": "编辑 FSx 挂载",
+      "s3": "编辑 S3 挂载"
+    },
+    "summary": {
+      "workspaces": "空间",
+      "totalMembers": "成员总数",
+      "totalGpuUsage": "当前总 GPU 配额使用",
+      "computing": "统计中…"
+    },
+    "empty": {
+      "admin": "还没有工作空间,立即创建一个开始使用",
+      "member": "你还未加入任何工作空间 · 联系管理员被拉入",
+      "noMatch": "没有匹配的工作空间",
+      "createNow": "立即创建"
+    },
+    "messages": {
+      "loadClustersFailed": "加载集群列表失败",
+      "needOneType": "请至少给一种机型分配 ≥ 1 台",
+      "created": "工作空间 + 配额已创建, 接下来挂载 FSx 和加成员",
+      "nameTaken": "name 已占用",
+      "createFailed": "创建失败"
+    },
+    "intro": {
+      "title": "工作空间介绍",
+      "whatIs": "工作空间是什么",
+      "resourceBoundary": "<b>资源边界</b>: 一份独立的 GPU / CPU / 内存配额, 由平台管理员分配; 空间内任务共享这份配额, 空间之间默认互不影响",
+      "permissionBoundary": "<b>权限边界</b>: 空间成员才能看到该空间的开发机 / 训练 / 推理 / 模版; 成员分两种角色 — 普通成员 (只能管自己的任务) 和工作空间管理员 (能管全空间任务 + 改资源模版 + 调任务优先级)",
+      "assetBoundary": "<b>资产边界</b>: 资源模版按空间维护, 不同空间互相独立; 任务的 FSx / S3 挂载点也按空间隔离",
+      "k8sMapping": "跟 K8s 的对应关系",
+      "k8sMappingHint": "一个工作空间对应一组 K8s / Kueue 对象, 创建时由 AWS HyperPod team API 一并出",
+      "k8sNamespace": "<b>1 个 Namespace</b>: 命名 <code/>; 该空间所有任务的 Pod / CR / Service 都落在这里",
+      "k8sNamespacePattern": "hyperpod-ns-<空间名>",
+      "k8sResourceQuota": "<b>1 个 ResourceQuota</b>: K8s 原生 quota, 拦超量请求 (硬墙)",
+      "k8sKueue": "<b>1 个 Kueue ClusterQueue + LocalQueue</b>: 任务排队 / admit / 抢占都靠它; 抢占开关 (<code>spec.preemption.withinClusterQueue</code>) 也作用在这一层",
+      "k8sComputeQuota": "<b>1 个 AWS ComputeQuota (Team)</b>: 等价 Kueue ClusterQueue 的 nominalQuota, 由 AWS 侧自动同步; 借/还策略 (DontLend / Lend / LendAndBorrow) 在这层配",
+      "k8sIamRole": "<b>1 个 IAM Role</b>: 该空间所有 Pod 走 Pod Identity 绑定到这个 Role, 用于访问 S3 / FSx / SageMaker 等",
+      "summary": "💡 <b>简化记忆</b>: 工作空间 ≈ K8s namespace + Kueue ClusterQueue + IAM Role 的组合包。删空间会级联清理所有这些对象 (含里面的任务), 不可恢复。"
+    },
+    "createModal": {
+      "title": "新建工作空间",
+      "hint": "创建后会调 AWS CreateComputeQuota · 自动建 K8s namespace + Kueue queue",
+      "noClusters": "集群列表为空",
+      "noClustersDesc": "请确认后端 /api/v1/clusters 可访问 (HYPERPOD_CLUSTER_NAME 是否配置)",
+      "cluster": "集群",
+      "clusterRequired": "请选择集群",
+      "clusterPlaceholder": "选择集群",
+      "nameLabel": "名称 (slug · DNS label)",
+      "nameTooltip": "小写字母/数字/-, 3-63 字符, 必须字母开头. K8s namespace 自动派生为 hyperpod-ns-{name}",
+      "nameRequired": "请输入名称",
+      "namePattern": "格式:^[a-z][a-z0-9-]{2,62}$",
+      "namePlaceholder": "例如 team-a-nlp",
+      "namespaceLabel": "K8s Namespace (自动)",
+      "namespacePlaceholder": "(填好名称后自动派生)",
+      "displayName": "展示名",
+      "displayNameRequired": "请输入展示名",
+      "displayNameMax": "不超过 128 字",
+      "displayNamePlaceholder": "例如 Team A — NLP 实验组",
+      "descriptionLabel": "描述 (可选)",
+      "descriptionPlaceholder": "一句话说明用途",
+      "quotaDivider": "机器配额"
+    }
+  },
+  "dashboard": {
+    "messages": {
+      "infoUpdated": "基本信息已更新",
+      "saveFailed": "保存失败",
+      "needOneType": "请至少给一种机型分配 ≥ 1 台",
+      "quotaUpdated": "配额已更新",
+      "quotaConflict": "配额已被他人修改, 请刷新页面后重试"
+    },
+    "notFound": {
+      "title": "工作空间不存在",
+      "subTitle": "id={{wsId}} 未找到",
+      "backToList": "返回列表"
+    },
+    "loadFailed": "加载工作空间失败",
+    "noDescription": "尚未填写描述",
+    "editInfo": "编辑基本信息",
+    "adjustQuota": "调整配额",
+    "breadcrumb": "工作空间",
+    "tabs": {
+      "overview": "概览",
+      "fsx": "FSx 挂载",
+      "s3": "S3 挂载",
+      "members": "成员"
+    },
+    "fields": {
+      "cluster": "集群"
+    },
+    "infoForm": {
+      "displayName": "展示名",
+      "displayNameRequired": "请输入展示名",
+      "displayNameMax": "不超过 128 字",
+      "displayNamePlaceholder": "例如 Team A — NLP 实验组",
+      "descriptionLabel": "描述 (可选)",
+      "descriptionMax": "最多 200 字符",
+      "descriptionPlaceholder": "一句话说明用途"
+    },
+    "mounts": {
+      "title": "已挂载存储",
+      "emptyFsx": "尚未挂载 FSx · 至 \"FSx 挂载\" Tab 添加",
+      "emptyS3": "尚未挂载 S3 · 至 \"S3 挂载\" Tab 添加",
+      "count_other": "{{count}} 个挂载"
+    },
+    "quota": {
+      "title": "当前配额使用",
+      "apiUnavailable": "配额 API 暂不可用",
+      "notAssigned": "尚未分配配额,请联系管理员",
+      "noResources": "暂无资源",
+      "collecting": "· 采集中",
+      "memory": "内存",
+      "cardsUnit_other": "卡",
+      "coresUnit_other": "核"
+    },
+    "pool": {
+      "gpu": "GPU 资源池",
+      "cpu": "CPU 资源池",
+      "instanceUnit_other": "台",
+      "showAll_other": "显示全部 {{count}} 种机型",
+      "typeCount_other": "{{count}} 种机型",
+      "modalTitle_other": "{{title}} · 全部 {{count}} 种机型"
+    }
+  },
+  "fsx": {
+    "messages": {
+      "attached": "FSx 挂载已添加",
+      "attachFailed": "挂载失败",
+      "detached": "FSx 已卸载",
+      "detachFailed": "卸载失败",
+      "loadGrantsFailed": "加载成员/授权失败",
+      "granted_other": "已授权 {{count}} 人",
+      "grantFailed": "授权失败",
+      "revoked": "已撤销",
+      "revokeFailed": "撤销失败"
+    },
+    "inUse": {
+      "title": "该 FSx 正被 pod 使用",
+      "content": "{{message}} 强制移除会让运行中的 pod 报 IO 错, 是否继续?",
+      "forceRemove": "强制移除"
+    },
+    "intro": "挂载到 workspace 的 FSx Lustre 文件系统. 可挂多个 team 的子目录; 成员需被授权 (只读/读写) 才能在开发机上挂载.",
+    "firstMountBlocked": "首个 FSx 挂载需平台管理员操作(确定本 team gid 基线)",
+    "addButton": "添加 FSx 挂载",
+    "primaryGid": {
+      "label": "本团队主用户组 (gid) =",
+      "tooltip": "主用户组代表本团队身份: 开发机/任务默认以此身份运行, 决定能读写哪些 FSx 目录。挂载其他团队共享目录时会额外获得对应目录的访问权, 但主身份不变。",
+      "unset": "本工作空间尚未设定主用户组 (gid) · 建议先挂载本团队自己的目录",
+      "unsetTooltip": "主用户组代表本团队身份: 开发机/任务默认以此身份运行, 决定能读写哪些 FSx 目录。第一次挂载的目录所属组会被设为本团队主 gid, 之后不再变, 所以建议第一次先挂本团队自己的目录。"
+    },
+    "empty": "尚未挂载任何 FSx",
+    "columns": {
+      "mountId": "挂载 ID",
+      "mountPoint": "挂载点",
+      "subdirGid": "子目录 / gid"
+    },
+    "remove": "移除",
+    "removeConfirm": {
+      "title": "确认移除挂载?",
+      "description": "会删除 K8s PV/PVC + 相关授权, 不删 FSx 文件系统本身"
+    },
+    "addModal": {
+      "title": "添加 FSx 挂载",
+      "ok": "添加",
+      "hint": "选择已有 FSx · 后端自动探测目录 gid + 建 PV/PVC (rw + ro 各一套)",
+      "loadingCandidates": "加载 FSx 候选池...",
+      "noCandidates": "暂无可用的 FSx · 请联系管理员",
+      "loading": "加载中...",
+      "mountIdTooltip": "ws 内 FSx 维度唯一. PVC 名 = pvc-ws-fsx-{挂载ID}-{rw|ro}. 默认作为 Pod 内挂载路径 (/fsx/{挂载ID}).",
+      "mountIdRequired": "请填挂载 ID",
+      "mountIdPattern": "小写字母开头, 字母/数字/-, 3-40 字符",
+      "mountIdPlaceholder": "例如 team-a-data",
+      "filesystemLabel": "FSx 文件系统",
+      "filesystemRequired": "请选择 FSx",
+      "filesystemPlaceholder": "选择 FSx",
+      "topDirLabel": "一级目录 (Team)",
+      "topDirTooltip": "选 /fsx 下的 team 目录. 跨 team 共享: 可选别的 team 的目录, gid 由后端探测真实值.",
+      "topDirRequired": "请选择一级目录",
+      "topDirPlaceholder": "先选 FSx 才能列目录",
+      "topDirEmpty": "该 FSx 下没有子目录, 先在节点上 mkdir",
+      "subPathLabel": "更深子路径 (可选)",
+      "subPathTooltip": "一级目录下的更深路径, 如 train/proj-b. 最终挂载 = /fsx/<一级目录>/<子路径>. gid 按最终目录探测 (可能与一级目录不同).",
+      "subPathPattern": "字母/数字/_/-, 多级用 / 分隔, 不要以 / 开头或结尾",
+      "subPathPlaceholder": "例如 train/project-b (留空则挂一级目录本身)",
+      "mountPathLabel": "Pod 内挂载路径",
+      "mountPathTooltip": "默认 /fsx/<挂载ID>, 跟挂载 ID 联动. 可手动改成任意 / 开头的路径",
+      "mountPathRequired": "请填 Pod 内挂载路径",
+      "mountPathPattern": "/ 开头, 字母/数字/_/-",
+      "mountPathPlaceholder": "默认 /fsx/<挂载ID>, 可改",
+      "descriptionLabel": "描述 (可选)",
+      "descriptionTooltip": "一句话说明这个挂载的用途, 仅展示给其他用户. 支持中文",
+      "descriptionMax": "最多 200 字符",
+      "descriptionPlaceholder": "例如: team-a 共享的 ImageNet 数据集"
+    },
+    "grant": {
+      "action": "授权",
+      "actionWithCount_other": "授权 {{count}} 人",
+      "title": "授权成员",
+      "titleWithMount": "授权成员 · {{mountId}} ({{mountPath}})",
+      "hint": "授权后成员才能在创建开发机时挂载此目录 · 只读=pod 内不可写 (PV mountOptions:[ro] 内核级强制), 读写=可读写",
+      "memberPlaceholder": "选择 ws 成员 (可多选, 一批一起授权)",
+      "allGranted": "所有成员都已授权 (或 ws 无成员)",
+      "access": {
+        "ro": "只读",
+        "rw": "读写"
+      },
+      "empty": "还没授权任何成员",
+      "columns": {
+        "member": "成员",
+        "access": "权限"
+      },
+      "revokeConfirm": "撤销该成员权限?",
+      "revoke": "撤销"
+    }
+  },
+  "s3": {
+    "messages": {
+      "attached": "S3 挂载已添加",
+      "attachFailed": "挂载失败",
+      "detached": "S3 已卸载",
+      "detachFailed": "卸载失败"
+    },
+    "inUse": {
+      "title": "该 S3 挂载正被 pod 使用",
+      "content": "{{message}} 强制移除会让运行中的 pod 报 IO 错, 是否继续?",
+      "forceRemove": "强制移除"
+    },
+    "intro": "挂载到 workspace 的 S3 bucket. 默认读写, 但 Mountpoint S3 不支持 rename / 随机写 / fsync 后续写 — checkpoint 写请用 boto3 SDK.",
+    "addButton": "添加 S3 挂载",
+    "empty": "尚未挂载任何 S3",
+    "columns": {
+      "mountId": "挂载 ID",
+      "mountPoint": "挂载点"
+    },
+    "remove": "移除",
+    "removeConfirm": {
+      "title": "确认移除挂载?",
+      "description": "会删除 K8s PV/PVC, 不删除 S3 bucket"
+    },
+    "addModal": {
+      "title": "添加 S3 挂载",
+      "ok": "添加",
+      "hint": "选择平台已建的 S3 bucket · 后端会自动建 PV + PVC",
+      "loadingCandidates": "加载 S3 bucket 候选池...",
+      "noCandidates": "暂无可用的 S3 bucket · 请联系管理员",
+      "mountIdTooltip": "ws 内 S3 维度唯一. PVC 名 = pvc-ws-s3-{挂载ID}. 例: imagenet",
+      "mountIdRequired": "请填挂载 ID",
+      "mountIdPattern": "小写字母开头, 字母/数字/-, 3-40 字符",
+      "mountIdPlaceholder": "例如 imagenet",
+      "bucketRequired": "请选择 bucket",
+      "bucketPlaceholder": "选择 bucket",
+      "prefixLabel": "Bucket 内子路径前缀 (可选)",
+      "prefixTooltip": "只挂 bucket 中此前缀下的对象. 留空挂整个 bucket. 例: datasets/imagenet/",
+      "mountPathLabel": "Pod 内挂载路径",
+      "mountPathTooltip": "必须 / 开头, 仅字母/数字/-/_/.. 例: /s3/imagenet",
+      "mountPathRequired": "请填挂载路径",
+      "mountPathPattern": "/ 开头, 仅字母/数字/-/_",
+      "descriptionLabel": "描述 (可选)",
+      "descriptionTooltip": "一句话说明这个挂载的用途, 仅展示给其他用户. 支持中文",
+      "descriptionMax": "最多 200 字符",
+      "descriptionPlaceholder": "例如: ImageNet 数据集, 训练用"
+    }
+  },
+  "members": {
+    "roles": {
+      "admin": "Workspace 管理员",
+      "member": "普通成员"
+    },
+    "messages": {
+      "added": "成员已添加",
+      "addFailed": "添加失败",
+      "roleChanged": "已改为 {{role}}",
+      "updateFailed": "更新失败",
+      "removed": "已移除成员",
+      "removeFailed": "移除失败"
+    },
+    "intro": "Workspace 成员. 管理员可加/减成员、调队列优先级; 普通成员可提交任务和创建开发机.",
+    "addButton": "添加成员",
+    "empty": "尚未添加任何成员",
+    "columns": {
+      "username": "用户名 (IdC)",
+      "email": "邮箱",
+      "role": "角色",
+      "joinedAt": "加入时间"
+    },
+    "selfDisabledOption": "{{role}} (不能操作自己)",
+    "changeRole": "改角色",
+    "cannotActOnSelf": "不能操作自己",
+    "removeConfirm": "移除 {{userId}}?",
+    "remove": "移除",
+    "addModal": {
+      "title": "添加成员",
+      "ok": "添加",
+      "hint": "输入完整 IdC username 或 email. 不支持部分匹配 — 输完整字符串后会出现匹配项.",
+      "userLabel": "IdC 用户",
+      "userRequired": "请选 IdC 用户",
+      "userPlaceholder": "输完整 username 或 email",
+      "userNotFound": "未找到, 检查 username/email 是否完整",
+      "roleRequired": "请选角色"
+    }
+  },
+  "gpuUtil": {
+    "avgUtil": "平均利用率",
+    "peakUtil": "峰值利用率",
+    "seriesOccupied": "占用 GPU 卡数",
+    "countTitle": "GPU 占用卡数",
+    "utilTitle": "GPU 利用率",
+    "title": "GPU 利用率与占用",
+    "cardsValue_other": "{{count}} 张",
+    "loadFailed": "加载失败: {{error}}",
+    "noData": "该时段未占用 GPU 卡 (无数据)",
+    "zoom": "放大查看",
+    "timeRange": "时间范围",
+    "dayOption_other": "{{count}}天",
+    "utilSubtitle_other": "过去 {{count}} 天 · 占用卡的忙碌率",
+    "countSubtitle_other": "过去 {{count}} 天 · 实际占用的 GPU 张数",
+    "past_other": "过去 {{count}} 天"
+  }
+}

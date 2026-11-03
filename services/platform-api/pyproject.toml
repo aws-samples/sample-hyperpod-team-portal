@@ -1,0 +1,70 @@
+[project]
+name = "platform-api"
+version = "0.1.0"
+description = "HyperPod UI Platform · API Backend"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    "httpx>=0.27.0",
+    "websockets>=13.0",   # 开发机 Code Editor WS proxy (upstream 连接); uvicorn[standard] 也带, 显式声明确保进镜像
+    "aioboto3>=13.2.0",
+    "kubernetes-asyncio>=32.0.0",
+    "python-jose[cryptography]>=3.3.0",
+    "structlog>=24.4.0",
+    "tenacity>=9.0.0",
+    "orjson>=3.10.0",
+    "scalar-fastapi>=1.8.2",   # Scalar API Reference UI (消费 /openapi.json, 替代/补充 Swagger)
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.27.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "ipython>=8.30.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["scripts*", "tests*"]
+
+[tool.setuptools.package-data]
+# 运行时文案表 (app/core/i18n.py 按路径读取); locales 非 Python 包, 须显式打入 wheel
+app = ["locales/*/*.json"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+# app/core/tests · core 层 (i18n / 安全 / 命名等) 单测
+# app/modules/<m>/tests/ · 每个资产模块自带本地测试 (Wave 2 资产导向结构要求)
+# app/repositories/tests · repository 层测试 (ResourceIndex 等)
+# app/tests · 全局集成测试
+# tests · 仓库级测试
+testpaths = ["app/core", "app/modules", "app/repositories", "app/tests", "tests"]
+pythonpath = ["."]
+python_files = ["test_*.py"]
+markers = [
+    "cr_compliance: CR 官方合规测试 · 需 kubeconfig 才跑完整 dry-run",
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true

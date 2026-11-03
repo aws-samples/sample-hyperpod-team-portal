@@ -1,0 +1,235 @@
+{
+  "nav": {
+    "workspace": "Workspace",
+    "devInstance": "Dev Instance"
+  },
+  "fields": {
+    "template": "Template",
+    "spec": "Spec",
+    "image": "Image",
+    "resourcePool": "Resource pool",
+    "resourceTemplate": "Resource template",
+    "sharedStorage": "Shared storage",
+    "envVars": "Environment variables"
+  },
+  "actions": {
+    "details": "Details",
+    "cloneConfig": "Clone config",
+    "share": "Share",
+    "resize": "Resize",
+    "connect": "Connect",
+    "openCodeEditor": "Open Code Editor",
+    "openJupyterLab": "Open JupyterLab"
+  },
+  "confirm": {
+    "stopTitle": "Stop dev instance?",
+    "stopDesc": "The EBS volume is retained. You can start it again at any time.",
+    "deleteTitle": "Delete {{name}}?",
+    "deleteTitleGeneric": "Delete dev instance?",
+    "deleteDesc": "This cannot be undone. The EBS volume is deleted as well."
+  },
+  "messages": {
+    "stopSent": "Stop command sent",
+    "stopSentNamed": "Stop command sent: {{name}}",
+    "startSent": "Start command sent",
+    "startSentNamed": "Start command sent: {{name}}",
+    "deleted": "Deleted",
+    "deletedNamed": "Deleted: {{name}}",
+    "stopFailed": "Failed to stop",
+    "startFailed": "Failed to start",
+    "deleteFailed": "Failed to delete"
+  },
+  "statusDetailTitle": "Dev instance status details",
+  "spec": {
+    "memory": "Memory",
+    "unitCard_one": "card",
+    "unitCard_other": "cards",
+    "unitCore_one": "core",
+    "unitCore_other": "cores",
+    "unitAdapter_one": "adapter",
+    "unitAdapter_other": "adapters"
+  },
+  "list": {
+    "description": "A Jupyter / Code Editor development environment based on SageMaker Spaces. Start and stop it at any time; the EBS volume is retained.",
+    "filter": "Filter",
+    "filterHint": "Filtering is limited to the latest 5000 items.",
+    "newButton": "New dev instance",
+    "meTag": "(me)",
+    "creatorMeTooltip": "{{name}} (me)",
+    "columns": {
+      "template": "Template",
+      "spec": "Spec",
+      "queueStatus": "Queue status",
+      "creator": "Creator"
+    },
+    "tips": {
+      "template": "The application type the dev instance uses (jupyter-lab / code-editor). It inherits the default image and launch command from the template; resources are chosen through a resource template when you create it.",
+      "spec": "Resources requested by this dev instance: CPU cores · memory · GPUs · EBS storage. The EBS volume is retained when stopped and destroyed on deletion (not recoverable).",
+      "status": "The dev instance's own runtime status (CR phase). Available: running; Stopped: stopped; Provisioning: being created; Degraded: unhealthy; and so on. Click the magnifier for the full status details.",
+      "queueStatus": "The dev instance's status in the Kueue scheduling queue (separate from its own status). Queued: waiting for quota; Admitted: admitted by Kueue; Evicted: evicted; and so on."
+    },
+    "statusTip": {
+      "progressing": "Pod creation / image pull / EBS mount / SSM agent start / Jupyter or Code Editor initialization. The most common \"waiting to load\" state.",
+      "available": "Target state: the Pod is Ready and the IDE port is up. Click \"Connect\" to open the IDE or get a shell over SSM. started_at is taken from this condition's lastTransitionTime.",
+      "stopped": "You clicked \"Stop\" (patch desiredStatus=Stopped) or the instance was reclaimed for being idle. The Pod is destroyed and its GPU/CPU released; the EBS volume is retained, and \"Start\" restores it.",
+      "degraded": "The Pod keeps crash-looping, the node is lost, the EBS mount failed, SSM registration timed out, and so on. Check the Conditions message in the \"Status timeline (K8s Conditions)\" card on the details page."
+    },
+    "scope": {
+      "label": "Scope",
+      "all": "All",
+      "mine": "Mine"
+    }
+  },
+  "detail": {
+    "title": "Dev Instance Details",
+    "notFound": "Dev instance not found",
+    "getAccessFailed": "Failed to get connection info",
+    "summary": {
+      "crStatus": "Status (CR Phase)",
+      "kueueStatus": "Queue status (Kueue)"
+    },
+    "ebsNote": "EBS volume · retained when stopped, destroyed when deleted (not recoverable)",
+    "tabs": {
+      "overview": "Overview",
+      "monitoring": "Monitoring",
+      "logs": "Logs"
+    },
+    "cards": {
+      "instance": "Instance details",
+      "timeline": "Status timeline (K8s Conditions)"
+    },
+    "fields": {
+      "nameDisplay": "Name / Display name",
+      "poolTag": "{{pool}} pool",
+      "instanceType": "Instance type",
+      "priority": "Scheduling priority",
+      "priorityDefault": "Default",
+      "mounts": "Storage mounts",
+      "notMounted": "Not mounted",
+      "creator": "Creator"
+    },
+    "lastStatus": "Latest status · {{message}}"
+  },
+  "logs": {
+    "pod": "Pod logs",
+    "all": "🔍 Task logs"
+  },
+  "connect": {
+    "title": "Connect to dev instance",
+    "preparing": "Preparing connection info…",
+    "notReady": "The instance is not ready yet, so there is no connection info. Wait for phase=Running and the DNS record to sync (about 30-60s), then click Refresh.",
+    "ssh": {
+      "title": "Native SSH · fixed DNS name, unchanged after stop/start",
+      "desc": "Connect to the dev instance directly over the VPC internal network (port 22222). You must configure your SSH public key first (① below). This internal domain name only resolves from machines in the same VPC as the cluster or with a connected network."
+    },
+    "key": {
+      "title": "① First-time setup · paste your SSH public key",
+      "desc": "Generate a key pair on your local machine if you don't have one: <code>ssh-keygen -t ed25519</code>. Paste the full contents of your local <code>~/.ssh/id_ed25519.pub</code> below and click \"Write automatically\"; the platform writes it to the dev instance's authorized_keys for you (the private key stays on your machine, never share it).",
+      "autoWrite": "Write automatically",
+      "manualHint": "The dev instance must be running. If automatic writing is unavailable, run this manually in the Code Editor terminal:",
+      "echoLine": "echo \"<paste the full contents of your local ~/.ssh/id_ed25519.pub>\" >> ~/.ssh/authorized_keys && \\",
+      "empty": "Paste your local SSH public key first (the full line of the .pub file).",
+      "written": "Public key written. You can now connect over SSH.",
+      "writeFailed": "Failed to write the public key",
+      "copied": "Copied the public key setup command"
+    },
+    "terminal": {
+      "title": "② Terminal · open a shell on the dev instance",
+      "desc": "After the public key is set up, copy the whole line below and run it in a macOS/Linux terminal to enter the dev instance ({{user}}).",
+      "copied": "Copied the connection command"
+    },
+    "vscode": {
+      "title": "③ VSCode Remote-SSH · edit code graphically",
+      "desc": "① Install the Remote - SSH extension in VSCode ② Append the whole block below to ~/.ssh/config ③ Press ⌘⇧P → \"Remote-SSH: Connect to Host\" → pick the alias after Host on the first line.",
+      "copied": "Copied the SSH config snippet"
+    },
+    "refreshHint": "· The DNS name never changes. If the instance was just created or started, the connection info may only be available after DNS syncs; refresh to fetch it."
+  },
+  "resize": {
+    "title": "Resize",
+    "okText": "Confirm resize",
+    "confirmTitle": "Confirm resize",
+    "confirmContent": "This restarts the current Pod and interrupts any running sessions (data in /home/sagemaker-user is kept; in-memory data is not). Are you sure you want to continue?",
+    "confirmOk": "Resize",
+    "submitted": "Resize submitted",
+    "failed": "Failed to resize",
+    "loadMountsFailed": "Failed to load the mount list",
+    "runningWarning": "Resizing recreates the Pod · the current session is interrupted; /home/sagemaker-user is kept, in-memory data is not",
+    "poolTooltip": "The resource pool cannot be changed. To switch between the CPU and GPU pools, recreate the dev instance.",
+    "noTemplates": "No resource templates yet · contact a Workspace admin to create one",
+    "targetSpec": "Target spec (locked by template)",
+    "storageTooltip": "Choose a subset of the FSx / S3 storage already attached to the Workspace · additions and removals take effect immediately (the new mounts are used after the Pod is recreated).",
+    "storageNote": "Storage capacity cannot be changed here (EBS volumes cannot be expanded). For a larger /home/sagemaker-user, recreate the dev instance."
+  },
+  "create": {
+    "title": "New Dev Instance",
+    "breadcrumbNew": "New",
+    "loadingConfig": "Loading configuration…",
+    "sections": {
+      "basic": "Basic info",
+      "template": "Template",
+      "image": "Image",
+      "resources": "Resources"
+    },
+    "storageTooltip": "Choose a subset of the FSx / S3 storage already attached to the Workspace · none is selected by default; leave empty to skip.",
+    "envTooltip": "Environment variables are injected into the container. Any row with a non-empty key is saved; leave empty to skip this step.",
+    "messages": {
+      "loadMountsFailed": "Failed to load the Workspace mount list",
+      "loadTemplatesFailed": "Failed to load templates",
+      "cloneTemplateChanged": "Clone: the resource template for the original configuration has changed or been deleted. Select a resource template again.",
+      "cloneFetchFailed": "Clone: failed to load the source dev instance configuration",
+      "mountMissing": "Mount {{path}} is not in the list (unexpected)",
+      "created": "Created dev instance: {{name}}"
+    },
+    "basic": {
+      "nameLabel": "Name (DNS label)",
+      "nameRequired": "Enter a name.",
+      "namePattern": "Must start with a lowercase letter, 3-63 characters; a-z, 0-9 and - are allowed.",
+      "displayNameLabel": "Display name",
+      "displayNameRequired": "Enter a display name.",
+      "displayNamePlaceholder": "My notebook environment",
+      "descriptionPlaceholder": "Optional. Describe its purpose"
+    },
+    "template": {
+      "label": "Select template"
+    },
+    "image": {
+      "label": "Image (full name, including tag)",
+      "help": "Choose from the images under \"Asset Management → Image\" whose purpose includes dev instance (dev), or type any full image URI (including the tag). Private ECR is only supported in the AWS account and Region this platform runs in; images from other accounts or Regions cannot be pulled.",
+      "loading": "Loading image list…",
+      "empty": "No images available for dev instances (dev). Register one under <registry>\"Asset Management → Image\"</registry> first, or type an image URI directly.",
+      "hint": "The dropdown lists images under \"Image\" whose purpose includes dev instance (dev); you can also type any image URI.",
+      "required": "Select or enter an image URI.",
+      "format": "Use the format <registry>/<repo>:<tag>",
+      "placeholder": "Select an image, or type <account>.dkr.ecr.<region>.amazonaws.com/my-repo:latest"
+    },
+    "resource": {
+      "poolTooltip": "Choose a GPU or CPU resource pool. The dev instance is scheduled onto any instance type in that pool (a CPU pool may contain several types).",
+      "poolRequired": "Select a resource pool.",
+      "poolPlaceholder": "Select a resource pool",
+      "templateTooltip": "Resources (GPU/CPU/memory) are governed by templates maintained by admins and cannot be entered manually.",
+      "templateRequired": "Select a resource template.",
+      "templatePlaceholder": "Select a resource template (maintained by admins)",
+      "noTemplates": "No resource templates yet · ask a Workspace admin to create one in Admin Console → Resource Template",
+      "poolNoTypes": "The current Workspace has no available instance types in the {{pool}} resource pool · contact a platform admin",
+      "poolNoTypesValidator": "The current Workspace has no available instance types in this resource pool.",
+      "storageLabel": "Storage (GiB, EBS)",
+      "storageTooltip": "Disk size of the dev instance home directory /home/sagemaker-user (a separate EBS volume). Conda environments, pip packages, code, and intermediate artifacts all live here, so leave plenty of room (deep learning environments take a lot of space). The volume is retained when the dev instance is stopped and the data is still there after a restart; deleting the dev instance destroys it as well, and it cannot be recovered. For large datasets or data that must be shared, mount FSx instead.",
+      "range": "Range {{min}} - {{max}}",
+      "rangeDefault": "Range 1 - 100",
+      "perNodeSpec": "Per-node spec · locked by template",
+      "perNodeSpecTooltip": "GPU/CPU/memory are governed by the resource template and cannot be entered manually; switching templates syncs them automatically.",
+      "memoryPolicy": "Memory below 8 GiB is blocked by the official policy (required for Remote Access).",
+      "quotaNeed_one": "Needs {{count}} GPU",
+      "quotaNeed_other": "Needs {{count}} GPUs",
+      "quotaRemaining_one": " · {{remaining}} remaining of {{count}} GPU",
+      "quotaRemaining_other": " · {{remaining}} remaining of {{count}} GPUs",
+      "quotaOver": " · over quota; it will wait for quota after you submit",
+      "quotaCollecting_one": " · {{count}} GPU in total · remaining quota is being collected",
+      "quotaCollecting_other": " · {{count}} GPUs in total · remaining quota is being collected"
+    },
+    "env": {
+      "add": "Add environment variable"
+    }
+  }
+}

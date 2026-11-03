@@ -1,0 +1,13 @@
+{
+  "workspace.fsx_first_mount_admin_only": "The first FSx mount must be performed by a platform admin (used to establish this team's gid baseline).",
+  "workspace.fsx_gid_mismatch": "Only directories belonging to this team (gid={primary_gid}) can be mounted; this directory has gid={probed_gid}",
+  "workspace.fsx_probe_failed": "Unable to probe the gid of directory {path} (the directory does not exist or fsx-admin is unavailable).",
+  "workspace.fsx_verify_failed": "PVC read-back verification failed (missing: {missing}). The changes were rolled back; please retry the mount.",
+  "workspace.fsx_not_configured": "FSx {filesystem_id} is not configured in PLATFORM_FSX_FILESYSTEMS.",
+  "workspace.invalid_path_segment": "Invalid path segment: {segment}",
+  "workspace.cannot_remove_self": "You cannot remove yourself.",
+  "workspace.cannot_demote_self": "You cannot demote yourself to a regular member.",
+  "workspace.namespace_empty": "Namespace must not be empty.",
+  "workspace.namespace_too_long": "Namespace length {length} exceeds the K8s limit of {max}.",
+  "workspace.namespace_pattern": "Namespace must match [a-z0-9]([-a-z0-9]*[a-z0-9])? (lowercase letters, digits and hyphens; must not start or end with a hyphen)."
+}

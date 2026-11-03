@@ -1,0 +1,281 @@
+{
+  "nav": {
+    "workspace": "Workspace",
+    "rayjob": "Ray Job"
+  },
+  "fields": {
+    "creator": "Creator",
+    "queueStatus": "Queue status",
+    "scale": "Scale"
+  },
+  "actions": {
+    "details": "Details",
+    "cloneConfig": "Clone config",
+    "share": "Share"
+  },
+  "spec": {
+    "memory": "Memory",
+    "unitCard_one": "card",
+    "unitCard_other": "cards",
+    "unitCore_one": "core",
+    "unitCore_other": "cores",
+    "unitAdapter_one": "adapter",
+    "unitAdapter_other": "adapters",
+    "gpuCount_one": "{{count}} GPU",
+    "gpuCount_other": "{{count}} GPUs",
+    "workerCount_one": "{{count}} worker",
+    "workerCount_other": "{{count}} workers",
+    "replicaCount_one": "{{count}} replica",
+    "replicaCount_other": "{{count}} replicas",
+    "hourCount_one": "{{count}} hour",
+    "hourCount_other": "{{count}} hours"
+  },
+  "confirm": {
+    "stopTitle": "Stop Ray job?",
+    "stopDescList": "Deletes the RayJob CR (KubeRay cascades and reclaims the Pods) to release compute. The config is kept.",
+    "deleteTitle": "Delete Ray job?",
+    "deleteDescList": "This also deletes the RayJob CR, the RayCluster and all Pods."
+  },
+  "messages": {
+    "loadFailed": "Failed to load: {{error}}",
+    "deleted": "Ray job deleted",
+    "deleteFailed": "Failed to delete: {{error}}",
+    "stopped": "Ray job stopped (the config is kept, so you can clone it to recreate the job)",
+    "stopFailed": "Failed to stop: {{error}}"
+  },
+  "list": {
+    "newButton": "New Ray job",
+    "description": "Distributed Ray training based on KubeRay (RayJob), suited to RLHF, reinforcement learning, hyperparameter search and data parallelism. The head+worker cluster is reclaimed automatically when the job finishes, and scheduling goes through Kueue.",
+    "tips": {
+      "status": "The RayJob's own status (jobStatus). PENDING: submitting; RUNNING: in progress; SUCCEEDED: finished successfully; FAILED: failed; STOPPED: stopped. Legacy values are also accepted: Initializing / Running / Complete / Failed / Stopped. Click the magnifier for the full status details.",
+      "queueStatus": "Status in the Kueue scheduling queue (native KubeRay Kueue integration).",
+      "scale": "Number of worker replicas × GPUs per node (the head is always 1)."
+    },
+    "scope": {
+      "label": "Scope",
+      "all": "All",
+      "mine": "Mine"
+    },
+    "statusDetailTitle": "Ray job status details"
+  },
+  "detail": {
+    "title": "Ray Job Details",
+    "tabs": {
+      "overview": "Overview",
+      "monitoring": "Monitoring",
+      "rayEngine": "Ray Engine",
+      "logs": "Logs"
+    },
+    "confirm": {
+      "stop": "Stop this Ray job?",
+      "delete": "Delete this Ray job?"
+    },
+    "messages": {
+      "stopped": "Stopped",
+      "deleted": "Deleted"
+    },
+    "summary": {
+      "crStatus": "Status (CR Phase)",
+      "kueueStatus": "Queue status (Kueue)"
+    },
+    "fields": {
+      "workspace": "Workspace",
+      "lastSync": "Last synced at",
+      "startedAt": "Started at"
+    },
+    "config": {
+      "title": "Run configuration",
+      "headInstance": "Head instance type",
+      "workerInstance": "Worker instance type",
+      "headResources": "Head resources",
+      "workerResources": "Worker resources",
+      "headImage": "Head image",
+      "workerImage": "Worker image",
+      "entryScript": "Entry script",
+      "fsxMounts": "FSx mounts",
+      "s3Datasets": "S3 datasets",
+      "none": "None",
+      "envVars": "Environment variables",
+      "envSecrets": "Environment Secrets",
+      "ownSecret": "Creator's Secret",
+      "maxRun": "Max run time",
+      "ttl": "Keep after completion (TTL)",
+      "retries": "Retries",
+      "runAs": "Run as",
+      "nonRoot": "non-root"
+    },
+    "pods": {
+      "title": "Current Pods ({{total}})",
+      "empty": "No Pods yet (the RayJob was just created and has not been scheduled)",
+      "role": "Role",
+      "restarts": "Restarts",
+      "node": "Node",
+      "logs": "Logs",
+      "terminal": "Terminal"
+    },
+    "containers": {
+      "container": "Container",
+      "head": "Head",
+      "worker": "Worker",
+      "logExporter": "Log exporter",
+      "fallbackName": "Container",
+      "name": "Container name",
+      "restarts": "Restarts",
+      "reason": "Reason"
+    },
+    "monitoringBanner": "GPU efficiency (SM/Tensor Core activity) / GPU memory / CPU / memory / network / EFA (node-level DCGM/cAdvisor, covering head and worker Pods) · Switch between the Job / Pod / GPUCard dimensions · Refreshes automatically every 20-30s. Metrics stop updating once the RayJob finishes and its cluster is reclaimed.",
+    "rayEngineBanner": "Ray engine metrics (collected from Ray :8080 by the Observability add-on): task/Actor status, logical CPU/GPU, Object Store, component CPU/memory · Refreshes automatically every 20-30s. Idle or finished jobs have no data.",
+    "terminalTitle": "Terminal · {{pod}} ({{container}})",
+    "logsTitle": "Logs · {{pod}}",
+    "timeline": "Status timeline (K8s Conditions)"
+  },
+  "logs": {
+    "pod": "Pod logs",
+    "all": "🔍 Task logs"
+  },
+  "create": {
+    "title": "New Ray Job",
+    "breadcrumbNew": "New",
+    "loadingConfig": "Loading configuration…",
+    "submit": "Submit Ray job",
+    "sections": {
+      "basic": "Basic info",
+      "image": "Image",
+      "storage": "Shared storage",
+      "resource": "Compute resources",
+      "launch": "Launch configuration",
+      "policy": "Run policy",
+      "preview": "Preview"
+    },
+    "access": {
+      "ro": "read-only",
+      "rw": "read-write"
+    },
+    "messages": {
+      "fsxNeed": "{{path}} (needs {{need}}, you only have {{have}})",
+      "fsxNoAccess": "{{path}} (you have no permission for this file system)",
+      "cloneFsxDropped_one": "Clone: you do not have the required permission for {{count}} FSx file system, so it is not preselected — {{details}}",
+      "cloneFsxDropped_other": "Clone: you do not have the required permission for {{count}} FSx file systems, so they are not preselected — {{details}}",
+      "cloneTemplateChanged": "Clone: some resource templates have changed or been deleted. Select the head/worker templates again.",
+      "cloneFetchFailed": "Clone: failed to load the source configuration — {{error}}",
+      "submitted": "Ray job submitted · {{name}}",
+      "fieldInvalid": "Validation failed for field [{{field}}]: {{error}}",
+      "submitFailed": "Failed to submit: {{error}}"
+    },
+    "yamlComments": {
+      "renderFailed": "# Backend rendering failed:\n# {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "Display name",
+      "displayNameTooltip": "A human-readable name that can be reused. The job name (K8s resource name) is derived from it by the backend plus a 10-character random suffix; the frontend does not generate it. Start with a lowercase letter, use 3-20 characters, contain only a-z, 0-9 and '-', and end with a letter or digit. Put notes in other languages such as Chinese in \"Description\".",
+      "displayNameRequired": "Enter a display name.",
+      "displayNamePattern": "Must start with a lowercase letter, be 3-36 characters long, contain only a-z, 0-9 and '-', and end with a letter or digit.",
+      "displayNamePlaceholder": "e.g. rlhf-qwen-rollout",
+      "descriptionPlaceholder": "e.g. RLHF rollout, Ray Tune hyperparameter search"
+    },
+    "image": {
+      "headHeading": "Head (coordinator node)",
+      "headLabel": "Head image (CPU)",
+      "headTooltip": "The head runs on a CPU instance type, so use a CPU image (a GPU image cannot start on a CPU node without GPU drivers). The dropdown lists images under \"Image\" whose purpose includes training, or type a URI directly.",
+      "workerLabel": "Worker image (GPU)",
+      "workerTooltip": "Workers run on GPU instance types, so use a GPU image. The dropdown lists images under \"Image\" whose purpose includes training, or type a URI directly.",
+      "loading": "Loading image list…",
+      "empty": "No images in Image Hub. Type a URI directly, or register one under <registry>\"Asset Management → Image\"</registry>.",
+      "hint": "The dropdown lists images under \"Image\" whose purpose includes training; you can also type any image URI.",
+      "required": "Select or enter an image URI.",
+      "format": "Use the format <registry>/<repo>:<tag>"
+    },
+    "worker": {
+      "heading": "Worker (compute node)",
+      "replicasLabel": "Worker replicas",
+      "replicasTooltip": "Number of Ray worker nodes (the head is always 1). Total Pods = 1 head + N workers.",
+      "replicasRequired": "Required"
+    },
+    "resource": {
+      "poolLabel": "Resource pool",
+      "poolTooltip": "Choose a GPU or CPU resource pool first. The instance type and template on the right are filtered by pool.",
+      "poolPlaceholder": "Select a resource pool",
+      "instanceTypeLabel": "Instance type",
+      "instanceTypeTooltip": "Instance types in this resource pool. The backend checks that the instance type is within your quota.",
+      "instanceTypeRequired": "Select an instance type.",
+      "instanceTypePlaceholder": "Select an instance type in this resource pool",
+      "noAssignedTypes": "No instance types are assigned to this Workspace",
+      "noTypesInPool": "No instance types available in this resource pool",
+      "templateLabel": "Resource template",
+      "templateRequired": "Select a resource template.",
+      "templateTooltip": "Per-node resources (GPU/CPU/memory) are governed by templates maintained by admins and cannot be entered manually.",
+      "templatePlaceholder": "Select a resource template (maintained by admins)",
+      "noTemplates": "No resource templates yet · ask a Workspace admin to create one in Admin Console → Resource Template",
+      "perNodeSpec": "Per-node spec · locked by template",
+      "perNodeSpecTooltip": "GPU/CPU/memory are governed by the resource template; switching templates syncs them automatically.",
+      "quotaNeed_one": "Workers need {{count}} GPU ({{workers}} × {{gpu}})",
+      "quotaNeed_other": "Workers need {{count}} GPUs ({{workers}} × {{gpu}})",
+      "quotaRemaining": " · {{remaining}} remaining of {{total}}",
+      "quotaOver": " · over quota; it will wait for quota after you submit"
+    },
+    "launch": {
+      "entryLabel": "Launch script (RayJob entrypoint)",
+      "entryTooltip": "The whole script runs as the RayJob entrypoint. You can write a single line that runs a script on FSx (for example bash /fsx/.../run.sh), or write multiple lines of commands directly. Call ray.init() in the script to connect to the cluster started by KubeRay.",
+      "entryRequired": "Launch script is required.",
+      "viewExample": "View example script",
+      "exampleTitle": "Example script (read-only reference)",
+      "exampleDesc": "Read-only reference · the head+worker cluster is started by KubeRay, and the script connects to it with ray.init(). You can change it to bash /fsx/.../run.sh, or paste the whole script into the launch script above.",
+      "exampleScript": "#!/bin/bash\n# ============================================================\n# Ray training launch script · RayJob entrypoint = bash <this script>\n# The head+worker cluster is already started by KubeRay; connect to it with ray.init() in the script\n# ============================================================\nset -e\npython3 - <<'PY'\nimport ray\nray.init()  # Connect to the current RayJob cluster\nprint(\"cluster resources:\", ray.cluster_resources())\n# TODO: your distributed training (Ray Train / Tune / RLHF rollout ...)\nPY\n",
+      "envHeading": "Environment variables (optional, multiple allowed)",
+      "envHelp": "Enter your own variables, such as WANDB_PROJECT.",
+      "envAdd": "Add environment variable",
+      "secretHeading": "Inject environment variables from Secrets (optional)",
+      "secretHelp": "Pick keys from a Secret and inject them as environment variables with the same name (values are never written into the config in plain text; they go through secretKeyRef).",
+      "secretKeyRequired": "Select a key.",
+      "secretPlaceholder": "Select a Secret key (= environment variable name)",
+      "secretEmpty": "No keys available (add one on the Secret management page first)",
+      "secretAdd": "Add environment variable from Secret"
+    },
+    "policy": {
+      "maxRunLabel": "Max run time (hours)",
+      "maxRunTooltip": "The job is terminated automatically when it times out (activeDeadlineSeconds).",
+      "ttlLabel": "Keep after completion (seconds)",
+      "ttlTooltip": "How long the CR is kept after the RayJob finishes, so you can inspect it (KubeRay requires ≥0; default 3600 = 1h).",
+      "retriesLabel": "Retries",
+      "retriesTooltip": "Number of retries after a RayJob-level failure (0 = no retries)."
+    }
+  },
+  "terminal": {
+    "disconnected": "[Disconnected] {{reason}}",
+    "close": {
+      "unauthorized": "Unauthorized",
+      "forbidden": "You do not have permission to access this Pod",
+      "notFound": "Ray job not found",
+      "idleTimeout": "Idle timeout, connection closed",
+      "tooMany": "Too many terminal connections (max 3 per user)",
+      "noShell": "Unable to open a shell"
+    }
+  },
+  "logViewer": {
+    "containerLogs": "Container logs",
+    "driverLogs": "Driver logs",
+    "driverFetching": "○ Fetching",
+    "driverFailed": "✗ Failed",
+    "pause": "Pause",
+    "reload": "Reload",
+    "noHead": "No head Pod (the job has not started or the Pod was reclaimed). Driver logs are only available while the head Pod is running.",
+    "driverNone": "(No driver logs yet: the entrypoint has not started, or the head Pod was reclaimed)",
+    "driverPulling": "(Fetching…)",
+    "driverSource": "Source: /tmp/ray/session_latest/logs/job-driver-*.log on the head Pod (polling)",
+    "driverOutput": "Actual entrypoint output (training / GPU / task dispatch)",
+    "live": "● Live",
+    "connecting": "○ Connecting",
+    "sseFailed": "✗ SSE failed",
+    "podPlaceholder": "Select a Pod",
+    "notRunningSuffix": " · not running",
+    "keywordPlaceholder": "Filter by keyword (client-side)",
+    "podNotRunning": "This Pod is not running. Live logs are only available while the Pod is alive (log history is available in the Logs tab).",
+    "noMatch": "No logs match \"{{keyword}}\"",
+    "empty": "No logs yet",
+    "containerSource": "Source: kubectl logs --follow container stdout (cluster / daemons)",
+    "downloaded_one": "Downloaded {{count}} line",
+    "downloaded_other": "Downloaded {{count}} lines",
+    "shownLines_one": "Showing {{count}} line",
+    "shownLines_other": "Showing {{count}} lines"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "docsMenu": {
+    "overview": "Overview",
+    "workspace": "Workspace",
+    "devinstance": "Dev Instance",
+    "training": "Training Job",
+    "inference": "Inference Service",
+    "llmd": "llm-d Inference",
+    "registry": "Image Hub",
+    "sharing": "Sharing",
+    "secret": "Token Center",
+    "quota": "Admin Console",
+    "observability": "Observability",
+    "architecture": "Technical Architecture",
+    "permissions": "About Permissions",
+    "faq": "FAQ"
+  },
+  "menu": {
+    "workspace": "Workspace",
+    "devinstance": "Dev Instance",
+    "training": "Training Job",
+    "rayjob": "Ray Job",
+    "inference": "Single-node Inference",
+    "llmd": "Multi-node Inference",
+    "dynamo": "Dynamo Inference",
+    "resourceTemplates": "Resource Template",
+    "assets": "Asset Management",
+    "images": "Image",
+    "taskOverview": "Task Overview",
+    "priorityClass": "Priority Class",
+    "preemption": "Workspace Preemption Switch",
+    "fsxQuota": "FSx Quota",
+    "admin": "Admin Console",
+    "monitoring": "Monitoring",
+    "fsxPerformance": "FSx Performance",
+    "queue": "Queue"
+  },
+  "header": {
+    "selectWorkspaceFirst": "Select a Workspace first.",
+    "currentWorkspace": "Current Workspace",
+    "selectWorkspace": "Select a Workspace",
+    "docs": "Docs",
+    "runbook": "Troubleshooting Runbook",
+    "apiReference": "API Reference",
+    "platformAdmin": "Platform admin",
+    "workspaceAdmin": "Workspace admin"
+  }
+}

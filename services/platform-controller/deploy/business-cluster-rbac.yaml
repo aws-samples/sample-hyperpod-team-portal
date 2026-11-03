@@ -1,0 +1,62 @@
+# platform-controller 在【业务集群 (集群 Y)】的最小权限 RBAC。
+#
+# ⚠️ apply 到业务集群, 不是平台集群:
+#   kubectl --context <业务集群> apply -f business-cluster-rbac.yaml
+#
+# 配合 EKS access entry: access entry 把 controller 的 IAM role 映射成下面
+# ClusterRoleBinding 引用的 K8s group "platform-controller", apiserver 据此授权。
+#   aws eks create-access-entry --cluster-name <业务集群> \
+#     --principal-arn arn:aws:iam::<ACCOUNT>:role/<PROJECT>-platform-controller \
+#     --kubernetes-groups platform-controller --type STANDARD
+#
+# controller 是只读投影 (watch → 派生 → 写 DDB), 对 K8s 只需 get/list/watch, 无任何写。
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: platform-controller-projection
+rules:
+  # 训练 CR
+  - apiGroups: ["sagemaker.amazonaws.com"]
+    resources: ["hyperpodpytorchjobs"]
+    verbs: ["get", "list", "watch"]
+  # 推理 CR
+  - apiGroups: ["inference.sagemaker.aws.amazon.com"]
+    resources: ["inferenceendpointconfigs"]
+    verbs: ["get", "list", "watch"]
+  # 开发机 CR
+  - apiGroups: ["workspace.jupyter.org"]
+    resources: ["workspaces"]
+    verbs: ["get", "list", "watch"]
+  # Dynamo 多机推理 CR (NVIDIA Dynamo operator)
+  - apiGroups: ["nvidia.com"]
+    resources: ["dynamographdeployments"]
+    verbs: ["get", "list", "watch"]
+  # llm-d: LWS (工作负载) + gateway Deployment (服务入口), 只读 watch
+  - apiGroups: ["leaderworkerset.x-k8s.io"]
+    resources: ["leaderworkersets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch"]
+  # Kueue Workload (派生 kueue_status 的来源)
+  - apiGroups: ["kueue.x-k8s.io"]
+    resources: ["workloads"]
+    verbs: ["get", "list", "watch"]
+  # Pod (2 跳 owner 链: 推理/开发机 Workload→Pod→CR; 训练 occupying 查 Pod)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: platform-controller-projection
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: platform-controller-projection
+subjects:
+  # group 名要和 access entry 的 --kubernetes-groups 一致。
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: platform-controller

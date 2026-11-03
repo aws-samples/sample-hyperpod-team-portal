@@ -1,0 +1,15 @@
+{
+  "inference.instance_type_not_allowed": "instance_type '{instance_type}' 不在该 workspace 已分配的配额机型内 (可选: {allowed})。只能选 workspace ComputeQuota 分配的机型。",
+  "inference.allowed_none": "无",
+  "inference.forbidden_operate": "无权操作该推理服务 (仅创建者本人 / 工作空间管理员 / 平台超管)",
+  "inference.model_location_absolute": "model_location 必须是相对路径 (不能以 / 开头)",
+  "inference.model_location_dotdot": "model_location 不能含 '..' (防逃出授权的 FSx 子目录到别 team)",
+  "inference.model_source_fsx_required": "model_source_type=fsx 必填 fsx 字段",
+  "inference.model_source_s3_required": "model_source_type=s3 必填 s3 字段",
+  "inference.model_source_huggingface_required": "model_source_type=huggingface 必填 huggingface 字段",
+  "inference.display_name_length": "长度须 3-29 字符, 实际 {actual}",
+  "inference.stage_waiting_alb": "等待 ALB 分配地址",
+  "inference.stage_sagemaker_not_created": "尚未创建 SageMaker endpoint",
+  "inference.stage_waiting_replicaset": "等待 ReplicaSet 推进",
+  "inference.stage_waiting_min_available": "等待副本达到最小可用"
+}

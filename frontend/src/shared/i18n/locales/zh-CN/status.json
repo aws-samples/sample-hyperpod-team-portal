@@ -1,0 +1,30 @@
+{
+  "phase": {
+    "pending": "待调度",
+    "running": "运行中",
+    "succeeded": "已完成",
+    "failed": "已失败",
+    "creating": "创建中",
+    "stopped": "已停止",
+    "degraded": "异常",
+    "deploying": "部署中",
+    "pendingDeploy": "待部署"
+  },
+  "tip": {
+    "title": "状态说明 (任务状态 / 排队状态)",
+    "taskStatus": "任务状态",
+    "phaseSource": "来源: {{source}} (各任务类型独立, 由对应 Operator 写入)",
+    "mechanism": "⚙️ <b>状态来源原理</b>: 后端 informer watch CR 的 status.conditions, 取所有 status==True 的 condition, 按 lastTransitionTime 最新优先 (时间戳相同按固定优先级: 终态>运行>创建>挂起) 取一个写到 DDB。 偶尔会看到拼接态如 <code>Created/Completed</code> = 多个 condition 同一刻为 True 时把 type 名用 / 拼接, 此时取色看最高优先级那个。",
+    "kueueTitle": "排队状态 (Kueue 六态)",
+    "kueueSource": "来源: Kueue Workload.status.conditions; 三类任务 (开发机 / 训练 / 推理) 共用",
+    "kueue": {
+      "queued": "排队等配额 (初始态)。Workload 已提交进 Kueue LocalQueue, 但本工作空间配额已满或还没到顺位, 没拿到资源。点\"任务总览\"可看真实排队顺序。",
+      "quotaReserved": "Kueue 已为该任务预留配额 (即将 admit)。中间态, 通常一闪而过, 配额预留 → 调度器接管 → 拉起 Pod。",
+      "admitted": "已被 Kueue admit (调度器接管)。Pod 已开始创建 / 拉镜像 / 等节点, 但还没全部就绪。",
+      "podsReady": "所有 Pod 就绪 (Ready=True)。任务真正进入运行状态; 训练任务此时开始计算, 推理服务此时可对外接收流量。",
+      "evicted": "被驱逐 (中间态, 仍算活跃)。常见原因:<b> ① 被高优先级任务抢占</b>(本工作空间抢占开关已开)<b> ② Kueue 主动 evict</b>(配额变更 / 节点回收)。被驱逐后 Workload 自动重排队 (回到 Queued)。",
+      "finished": "终态。任务已结束 (成功 / 失败 / 主动停止), Workload 释放配额, 不再占用资源。仅此一态算终态。"
+    },
+    "note": "💡 <b>任务状态 ≠ 排队状态</b>: 前者由各 Operator 写, 看的是任务自身生命周期 (创建 / 运行 / 完成); 后者由 Kueue 写, 看的是任务在调度队列中的位置 (排队 / 已 admit / 被驱逐)。同一时刻两者并存, 查问题时一般先看排队状态 (能不能拿到资源), 再看任务状态 (拿到资源后有没有跑起来)。"
+  }
+}

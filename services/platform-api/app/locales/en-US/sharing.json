@@ -1,0 +1,6 @@
+{
+  "sharing.res_type_unsupported": "Resource type supports only {supported}; got: {res_type}",
+  "sharing.creator_only": "Only the resource creator can share or unshare it.",
+  "sharing.cannot_share_with_self": "You cannot share a resource with yourself.",
+  "sharing.target_not_member": "User '{username}' is not a member of this Workspace, so the resource cannot be shared with them."
+}

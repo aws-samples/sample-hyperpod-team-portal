@@ -1,0 +1,3 @@
+{
+  "user.api_token_exists": "An API token already exists. Delete it before generating a new one."
+}

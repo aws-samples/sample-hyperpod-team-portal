@@ -1,0 +1,298 @@
+{
+  "nav": {
+    "workspace": "Workspace",
+    "inference": "Single-node Inference"
+  },
+  "fields": {
+    "spec": "Spec",
+    "framework": "Framework",
+    "creator": "Creator",
+    "queueStatus": "Queue status",
+    "image": "Image",
+    "workspace": "Workspace"
+  },
+  "actions": {
+    "details": "Details",
+    "cloneConfig": "Clone config"
+  },
+  "spec": {
+    "unitCard_one": "card",
+    "unitCard_other": "cards",
+    "unitCore_one": "core",
+    "unitCore_other": "cores",
+    "unitAdapter_one": "adapter",
+    "unitAdapter_other": "adapters",
+    "memory": "Memory",
+    "gpuCount_one": "{{count}} GPU",
+    "gpuCount_other": "{{count}} GPUs"
+  },
+  "confirm": {
+    "stopTitle": "Stop inference service?",
+    "stopDesc": "Deletes the CR, Pods, ALB and SageMaker endpoint to release compute. The config and logs are kept, so you can clone it to rebuild the service.",
+    "deleteTitle": "Delete inference service?",
+    "deleteDescList": "This also deletes the IEC CR, Pods and ALB.",
+    "deleteDescDetail": "This also deletes the IEC CR, Pods and ALB."
+  },
+  "messages": {
+    "stopped": "Inference service stopped (the config and logs are kept; clone it to rebuild)",
+    "stopFailed": "Failed to stop: {{error}}",
+    "deleted": "Inference service deleted",
+    "deleteFailed": "Failed to delete: {{error}}",
+    "loadFailed": "Failed to load: {{error}}"
+  },
+  "statusDetailTitle": "Inference service status details",
+  "list": {
+    "description": "Inference services based on the HyperPod InferenceEndpointConfig (SGLang engine). Models are loaded from FSx or S3, and the API is OpenAI-compatible.",
+    "filter": "Filter",
+    "filterHint": "Filtering is limited to the latest 5000 items.",
+    "newButton": "New single-node inference",
+    "tips": {
+      "status": "The inference service's own runtime status (CR phase). DeploymentComplete: running; DeploymentInProgress: deploying; DeploymentFailed: failed; Stopped: stopped; Deleted: deleted. Click the magnifier for the full status details.",
+      "queueStatus": "The inference service's status in the Kueue scheduling queue (separate from its own status). Queued: waiting for quota; Admitted: admitted by Kueue; Evicted: evicted from the queue; and so on.",
+      "framework": "Inference engine: SGLang (high throughput, the primary choice) / vLLM / TRT-LLM. The framework determines the set of launch arguments and the optimizations available (such as KV cache and quantization schemes).",
+      "spec": "Resources requested by the inference service: number of replicas × GPUs per replica. Hover over the tag to see the instance type. With multiple replicas, an ALB balances the load."
+    },
+    "scope": {
+      "label": "Scope",
+      "all": "All",
+      "mine": "Mine"
+    },
+    "statusTip": {
+      "phaseSource": "InferenceEndpointConfig CR.status.deploymentStatus.deploymentObjectOverallState (falls back to status.state if missing)",
+      "pending": {
+        "detail": "The CR has been created, but the IEC Operator has not started processing it yet (queued for reconcile)."
+      },
+      "deploying": {
+        "detail": "The Operator is creating the Deployment, pulling the model weights (FSx / S3 / HuggingFace Hub), starting the SGLang or vLLM engine, and configuring the ALB target group. This is the most common \"waiting to load\" state."
+      },
+      "running": {
+        "detail": "Target terminal state: the Pod is Ready, the ALB health check passes, and the SageMaker endpoint is InService, so the service can take OpenAI-compatible traffic from outside. With multiple replicas, an ALB balances the load."
+      },
+      "failed": {
+        "label": "Deployment failed",
+        "detail": "Terminal failure state: the model weights could not be pulled, SGLang ran out of memory on startup, there were not enough GPUs, the ALB target group health check failed, and so on. Check the Pod logs or the \"Status timeline\" card on the details page."
+      },
+      "stopped": {
+        "detail": "Sentinel state (not a raw CR value; written by the backend stop API): the Pods, ALB and SageMaker endpoint are all destroyed to release compute. The CR record is still kept (in DDB) and the config and logs remain viewable, so you can rebuild the service with \"Clone config\"."
+      }
+    }
+  },
+  "detail": {
+    "forceRefresh": "Force refresh",
+    "tabs": {
+      "overview": "Overview",
+      "monitoring": "Monitoring",
+      "sglang": "SGLang Performance",
+      "logs": "Logs"
+    },
+    "summary": {
+      "crStatus": "Status (CR Phase)",
+      "kueueStatus": "Queue status (Kueue)"
+    },
+    "fields": {
+      "lastSync": "Last synced at"
+    },
+    "config": {
+      "title": "Run configuration",
+      "modelSource": "Model source",
+      "sharedMount": "Shared storage mount",
+      "instanceType": "Instance type",
+      "replicas": "Replicas",
+      "gpuPerReplica": "GPUs per replica",
+      "containerPort": "Container port (Pod)",
+      "memory": "Memory (request / limit)",
+      "launchScript": "Launch script",
+      "defaultLaunch": "Default launch",
+      "metricsEnabled": "Metrics enabled",
+      "publicEndpoint": "SageMaker endpoint (public)",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "none": "None"
+    },
+    "pods": {
+      "title": "Current Pods ({{total}})",
+      "empty": "No Pods yet (it may still be provisioning; click Force refresh to load)",
+      "replica": "Replica",
+      "restarts": "Restarts",
+      "reason": "Reason"
+    },
+    "containers": {
+      "role": "Role",
+      "name": "Container name",
+      "ready": "Ready",
+      "notReady": "Not ready",
+      "empty": "No container status",
+      "roles": {
+        "proxy": "Reverse proxy",
+        "metrics": "Metrics collector",
+        "engine": "Inference engine"
+      }
+    },
+    "timeline": "Status timeline (K8s Conditions)",
+    "sglangArgs": "SGLang launch arguments",
+    "monitoringBanner": "Data comes from the in-cluster Prometheus · CPU / GPU / GPU memory / network · Refreshes automatically every 20-30s",
+    "sglangBanner": "Built-in SGLang /metrics · Throughput / cache hit rate / queue / KV usage · Refreshes automatically every 20-30s"
+  },
+  "logs": {
+    "pod": "Pod logs",
+    "all": "🔍 Task logs"
+  },
+  "create": {
+    "title": "New Single-node Inference",
+    "breadcrumbNew": "New",
+    "loadingConfig": "Loading configuration…",
+    "sections": {
+      "basic": "Basic info",
+      "image": "Image",
+      "model": "Model source",
+      "resource": "Compute resources",
+      "launch": "Launch configuration",
+      "preview": "Preview"
+    },
+    "messages": {
+      "fsxNotAuthorized": "FSx mount source {{id}} is not in your authorized list.",
+      "cloneFsxMissing": "Clone: the source FSx is not within your current authorization. Select an FSx mount source again.",
+      "cloneS3Missing": "Clone: the source S3 is not within your current mounts. Select an S3 mount source again.",
+      "cloneTemplateChanged": "Clone: the resource template for the original configuration has changed or been deleted. Select a resource template again.",
+      "cloneFetchFailed": "Clone: failed to load the source inference configuration — {{error}}",
+      "fillRequiredYaml": "# Fill in the required fields (such as the display name) first, then preview.",
+      "fillRequiredWarn": "Fill in the required fields (such as the display name) before previewing.",
+      "rendering": "# Rendering…",
+      "renderFailed": "# Backend rendering failed ({{error}}); below is a local approximate preview:",
+      "created": "Inference service created",
+      "createFailed": "Failed to create: {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "Display name",
+      "displayNameTooltip": "Also used as the prefix of the K8s task name, so it must be a valid DNS name: start with a lowercase letter, be 3-29 characters long, contain only a-z, 0-9 and '-', and end with a letter or digit. For notes in other languages such as Chinese, use the \"Description\" field below. The final task name = this name + '-' + 10 random characters, generated by the backend at creation.",
+      "displayNameRequired": "Enter a display name.",
+      "displayNameAscii": "Chinese and full-width characters are not allowed. Put any notes in the \"Description\" field below.",
+      "displayNameLength": "Must be 3-29 characters.",
+      "displayNamePattern": "Must start with a lowercase letter, contain only a-z, 0-9 and '-', and end with a letter or digit.",
+      "displayNamePlaceholder": "e.g. qwen3-06b-infer",
+      "descriptionTooltip": "A short description of this inference service (optional), to help you recognize it later in the list and details.",
+      "descriptionPlaceholder": "e.g. Qwen3 0.6B online inference, used for XX business testing"
+    },
+    "image": {
+      "help": "Choose from the images under \"Asset Management → Image\" whose purpose includes inference, or type any full image URI (including the tag). Private ECR is only supported in the AWS account and Region this platform runs in; images from other accounts or Regions cannot be pulled.",
+      "label": "Image (full name, including tag)",
+      "loading": "Loading image list…",
+      "empty": "No images available for inference. Register one under <registry>\"Asset Management → Image\"</registry> first, or type an image URI directly.",
+      "hint": "The dropdown lists images under \"Image\" whose purpose includes inference; you can also type any image URI.",
+      "required": "Select or enter an image URI.",
+      "format": "Use the format <registry>/<repo>:<tag>",
+      "placeholder": "Select an image, or type lmsysorg/sglang:latest"
+    },
+    "model": {
+      "sourceLabel": "Model source",
+      "fsxOption": "FSx Lustre (recommended)",
+      "fsxLabel": "Shared storage mount (FSx)",
+      "fsxTooltip": "Choose an authorized FSx file system (select one). The FSx mount point in the container matches the dev instance, so in the launch script write --model-path as the absolute model path you see in the dev instance. If no resources are listed, contact an admin to grant access.",
+      "fsxLoading": "Loading authorized FSx…",
+      "fsxNone": "You have no authorized FSx in this Workspace · contact an admin",
+      "fsxHint": "In the launch script, write --model-path <absolute model path as seen in the dev instance> (the FSx mount point is the same; use the path as-is).",
+      "fsxRequired": "Select an FSx mount source.",
+      "fsxPlaceholder": "Select an FSx mount source (select one)",
+      "fsxPlaceholderEmpty": "No authorized FSx (contact an admin)",
+      "fsxNotFound": "No authorized FSx in this Workspace",
+      "s3Label": "Shared storage mount (S3)",
+      "s3Tooltip": "Choose an S3 bucket already mounted in the Workspace (select one); the bucket and Region are filled in automatically. Enter the relative model path below. If no resources are listed, contact an admin to grant access.",
+      "s3Required": "Select an S3 mount source.",
+      "s3Placeholder": "Select an S3 mount source (select one)",
+      "s3Loading": "Loading S3…",
+      "s3PlaceholderEmpty": "No S3 mounted in this Workspace (contact an admin)",
+      "s3NotFound": "No S3 mounted in this Workspace",
+      "s3PathLabel": "Relative model path",
+      "s3PathTooltip": "The path of the model within S3. Its contents are prefetched to the mount root /opt/ml/model — in the launch script, write --model-path /opt/ml/model (do not append this subpath; this differs from FSx).",
+      "s3PathRequired": "Enter the relative model path.",
+      "s3PathExtra": "e.g. models/qwen3-0-6b · keep --model-path as /opt/ml/model in the script"
+    },
+    "resource": {
+      "poolLabel": "Resource pool",
+      "poolTooltip": "Choose a GPU or CPU resource pool first. The instance type and resource template on the right are filtered by pool.",
+      "poolPlaceholder": "Select a resource pool",
+      "instanceTypeLabel": "Instance type",
+      "instanceTypeTooltip": "Instance types in this resource pool. A pool usually has a single type, so the first one is selected automatically; you can change it. The backend checks that the instance type is within your quota.",
+      "instanceTypeRequired": "Select an instance type.",
+      "instanceTypePlaceholder": "Select an instance type in this resource pool",
+      "noAssignedTypes": "No instance types are assigned to this Workspace (contact an admin to set up a quota)",
+      "noTypesInPool": "No instance types available in this resource pool",
+      "templateLabel": "Resource template",
+      "templateTooltip": "Resources (GPU/CPU/memory) are governed by templates maintained by admins and cannot be entered manually. For inference, request = limit.",
+      "templateRequired": "Select a resource template.",
+      "templatePlaceholder": "Select a resource template (maintained by admins)",
+      "noTemplates": "No resource templates yet · ask a Workspace admin to create one in Admin Console → Resource Template",
+      "replicasLabel": "Replicas",
+      "replicasTooltip": "Number of replicas (1-256). With multiple replicas, an ALB balances the load. GPUs used = replicas × GPUs per replica.",
+      "perReplicaSpec": "Per-replica spec · locked by template",
+      "perReplicaSpecTooltip": "GPU/CPU/memory are governed by the resource template and cannot be entered manually; switching templates syncs them automatically (for inference, request = limit).",
+      "efaNote": "(Note: inference does not request EFA)",
+      "quotaNeed_one": "This service needs {{count}} GPU",
+      "quotaNeed_other": "This service needs {{count}} GPUs",
+      "quotaBreakdown_one": " ({{count}} replica × {{gpu}})",
+      "quotaBreakdown_other": " ({{count}} replicas × {{gpu}})",
+      "quotaRemaining_one": " · {{remaining}} remaining of {{count}} GPU",
+      "quotaRemaining_other": " · {{remaining}} remaining of {{count}} GPUs",
+      "quotaOver": " · over quota; it will wait for quota after you submit",
+      "quotaCollecting_one": " · {{count}} GPU in total · remaining quota is being collected",
+      "quotaCollecting_other": " · {{count}} GPUs in total · remaining quota is being collected",
+      "containerPortLabel": "Container port (Pod)",
+      "containerPortTooltip": "The port the SGLang server listens on = Pod modelInvocationPort + metrics port. Default: 8000."
+    },
+    "launch": {
+      "heading": "Launch script (SGLang)",
+      "help": "The whole script runs via /bin/sh -c (the backend renders command=[\"/bin/sh\",\"-c\"], args=[script]).<br/>Use exec to take over the main process. --model-path is required and must be the absolute model path (for FSx, the path you see in the dev instance, such as /fsx/checkpoint).<br/>Edit --tp / --mem-fraction-static / --context-length and similar flags directly here.",
+      "scriptExtra": "A complete SGLang launch command is pre-filled; edit it as needed (the port must match the container port under Compute resources; avoid 8081, which is used by the platform's reverse proxy).",
+      "scriptRequired": "Launch script is required.",
+      "scriptModelPathPlaceholder": "absolute-path-in-dev-instance",
+      "metricsLabel": "Enable metrics (SGLang /metrics + DCGM, connected to AMP automatically)",
+      "metricsHint": "If disabled, do not include --enable-metrics in the script.",
+      "publicLabel": "Create SageMaker endpoint (public access)",
+      "publicHint": "Off by default: the service can only be invoked from inside the cluster or the VPC (ClusterIP / ALB). If on, an extra public SageMaker endpoint is created (invoked with boto3 or the CLI using SigV4), which uses 1 additional IP per subnet."
+    },
+    "preview": {
+      "heading": "Rendered preview",
+      "refresh": "Generate / refresh preview (backend rendering)",
+      "placeholder": "# Click \"Generate / refresh preview\" to generate the final YAML rendered by the backend",
+      "archive": "Archived to S3 automatically after submission: <path/> (when the Workspace has an S3 bucket mounted; skipped otherwise)."
+    }
+  },
+  "invoke": {
+    "title": "Invocation commands",
+    "tabs": {
+      "alb": "Inside the VPC (via ALB)",
+      "sagemaker": "Public Internet (via SageMaker Endpoint)",
+      "cluster": "In-Cluster (via a Workspace Dev Instance)"
+    },
+    "connInfo": "Connection info",
+    "examples": "Invocation examples",
+    "rows": {
+      "addrSameNs": "Address (same namespace)",
+      "sameNsNote": "Use the short name within the same namespace",
+      "addrCrossNs": "Address (cross-namespace)",
+      "crossNsNote": "Fully qualified domain name",
+      "addr": "Address",
+      "albPending": "internal ALB (not ready; see the query below)",
+      "endpointName": "Endpoint name",
+      "protocol": "Protocol",
+      "protocolValue": "HTTPS + automatic SigV4 signing",
+      "credential": "Credentials",
+      "credentialNote": "Must belong to the account that owns the endpoint"
+    },
+    "notes": {
+      "albLookup": "Look up the ALB address",
+      "albCall": "Invoke (chat completions only; -k skips the self-signed certificate check)",
+      "smCli": "AWS CLI (automatic SigV4 signing)"
+    },
+    "disabled": {
+      "title": "Public access is not enabled for this inference service",
+      "desc": "This entry is only available if \"Create SageMaker endpoint (public access)\" was checked at creation. For now, invoke it from inside the cluster or the VPC (ALB)."
+    },
+    "code": {
+      "samplePrompt": "Say hello in three words",
+      "albLookupComment": "If the ALB address is not ready yet, look it up from the cluster side:",
+      "albPlaceholder": "address-found-above",
+      "awsProfileComment": "AWS_PROFILE: use credentials from the account that owns the endpoint"
+    }
+  }
+}

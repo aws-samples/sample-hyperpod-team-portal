@@ -1,0 +1,74 @@
+{
+  "overview": {
+    "title": "任务总览",
+    "kind": {
+      "dev": "开发机",
+      "train": "训练任务",
+      "inference": "单机推理",
+      "dynamo": "Dynamo 推理",
+      "llmd": "多机推理",
+      "rayjob": "Ray 任务"
+    },
+    "loadFailed": "加载任务总览失败: {{error}}",
+    "forbidden": {
+      "title": "无权访问任务总览",
+      "subTitle": "任务总览用于调整任务优先级, 仅工作空间管理员或平台超管可见。"
+    },
+    "search": "搜索任务名称",
+    "filter": "筛选",
+    "filterLimit": "仅支持筛选最近 5000 条",
+    "description": "本页面仅工作空间管理员 / 平台管理员可见。可查看本工作空间的所有活跃任务，并调整「排队中」任务的 Kueue 优先级档位（运行中的任务不可调整）。",
+    "columns": {
+      "type": "类型",
+      "queueOrder": "排队顺序",
+      "queueOrderTip": "该任务在本工作空间 Kueue 队列中的真实身位 (1 = 最前, 数字越小越先被调度)。多机任务含多个调度单元 (LWS 各副本组 / gateway) 时, 主显示取最靠前身位, 点击行左侧箭头展开查看每个调度单元的排队明细。不在排队中的任务显示 -。",
+      "statusTip": "任务自身的运行状态 (CR phase, 与详情页一致): 排队中 / 运行中 / 已完成 / 失败 / 被驱逐 等。注意区别于\"排队状态\"列 — 这一列看的是任务本身, 不是它在调度队列里的位置。",
+      "gpuTip": "任务申请的 GPU 数量与机型 (节点数 × 单节点 GPU 数 / 实例类型)。开发机 / 推理通常单节点; 训练可多节点。",
+      "priorityClass": "优先级档位",
+      "priorityTipIntro": "任务挂的优先级档位 (括号内是档位数值, 越大越优先)。点笔图标可换档位:",
+      "priorityTipQueued": "排队中任务: 立即按新档位重新排队",
+      "priorityTipRunning": "运行中任务: 容器重建以让新档位生效, 会重启",
+      "priorityTipDict": "档位字典由平台管理员在「管理中心 → 优先级档位」维护。",
+      "creator": "创建者",
+      "priority": "优先级"
+    },
+    "tips": {
+      "rules": "任务档位修改规则",
+      "status": "状态 / 排队顺序 含义",
+      "rule1": "在<b>「优先级档位」</b>列点笔图标可换档位; 档位字典由平台管理员在「管理中心 → 优先级档位」维护, 本页只能从中挑选, 不能新增档位",
+      "rule2": "对<b>排队中</b>的任务换档位: 立即按新档位重新排队, 高档位前移, 任务不会重启",
+      "rule3": "对<b>运行中</b>的任务换档位: 平台会重建该任务的容器以让新档位生效, 训练任务自动重新排队 (有检查点才能续训), 推理 / 开发机 = 服务中断 / 会话中断",
+      "rule4": "换档位本身<b>不会触发抢占</b>; 要让运行中任务被自动踢, 还得在「管理中心 → 工作空间抢占开关」把本工作空间开关设为开启",
+      "queueHeading": "<b>排队顺序列</b>",
+      "queueScopeNote": "仅在范围 = 排队中 时显示",
+      "queue1": "数字 = 该任务在 Kueue 队列中的<b>真实身位</b> (1 = 最前, 数字越小越先被调度)。它是队列绝对位置, <b>可能跳号</b> (如 2/8/13, 中间夹着别的任务的调度单元)",
+      "queue2": "底层来源: Kueue visibility API 的 <code>positionInLocalQueue</code> (Workload 级)。一个<b>多机任务</b>含多个调度单元 (Workload), 主显示取其<b>最靠前</b>身位代表该任务, 点击行左侧箭头展开查看每个调度单元的排队顺序与优先级",
+      "queue3": "显示为 <b>-</b>: 任务未在排队 / 查询失败 / 任务刚提交还没进队; 这种行排在表格底部",
+      "queue4": "次序由<b>优先级档位 (高优在前)</b> + 提交时间 (同档位先来后到) 决定; 改档位会立即影响次序",
+      "queue5": "资源释放时, Kueue 按此顺序逐个 admit, <b>不一定按到达顺序</b>",
+      "statusHeading": "<b>状态列</b>",
+      "statusSourceNote": "各任务类型自身生命周期, 来源: 各 Operator 写入 CR.status.conditions",
+      "status1": "本页混合三类任务 (开发机 / 训练 / 推理), 状态值各自不同, 不归一翻译, 直接显原始 CR phase 便于排查",
+      "status2": "<b>开发机</b>: Initialized / Progressing / Available (运行中) / Stopped (已停) / Degraded (异常)",
+      "status3": "<b>训练</b>: Suspended (Kueue 暂挂) / Created / Created/Running (运行中) / PodsRunning / Faulted (auto-resume 中) / Complete / Completed / Failed",
+      "status4": "<b>推理</b>: DeploymentPending / DeploymentInProgress / DeploymentComplete (运行中) / DeploymentFailed / Stopped / Deleted",
+      "status5": "偶尔出现<b>拼接态</b> (如 <code>Created/Completed</code>): 多个 condition 同一刻为 True 时把 type 名用 / 拼接; 详细说明见各任务列表页的「状态说明」tip",
+      "footnote": "💡 <b>状态 ≠ 排队状态</b>: 状态列由各 Operator 写, 看任务自身生命周期 (创建 / 运行 / 完成); 排队顺序看任务在 Kueue 队列中的相对位置。一个任务可能\"运行中\"但不在队 (已 admit), 也可能\"待调度\"但在队首 (即将拿到资源)。"
+    },
+    "filters": {
+      "scope": "范围",
+      "type": "类型",
+      "all": "全部",
+      "queued": "排队中",
+      "running": "运行中"
+    }
+  },
+  "changePriority": {
+    "title": "修改优先级 — {{name}}",
+    "placeholder": "选择优先级 label",
+    "loadFailed": "加载优先级列表失败: {{error}}",
+    "missingCrName": "任务缺少 CR 名, 无法改优先级",
+    "success": "优先级已更新",
+    "failed": "修改失败: {{error}}"
+  }
+}

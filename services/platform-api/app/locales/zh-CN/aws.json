@@ -1,0 +1,8 @@
+{
+  "aws.fsx_id_invalid": "FSx id 非法 (需 fs-<hex>): {fs_id}",
+  "aws.fsx_id_duplicate": "FSx id 重复: {fs_id}",
+  "aws.idc_assume_role_failed": "AssumeRole {role_arn} 失败: {error}",
+  "aws.idc_store_id_missing_env": "IDC_IDENTITY_STORE_ID 未配置 (见 .env)",
+  "aws.idc_store_id_missing": "IDC_IDENTITY_STORE_ID 未配置",
+  "aws.idc_store_unreachable": "IdC store '{store_id}' 在 region {region} 不可达 (检查 IDC_REGION). 原始: {error}"
+}

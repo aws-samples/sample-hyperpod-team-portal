@@ -1,0 +1,9 @@
+{
+  "priority.class_not_found": "Priority class not found: {name}",
+  "priority.dynamo_unsupported": "Multi-node inference (Dynamo) does not support changing priority yet.",
+  "priority.workload_not_found": "No Kueue Workload found for task {cr_name} (it may not have been submitted yet, or it has finished).",
+  "priority.target_class_not_found": "Priority class not found: {name}",
+  "priority.task_finished": "The task has finished, so its priority cannot be changed.",
+  "priority.note_workload": "Updated the CR label and deleted Workload {name}. Kueue will recreate the Workload with the new priority.",
+  "priority.note_deployment": "Updated the CR label and deleted Deployment {name} (the operator recreates it and the container restarts). Kueue will rebuild the Workload with the new priority."
+}

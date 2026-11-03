@@ -1,0 +1,11 @@
+{
+  "llmd.instance_type_not_allowed": "Instance type '{instance_type}' is not among the instance types allocated to this Workspace's quota (available: {allowed}).",
+  "llmd.allowed_none": "none",
+  "llmd.fsx_not_authorized": "FSx '{pvc_name}' is not in your authorized mount list (you can only select FSx mounts you are authorized to use in this Workspace).",
+  "llmd.s3_bucket_not_mounted": "S3 bucket '{bucket}' is not among the S3 buckets mounted in this Workspace.",
+  "llmd.forbidden_operate": "Not allowed to operate this llm-d inference service (creator, Workspace admin or platform admin only).",
+  "llmd.model_source_fsx_required": "model_source_type=fsx requires model_pvc.",
+  "llmd.model_source_s3_required": "model_source_type=s3 requires s3_bucket and s3_prefix.",
+  "llmd.nodes_per_replica_min": "nodes_per_replica must be >= {min} (size=1 gives worker count=0; with TAS, Kueue v0.12.0 crashes the cluster with a division by zero, bug#6486).",
+  "llmd.display_name_length": "Length must be 3-20 characters, got {actual}"
+}

@@ -1,0 +1,14 @@
+{
+  "core.cognito_missing_idc_username": "Cognito token missing IdC username (检查 IdC SAML Subject 配置)",
+  "core.ws_admin_required": "需要 workspace 管理员或平台超管权限",
+  "core.ws_member_required": "无权访问该 workspace (需要是其成员或平台超管)",
+  "core.display_name_ascii": "只能用可打印 ASCII, 不能含中文或全角字符 (说明写 description)",
+  "core.name_not_client_supplied": "name 由后端从 display_name 派生, 请勿传入 (改传 display_name); 创建成功后从响应的 name 字段读取真实任务名",
+  "core.label_reserved_prefix": "label key '{key}' 使用了平台保留前缀 '{prefix}'",
+  "core.label_prefix_invalid": "label key 前缀 '{prefix}' 非法 (DNS 子域, ≤253 字符)",
+  "core.label_name_invalid": "label key '{name}' 非法 (≤63 字符, 字母数字起止, 中间 -_. )",
+  "core.label_value_invalid": "label '{key}' 的值 '{value}' 非法 (≤63 字符, 字母数字起止, 中间 -_. )",
+  "core.label_too_many": "自定义 label 最多 {max} 个, 实际 {actual}",
+  "core.label_key_empty": "label key 不能为空",
+  "core.terminal_unavailable": "[平台] 无法在该 pod 开终端: 容器未运行/崩溃, 或镜像无 bash/sh。"
+}

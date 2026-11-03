@@ -1,0 +1,9 @@
+{
+  "rayjob.instance_type_not_allowed": "instance_type '{instance_type}' 不在该 workspace 已分配的配额机型内 (可选: {allowed})。",
+  "rayjob.allowed_none": "无",
+  "rayjob.fsx_not_authorized": "FSx '{pvc_name}' 不在你被授权的挂载列表中 (只能选你在该 workspace 被授权的 FSx)",
+  "rayjob.s3_mount_not_allowed": "S3 mount_id '{mount_id}' 不在该 workspace 已挂载的 S3 列表中 (只能选 workspace 管理员已挂载/授权的 S3 数据集)",
+  "rayjob.secret_keys_missing": "你的 Secret 里没有这些 key: {keys} (请先在 Secret 管理页添加)",
+  "rayjob.forbidden_operate": "无权操作该 Ray 训练任务 (仅创建者本人 / 工作空间管理员 / 平台超管)",
+  "rayjob.display_name_length": "长度须 3-36 字符, 实际 {actual}"
+}

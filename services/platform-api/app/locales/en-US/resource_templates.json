@@ -1,0 +1,13 @@
+{
+  "resource_templates.not_ws_member": "You are not a member of this Workspace and cannot access its resource templates.",
+  "resource_templates.admin_only": "Only Workspace admins can create, edit or delete resource templates.",
+  "resource_templates.not_found": "Resource template not found.",
+  "resource_templates.seed.small.name": "Small",
+  "resource_templates.seed.small.description": "Single GPU, small models / debugging",
+  "resource_templates.seed.medium.name": "Medium",
+  "resource_templates.seed.medium.description": "Single GPU, 7B/8B models",
+  "resource_templates.seed.large.name": "Large",
+  "resource_templates.seed.large.description": "2 GPUs, TP=2 / DDP",
+  "resource_templates.seed.xlarge.name": "Extra large",
+  "resource_templates.seed.xlarge.description": "4 GPUs, TP=4"
+}

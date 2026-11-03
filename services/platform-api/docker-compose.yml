@@ -1,0 +1,36 @@
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local:2.5.4
+    container_name: hypd-ddb-local
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    ports:
+      - "8000:8000"
+    volumes:
+      - dynamodb_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/ -X POST -H 'X-Amz-Target: DynamoDB_20120810.ListTables' -H 'Content-Type: application/x-amz-json-1.0' --data '{}' || exit 0"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # 可选 UI: dynamodb-admin (类似 pgAdmin)
+  ddb-admin:
+    image: aaronshaf/dynamodb-admin:4.6.1
+    container_name: hypd-ddb-admin
+    environment:
+      DYNAMO_ENDPOINT: http://dynamodb-local:8000
+      AWS_REGION: us-west-2
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
+    ports:
+      - "8001:8001"
+    depends_on:
+      dynamodb-local:
+        condition: service_started
+    profiles: ["ui"]
+    restart: unless-stopped
+
+volumes:
+  dynamodb_data:
+    name: hypd-ddb-data

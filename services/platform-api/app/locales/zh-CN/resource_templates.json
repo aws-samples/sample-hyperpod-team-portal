@@ -1,0 +1,13 @@
+{
+  "resource_templates.not_ws_member": "你不是该 workspace 成员, 无权访问其资源模板",
+  "resource_templates.admin_only": "仅 workspace 管理员可建/改/删资源模板",
+  "resource_templates.not_found": "模板不存在",
+  "resource_templates.seed.small.name": "小规格",
+  "resource_templates.seed.small.description": "单卡小模型 / 调试",
+  "resource_templates.seed.medium.name": "中规格",
+  "resource_templates.seed.medium.description": "单卡 7B/8B",
+  "resource_templates.seed.large.name": "大规格",
+  "resource_templates.seed.large.description": "双卡 TP=2 / DDP",
+  "resource_templates.seed.xlarge.name": "超大规格",
+  "resource_templates.seed.xlarge.description": "四卡 TP=4"
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Share",
+  "okText": "Share",
+  "pickUnshared": "Select members you have not shared with yet.",
+  "shared": "Shared",
+  "shareFailed": "Failed to share",
+  "unshared": "Sharing removed",
+  "unshareFailed": "Failed to remove sharing",
+  "pickMembers": "Select Workspace members",
+  "loadingMembers": "Loading members…",
+  "placeholder": "Select members to share with",
+  "loading": "Loading…",
+  "noMembers": "No members available to share with",
+  "sharedWith": "Shared with",
+  "noShares": "Not shared with anyone yet",
+  "remove": "Remove"
+}

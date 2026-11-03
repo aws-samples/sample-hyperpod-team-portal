@@ -1,0 +1,14 @@
+{
+  "fsx_quota.not_configured": "FSx {filesystem_id} 未在 PLATFORM_FSX_FILESYSTEMS 配置, 无法管理配额",
+  "fsx_quota.quota_sum_exceeded": "配额总和 {projected} GiB 将超过 FSx 总容量 {total} GiB (其他目录已占 {others} GiB)",
+  "fsx_quota.dir_name_not_single": "非法目录名: {name} (必须是单层目录名)",
+  "fsx_quota.dir_name_charset": "非法目录名: 只允许字母/数字/. _ -",
+  "fsx_quota.admin_unavailable": "fsx-admin 不可用或 lfs 命令报错",
+  "fsx_quota.gid_unknown": "gid {gid} 不属于任何已有目录, 无法复用",
+  "fsx_quota.dir_exists": "目录 {name} 已存在",
+  "fsx_quota.create_failed": "建目录 {name} 失败 ({error})。检查 pod + lfs 权限。",
+  "fsx_quota.create_readback_failed": "目录已建但配额回读校验失败 (期望 {expected}G, 实读 {actual}G)。请检查 project quota 是否激活 (需原生 2.15 FS)。",
+  "fsx_quota.dir_not_found": "目录 {name} 不存在",
+  "fsx_quota.update_failed": "改配额失败 ({error}): {name}",
+  "fsx_quota.update_readback_failed": "配额回读校验失败 (期望 {expected}G, 实读 {actual}G)"
+}

@@ -1,0 +1,8 @@
+{
+  "aws.fsx_id_invalid": "Invalid FSx id (expected fs-<hex>): {fs_id}",
+  "aws.fsx_id_duplicate": "Duplicate FSx id: {fs_id}",
+  "aws.idc_assume_role_failed": "AssumeRole {role_arn} failed: {error}",
+  "aws.idc_store_id_missing_env": "IDC_IDENTITY_STORE_ID is not configured (see .env).",
+  "aws.idc_store_id_missing": "IDC_IDENTITY_STORE_ID is not configured.",
+  "aws.idc_store_unreachable": "IdC store '{store_id}' is unreachable in region {region} (check IDC_REGION). Original error: {error}"
+}

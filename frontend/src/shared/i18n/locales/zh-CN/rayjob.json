@@ -1,0 +1,270 @@
+{
+  "nav": {
+    "workspace": "工作空间",
+    "rayjob": "Ray 训练"
+  },
+  "fields": {
+    "creator": "创建者",
+    "queueStatus": "排队状态",
+    "scale": "规模"
+  },
+  "actions": {
+    "details": "详情",
+    "cloneConfig": "克隆配置",
+    "share": "分享"
+  },
+  "spec": {
+    "memory": "内存",
+    "unitCard_other": "卡",
+    "unitCore_other": "核",
+    "unitAdapter_other": "张",
+    "gpuCount_other": "{{count}} GPU",
+    "workerCount_other": "{{count}} worker",
+    "replicaCount_other": "{{count}} 副本",
+    "hourCount_other": "{{count}} 小时"
+  },
+  "confirm": {
+    "stopTitle": "停止 Ray 训练任务",
+    "stopDescList": "删 RayJob CR (KubeRay 级联回收 pod) 释放算力, 保留配置",
+    "deleteTitle": "删除 Ray 训练任务",
+    "deleteDescList": "会级联删除 RayJob CR + RayCluster + 所有 pod"
+  },
+  "messages": {
+    "loadFailed": "加载失败: {{error}}",
+    "deleted": "Ray 训练任务已删除",
+    "deleteFailed": "删除失败: {{error}}",
+    "stopped": "Ray 训练任务已停止 (保留配置, 可克隆重建)",
+    "stopFailed": "停止失败: {{error}}"
+  },
+  "list": {
+    "newButton": "新建 Ray 训练",
+    "description": "基于 KubeRay (RayJob) 的 Ray 分布式训练 — 适合 RLHF / 强化学习 / 超参搜索 / 数据并行。 head+worker 集群跑完自动回收, 走 Kueue 统一调度。",
+    "tips": {
+      "status": "RayJob 状态 (jobStatus): PENDING 提交中 / RUNNING 运行中 / SUCCEEDED 成功 / FAILED 失败 / STOPPED 已停止 (兼容历史: Initializing/Running/Complete/Failed/Stopped)。点放大镜看完整状态详情。",
+      "queueStatus": "Kueue 调度队列状态 (KubeRay 原生 Kueue 集成)。",
+      "scale": "worker 副本数 × 单节点 GPU (head 固定 1)。"
+    },
+    "scope": {
+      "label": "范围",
+      "all": "全部",
+      "mine": "我的"
+    },
+    "statusDetailTitle": "Ray 任务状态详情"
+  },
+  "detail": {
+    "title": "Ray 训练详情",
+    "tabs": {
+      "overview": "总览",
+      "monitoring": "监控",
+      "rayEngine": "Ray 引擎",
+      "logs": "日志"
+    },
+    "confirm": {
+      "stop": "停止该 Ray 训练?",
+      "delete": "删除该 Ray 训练?"
+    },
+    "messages": {
+      "stopped": "已停止",
+      "deleted": "已删除"
+    },
+    "summary": {
+      "crStatus": "状态（CR Phase）",
+      "kueueStatus": "排队状态（Kueue）"
+    },
+    "fields": {
+      "workspace": "工作空间",
+      "lastSync": "最后同步",
+      "startedAt": "启动时间"
+    },
+    "config": {
+      "title": "运行配置",
+      "headInstance": "Head 机型",
+      "workerInstance": "Worker 机型",
+      "headResources": "Head 资源",
+      "workerResources": "Worker 资源",
+      "headImage": "Head 镜像",
+      "workerImage": "Worker 镜像",
+      "entryScript": "入口脚本",
+      "fsxMounts": "FSx 挂载",
+      "s3Datasets": "S3 数据集",
+      "none": "无",
+      "envVars": "环境变量",
+      "envSecrets": "环境 Secret",
+      "ownSecret": "本人 Secret",
+      "maxRun": "运行时长上限",
+      "ttl": "完成后保留 (TTL)",
+      "retries": "重试次数",
+      "runAs": "运行身份",
+      "nonRoot": "非 root"
+    },
+    "pods": {
+      "title": "当前运行的 Pods ({{total}})",
+      "empty": "暂无 Pod (RayJob 刚创建时尚未调度)",
+      "role": "角色",
+      "restarts": "重启",
+      "node": "节点",
+      "logs": "日志",
+      "terminal": "终端"
+    },
+    "containers": {
+      "container": "容器",
+      "head": "主节点",
+      "worker": "计算",
+      "logExporter": "日志导出",
+      "fallbackName": "容器",
+      "name": "容器名",
+      "restarts": "重启",
+      "reason": "原因"
+    },
+    "monitoringBanner": "GPU 效率 (SM/Tensor Core 活跃度) / 显存 / CPU / 内存 / 网络 / EFA (节点级 DCGM/cAdvisor, 覆盖 head + worker pod) · 可按 任务 / Pod / GPU 卡 三维度切换 · 每 20-30s 自动刷新。RayJob 跑完集群回收后指标停更。",
+    "rayEngineBanner": "Ray 引擎指标 (Observability add-on 采 Ray :8080): 任务/Actor 状态、逻辑 CPU/GPU、Object Store、组件 CPU/内存 · 每 20-30s 自动刷新。空转 / 已结束任务无数据。",
+    "terminalTitle": "终端 · {{pod}} ({{container}})",
+    "logsTitle": "日志 · {{pod}}",
+    "timeline": "状态时间线（K8s Conditions）"
+  },
+  "logs": {
+    "pod": "Pod 日志",
+    "all": "🔍 任务日志"
+  },
+  "create": {
+    "title": "新建 Ray 训练",
+    "breadcrumbNew": "新建",
+    "loadingConfig": "加载配置中...",
+    "submit": "提交 Ray 训练",
+    "sections": {
+      "basic": "基本信息",
+      "image": "镜像",
+      "storage": "共享存储",
+      "resource": "计算资源",
+      "launch": "启动配置",
+      "policy": "运行策略",
+      "preview": "预览"
+    },
+    "access": {
+      "ro": "只读",
+      "rw": "读写"
+    },
+    "messages": {
+      "fsxNeed": "{{path}} (需{{need}}, 你只有{{have}})",
+      "fsxNoAccess": "{{path}} (你无此盘权限)",
+      "cloneFsxDropped_other": "克隆: {{count}} 块 FSx 你没有相应权限, 已不预选 — {{details}}",
+      "cloneTemplateChanged": "克隆: 部分资源模板已变更/删除, 请重新选择 head/worker 模板",
+      "cloneFetchFailed": "克隆: 拉取源配置失败 — {{error}}",
+      "submitted": "Ray 训练已提交 · {{name}}",
+      "fieldInvalid": "字段 [{{field}}] 校验失败: {{error}}",
+      "submitFailed": "提交失败: {{error}}"
+    },
+    "yamlComments": {
+      "renderFailed": "# 后端渲染失败:\n# {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "显示名称",
+      "displayNameTooltip": "给人看的名字, 可重复。任务名 (K8s 资源名) 由后端从它派生 + 10 位随机后缀, 前端不生成。小写字母开头, 3-20 字符, 只含 a-z 0-9 '-', 结尾须字母或数字。中文说明写「描述」。",
+      "displayNameRequired": "请输入显示名称",
+      "displayNamePattern": "小写字母开头, 3-36 字符, 只含 a-z 0-9 -, 结尾字母/数字",
+      "displayNamePlaceholder": "例 rlhf-qwen-rollout",
+      "descriptionPlaceholder": "例: RLHF rollout, Ray Tune 超参搜索"
+    },
+    "image": {
+      "headHeading": "Head (协调节点)",
+      "headLabel": "Head 镜像 (CPU)",
+      "headTooltip": "head 落 CPU 机型, 用 CPU 镜像 (gpu 镜像在无 GPU 驱动的 CPU node 起不来)。下拉「镜像」中用途含训练的镜像, 或直接键入 URI。",
+      "workerLabel": "Worker 镜像 (GPU)",
+      "workerTooltip": "worker 落 GPU 机型, 用 gpu 镜像。下拉「镜像」中用途含训练的镜像, 或直接键入 URI。",
+      "loading": "正在加载镜像列表…",
+      "empty": "无镜像中心镜像时可直接键入 URI, 或到<registry>「资产管理 → 镜像」</registry>注册。",
+      "hint": "下拉列出「镜像」中用途含训练 (training) 的镜像; 也可直接键入任意镜像 URI。",
+      "required": "请选择或填写镜像 URI",
+      "format": "格式须为 <registry>/<repo>:<tag>"
+    },
+    "worker": {
+      "heading": "Worker (计算节点)",
+      "replicasLabel": "worker 副本数",
+      "replicasTooltip": "Ray worker 节点数 (head 固定 1)。总 pod = 1 head + N worker。",
+      "replicasRequired": "必填"
+    },
+    "resource": {
+      "poolLabel": "资源池",
+      "poolTooltip": "先选 GPU/CPU 资源池, 右侧机型与模板按池筛。",
+      "poolPlaceholder": "选择资源池",
+      "instanceTypeLabel": "实例类型",
+      "instanceTypeTooltip": "该资源池内机型; 后端校验机型 ∈ 配额。",
+      "instanceTypeRequired": "请选择实例类型",
+      "instanceTypePlaceholder": "选该资源池内的机型",
+      "noAssignedTypes": "该 workspace 无已分配机型",
+      "noTypesInPool": "该资源池下无可用机型",
+      "templateLabel": "资源模板",
+      "templateRequired": "请选择资源模板",
+      "templateTooltip": "每节点资源 (GPU/CPU/内存) 由管理员维护的模板统一管控, 用户不可手填。",
+      "templatePlaceholder": "选择资源模板 (由管理员维护)",
+      "noTemplates": "暂无资源模板 · 请联系空间管理员在 管理中心 -「资源模版」创建",
+      "perNodeSpec": "每节点规格 · 模板锁定",
+      "perNodeSpecTooltip": "GPU/CPU/内存 由资源模板统一管控, 切模板自动同步",
+      "quotaNeed_other": "worker 需 {{count}} GPU ({{workers}} × {{gpu}})",
+      "quotaRemaining": " · 剩余 {{remaining}} / {{total}}",
+      "quotaOver": " · 超额, 提交后需等待"
+    },
+    "launch": {
+      "entryLabel": "启动脚本 (RayJob entrypoint)",
+      "entryTooltip": "整段作 RayJob entrypoint 跑, 可只写一行执行 FSx 上脚本 (如 bash /fsx/.../run.sh), 也可直接写多行命令。脚本里 ray.init() 连 KubeRay 拉起的集群。",
+      "entryRequired": "必填启动脚本",
+      "viewExample": "查看示例脚本",
+      "exampleTitle": "示例脚本 (只读参考)",
+      "exampleDesc": "只读参考 · head+worker 集群由 KubeRay 拉起, 脚本里 ray.init() 连上。可整段贴进上方启动脚本, 或改成 bash /fsx/.../run.sh。",
+      "exampleScript": "#!/bin/bash\n# ============================================================\n# Ray 训练启动脚本 · RayJob entrypoint = bash <此脚本>\n# head+worker 集群已由 KubeRay 拉起; 脚本里 ray.init() 连上\n# ============================================================\nset -e\npython3 - <<'PY'\nimport ray\nray.init()  # 连当前 RayJob 集群\nprint(\"cluster resources:\", ray.cluster_resources())\n# TODO: 你的分布式训练 (Ray Train / Tune / RLHF rollout ...)\nPY\n",
+      "envHeading": "环境变量 (选填多个)",
+      "envHelp": "填你自己的变量, 如 WANDB_PROJECT。",
+      "envAdd": "加环境变量",
+      "secretHeading": "从 Secret 注入环境变量 (选填)",
+      "secretHelp": "选 Secret 里的 key 注入成同名 env (值不进配置明文, 走 secretKeyRef)。",
+      "secretKeyRequired": "选 key",
+      "secretPlaceholder": "选 Secret key (= 环境变量名)",
+      "secretEmpty": "无可用 key (先到 Secret 管理页添加)",
+      "secretAdd": "从 Secret 加环境变量"
+    },
+    "policy": {
+      "maxRunLabel": "最长运行时长 (小时)",
+      "maxRunTooltip": "超时自动终止 (activeDeadlineSeconds)。",
+      "ttlLabel": "完成后保留 (秒)",
+      "ttlTooltip": "RayJob 跑完 CR 保留多久供查 (KubeRay 要 ≥0; 默认 3600=1h)。",
+      "retriesLabel": "重试次数",
+      "retriesTooltip": "RayJob 层失败重试次数 (0=不重试)。"
+    }
+  },
+  "terminal": {
+    "disconnected": "[已断开] {{reason}}",
+    "close": {
+      "unauthorized": "未授权",
+      "forbidden": "无权访问该 pod",
+      "notFound": "任务不存在",
+      "idleTimeout": "空闲超时, 连接已断",
+      "tooMany": "终端连接数超限 (每用户最多 3)",
+      "noShell": "无法开 shell"
+    }
+  },
+  "logViewer": {
+    "containerLogs": "容器日志",
+    "driverLogs": "Driver 日志",
+    "driverFetching": "○ 拉取中",
+    "driverFailed": "✗ 失败",
+    "pause": "暂停",
+    "reload": "重新加载",
+    "noHead": "无 head pod (任务未起或已回收), driver 日志仅在 head 存活时可看。",
+    "driverNone": "(暂无 driver 日志: entrypoint 未开始, 或 head pod 已回收)",
+    "driverPulling": "(拉取中...)",
+    "driverSource": "数据源: head /tmp/ray/session_latest/logs/job-driver-*.log (轮询)",
+    "driverOutput": "entrypoint 真输出 (训练/GPU/task 分发)",
+    "live": "● 实时",
+    "connecting": "○ 连接中",
+    "sseFailed": "✗ SSE 失败",
+    "podPlaceholder": "选 Pod",
+    "notRunningSuffix": " · 未运行",
+    "keywordPlaceholder": "关键字过滤(客户端)",
+    "podNotRunning": "该 Pod 未运行, 实时日志仅在 Pod 存活时可看 (历史日志归第二批 CloudWatch)。",
+    "noMatch": "无匹配 \"{{keyword}}\" 的日志",
+    "empty": "暂无日志",
+    "containerSource": "数据源: kubectl logs --follow 容器 stdout (集群/守护)",
+    "downloaded_other": "已下载 {{count}} 行",
+    "shownLines_other": "显示 {{count}} 行"
+  }
+}

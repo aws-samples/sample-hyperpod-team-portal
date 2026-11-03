@@ -1,0 +1,124 @@
+# 业务集群 RBAC: platform-api / platform-worker 经 access entry 的
+# kubernetesGroups=cluster-workspace-admin 映射进集群, 权限由本 ClusterRole 给。
+# access entry 已去掉 AmazonEKSClusterAdminPolicy → 本文件未 apply 则后端全部 403。
+#
+# group 名必须 = cdk.json clusterWorkspaceAdminGroup。
+#
+# 部分 verb api 自身不调, 是 K8s 提权保护要的: api 创建 workspace-developer
+# Role/RoleBinding 时必须自身已持有其授予的全部权限 (见 workspace_resources.py)。
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: platform-api-manager
+  labels:
+    app.kubernetes.io/managed-by: hyperpod-platform
+rules:
+- apiGroups: ["sagemaker.amazonaws.com"]
+  resources: ["hyperpodpytorchjobs"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+# RayJob (KubeRay): api 建/删 rayjobs, controller list/watch 派生状态。
+# RayCluster: controller Owns(RayCluster) 监听 (reconcile 拉 RayCluster 判 occupying),
+# 只读即可; RayCluster+Pod 由 KubeRay operator 建/GC (shutdownAfterJobFinishes),
+# 平台不直接管。无 rayclusters 的 list/watch 权限则 controller informer sync 超时 → 崩溃。
+- apiGroups: ["ray.io"]
+  resources: ["rayjobs"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["ray.io"]
+  resources: ["rayclusters"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["inference.sagemaker.aws.amazon.com"]
+  resources: ["inferenceendpointconfigs"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+# workspaceintegrationtemplates (spaces v0.2.0+): 平台 list/get 做 /dev/shm 档位下拉,
+# 建/改 workspace 时带 spec.integrationTemplateRefs 引用 platform-integrations 里的 tier 模板。
+- apiGroups: ["workspace.jupyter.org"]
+  resources: ["workspaces", "workspacetemplates", "workspaceintegrationtemplates"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["connection.workspace.jupyter.org"]
+  resources: ["workspaceconnections"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["nvidia.com"]
+  resources: ["dynamographdeployments"]
+  verbs: ["get", "list", "watch"]
+# LWS 由平台自己渲 (adapters/k8s/llmd.py)。不给 update: 409 时视幂等跳过不 replace
+- apiGroups: ["leaderworkerset.x-k8s.io"]
+  resources: ["leaderworkersets"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: ["kueue.x-k8s.io"]
+  resources: ["workloads", "localqueues"]
+  verbs: ["get", "list", "watch", "delete"]
+- apiGroups: ["kueue.x-k8s.io"]
+  resources: ["workloadpriorityclasses", "clusterqueues"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+# topologies 是 v1alpha1, 与 resourceflavors 的 v1beta1 不同版本
+- apiGroups: ["kueue.x-k8s.io"]
+  resources: ["resourceflavors", "topologies"]
+  verbs: ["get", "list"]
+- apiGroups: ["visibility.kueue.x-k8s.io"]
+  resources: ["localqueues/pendingworkloads", "clusterqueues/pendingworkloads"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["services", "configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["persistentvolumes"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["serviceaccounts"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+# bind: 建 RoleBinding 引用 Role 时提权保护要求对被引用 Role 有 bind
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["roles", "rolebindings"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete", "bind"]
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+# llm-d 的 gateway Deployment 由平台自己渲; update 给 409 重入时的 replace 用
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+# llm-d 的 Ingress 由平台自己渲 (IEC 那个是 operator 建的, 只需读)。
+# 不给 update: 同一实例内容不变, 409 直接跳过
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: platform-api-manager-binding
+  labels:
+    app.kubernetes.io/managed-by: hyperpod-platform
+subjects:
+- kind: Group
+  name: cluster-workspace-admin   # = cdk.json clusterWorkspaceAdminGroup
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: platform-api-manager
+  apiGroup: rbac.authorization.k8s.io

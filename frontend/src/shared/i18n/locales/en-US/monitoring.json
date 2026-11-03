@@ -1,0 +1,77 @@
+{
+  "tabPanel": {
+    "dimension": "Dimension",
+    "timeRange": "Time range",
+    "refreshInterval": "Refresh interval",
+    "refreshPaused": "Off",
+    "filter": {
+      "button": "Metrics ({{visible}}/{{total}})",
+      "selectAll": "Select all",
+      "selectNone": "Deselect all",
+      "unit": "Unit: {{unit}}",
+      "noDescription": "No description"
+    },
+    "loadFailed": "Failed to load metric templates: {{error}}",
+    "emptyDimension": "No metrics for the current dimension",
+    "allHidden": "All metrics are hidden. Use the \"Metrics\" button above to show them again."
+  },
+  "group": {
+    "other": "Other"
+  },
+  "pages": {
+    "fsx": {
+      "title": "FSx Performance",
+      "dataSource": "Data source: CloudWatch",
+      "loadingFsx": "Loading FSx…",
+      "selectFsx": "Select FSx",
+      "loadListFailed": "Failed to load FSx list",
+      "loadMetricsFailed": "Failed to load monitoring metrics",
+      "requestFailed": "Request failed (HTTP {{status}})",
+      "range": {
+        "h1": "Last 1 hour",
+        "h6": "Last 6 hours",
+        "h24": "Last 24 hours"
+      }
+    },
+    "kueue": {
+      "title": "Queue (Kueue)",
+      "description": "The number of tasks currently waiting in the Kueue queue of each Workspace. Platform admins see all Workspaces; regular users see only the Workspaces where they are the owner or a member. Data source: AWS Managed Prometheus (AMP), with metrics exposed by the Kueue controller; all values show as 0 when AMP is unavailable. Refreshes automatically every 30 seconds. Click the number in the \"Queued Pods (Inadmissible)\" column to expand the list of queued tasks in that Workspace.",
+      "loadFailed": "Failed to load queue status",
+      "workspace": "Workspace",
+      "activeHeader": "Pods awaiting admission (Active)",
+      "activeTip": "Pods that Kueue has accepted and is evaluating for admission (active). They enter scheduling once the tasks ahead finish or resources are ready, and usually need no manual action.",
+      "inadmissibleHeader": "Queued Pods (Inadmissible)",
+      "inadmissibleTip": "Pods that currently cannot be admitted (inadmissible): the request exceeds the quota or the topology cannot be satisfied, so waiting longer will not help. Adjust the task spec or increase the quota. Click the number to expand the list of queued tasks in this Workspace.",
+      "expandTip": "Click to expand the list of queued tasks in this Workspace"
+    }
+  },
+  "kueueTasks": {
+    "kind": {
+      "dev": "Dev Instance",
+      "train": "Training Job",
+      "inference": "Single-node Inference",
+      "dynamo": "Dynamo Inference",
+      "llmd": "Multi-node Inference",
+      "rayjob": "Ray Job"
+    },
+    "columns": {
+      "queueOrder": "Queue position",
+      "priority": "Priority",
+      "type": "Type",
+      "taskName": "Task name",
+      "queueOrderTip": "The task's actual position in this Workspace's Kueue queue (1 = front; a smaller number is scheduled sooner). For a task with several scheduling units, the frontmost position is shown; expand the \"+\" to see the queue details of each unit. Tasks that are not queued show \"-\".",
+      "kueueStatus": "Kueue status"
+    },
+    "detailUnsupported": "Kueue details are not yet available here for Multi-node Inference or Dynamo Inference.",
+    "forbidden": {
+      "title": "No permission to view task details",
+      "description": "Task details are visible only to Workspace admins and platform admins. You can see this Workspace's queue counts, but viewing individual tasks requires admin permission."
+    },
+    "loadFailed": "Failed to load tasks",
+    "empty": {
+      "title": "No queued tasks",
+      "description": "This Workspace has no tasks in the Queued state. If the header still shows a count, the metrics may not have refreshed yet (a delay of up to about 30s)."
+    },
+    "intro": "Tasks in this Workspace with Kueue status Queued. Queued can mean normal queueing or being unable to be admitted (the metrics count about {{inadmissible}} tasks that cannot be admitted). Click \"Kueue details\" to check the Reason / Message of the conditions."
+  }
+}

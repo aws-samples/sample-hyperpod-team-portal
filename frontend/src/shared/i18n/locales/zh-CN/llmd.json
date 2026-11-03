@@ -1,0 +1,264 @@
+{
+  "nav": {
+    "workspace": "工作空间",
+    "llmd": "多机推理"
+  },
+  "fields": {
+    "scale": "规模",
+    "creator": "创建者",
+    "queueStatus": "排队状态",
+    "workspace": "工作空间",
+    "role": "角色"
+  },
+  "actions": {
+    "details": "详情",
+    "cloneConfig": "克隆配置"
+  },
+  "spec": {
+    "unitCard_other": "卡",
+    "unitCore_other": "核",
+    "unitAdapter_other": "张",
+    "memory": "内存",
+    "gpuCount_other": "{{count}} GPU",
+    "replicaCount_other": "{{count}} 副本",
+    "nodeCount_other": "{{count}} 节点",
+    "scale": "{{replicas}} × {{nodes}} × {{gpu}}"
+  },
+  "confirm": {
+    "stopTitle": "停止 llm-d 推理服务",
+    "stopDesc": "删 CR (级联回收 pod) 释放算力, 保留配置, 可克隆重建",
+    "deleteTitle": "删除 llm-d 推理服务",
+    "deleteDescList": "会级联删除 LWS + gateway 资源及所有 pod",
+    "deleteDescDetail": "级联删除 LWS + gateway 资源及所有 pod"
+  },
+  "messages": {
+    "stopped": "llm-d 推理服务已停止 (保留配置, 可克隆重建)",
+    "stopFailed": "停止失败: {{error}}",
+    "deleted": "llm-d 推理服务已删除",
+    "deleteFailed": "删除失败: {{error}}",
+    "loadFailed": "加载失败: {{error}}"
+  },
+  "list": {
+    "description": "基于 llm-d (LeaderWorkerSet + sgl-model-gateway), 部署跨机 TP/EP。",
+    "filter": "筛选",
+    "filterHint": "仅支持筛选最近 5000 条",
+    "newButton": "新建多机推理",
+    "tips": {
+      "status": "LWS/gateway status.state: initializing 初始化 / pending 待部署 / successful 运行中 / failed 失败 / Stopped 已停止。",
+      "queueStatus": "Kueue 调度队列状态 (走 Kueue pod integration, per-pod 准入)。",
+      "scale": "多机 gang: 副本 × 每组节点 × 单 pod GPU (tp/ep 见详情)。"
+    },
+    "scope": {
+      "label": "范围",
+      "all": "全部",
+      "mine": "我的"
+    }
+  },
+  "detail": {
+    "forceRefresh": "强制刷新",
+    "tabs": {
+      "overview": "总览",
+      "monitoring": "监控",
+      "sglang": "SGLang 性能",
+      "logs": "日志"
+    },
+    "summary": {
+      "kueueStatus": "排队状态（Kueue）"
+    },
+    "fields": {
+      "lastSync": "最后同步"
+    },
+    "endpoint": {
+      "label": "VPC 内访问入口",
+      "albReady": "ALB 已就绪 (<dns/>), 等待 gateway 副本 Ready",
+      "albCreating": "ALB 创建中 (约 1-2 分钟); 若长时间无地址, 请联系管理员检查节点安全组",
+      "disabled": "未开启 · 仅集群内可访问 (创建时可勾选「VPC 内访问入口」)"
+    },
+    "gateway": {
+      "title": "Gateway 配置 (路由层)",
+      "image": "Gateway 镜像",
+      "instanceType": "机型 (Gateway)",
+      "replicas": "Gateway 副本",
+      "memory": "Gateway 内存",
+      "extraArgs": "Gateway 额外参数"
+    },
+    "worker": {
+      "title": "Worker 配置 (推理引擎)",
+      "sglangImage": "SGLang 镜像",
+      "modelSource": "模型源",
+      "modelMount": "模型挂载",
+      "instanceType": "机型 (GPU)",
+      "replicas": "副本数 (replicas)",
+      "nodesPerGroup": "每组节点数 (size)",
+      "gpuPerPod": "单 Pod GPU",
+      "efaPerPod": "单 Pod EFA",
+      "cpuPerPod": "单 Pod CPU",
+      "memoryPerPod": "单 Pod 内存",
+      "launchScript": "启动脚本",
+      "none": "无"
+    },
+    "pods": {
+      "title": "当前运行的 Pods ({{total}})",
+      "empty": "暂无 pod (可能初始化中, 强制刷新拉)",
+      "groupGateway": "网关 (gateway)",
+      "groupReplica": "副本组 {{index}}",
+      "restarts": "重启",
+      "reason": "原因"
+    },
+    "containers": {
+      "name": "容器名",
+      "ready": "就绪",
+      "notReady": "未就绪",
+      "empty": "无容器状态",
+      "roles": {
+        "engine": "推理引擎",
+        "gateway": "网关",
+        "metrics": "指标采集",
+        "other": "容器"
+      }
+    },
+    "timeline": "状态时间线（K8s Conditions）",
+    "monitoringBanner": "GPU / 显存 / 温度 / CPU / 网络 (节点级 DCGM/cAdvisor, 覆盖 worker + gateway pod) · 每 20-30s 自动刷新。",
+    "sglangBanner": "SGLang 引擎指标 (OTel sidecar 抓 /metrics, 按 resource_name 过滤) · 吞吐 / TTFT / KV cache / 队列并发 · 每 20-30s 自动刷新。"
+  },
+  "logs": {
+    "pod": "Pod 日志",
+    "all": "🔍 任务日志"
+  },
+  "create": {
+    "title": "新建多机推理",
+    "breadcrumbNew": "新建",
+    "loadingConfig": "加载克隆配置中...",
+    "sections": {
+      "basic": "基本信息",
+      "gateway": "Gateway (路由层)",
+      "worker": "Worker (推理引擎)",
+      "launch": "启动配置",
+      "preview": "预览"
+    },
+    "messages": {
+      "cloneFsxReadOnly": "克隆: 源 FSx 你只有只读权限, 已不预选, 请重选",
+      "cloneFsxReadWrite": "克隆: 源 FSx 你只有读写权限, 已不预选, 请重选",
+      "cloneFsxMissing": "克隆: 源 FSx 不在你的授权范围, 已不预选, 请重选 FSx 挂载源",
+      "cloneFetchFailed": "克隆: 拉取源 llm-d 配置失败 — {{error}}",
+      "fillRequiredYaml": "# 请先补全表单必填项, 再预览。",
+      "fillRequiredWarn": "请先填写必填项再预览",
+      "rendering": "# 渲染中...",
+      "renderFailed": "# 后端渲染失败: {{error}}",
+      "created": "llm-d 推理服务创建成功",
+      "createFailed": "创建失败: {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "显示名称",
+      "displayNameTooltip": "同时作为 K8s 任务名的前缀, 所以要符合 DNS 命名: 小写字母开头, 3-20 字符, 只含 a-z 0-9 '-', 结尾须字母或数字。中文说明请写在下面的「描述」里。最终任务名 = 本名 + '-' + 10 位随机, 由后端在创建时生成。多机推理比训练/推理短 9 个字符, 因为 Kueue 会把任务名嵌进一个长度受限的 label。",
+      "displayNameRequired": "请输入显示名称",
+      "displayNameAscii": "不能含中文或全角字符, 中文说明请写在下面的「描述」里",
+      "displayNameLength": "长度 3-20 字符",
+      "displayNamePattern": "小写字母开头, 只含 a-z 0-9 '-', 结尾须字母或数字",
+      "displayNamePlaceholder": "例 deepseek-v3-llmd",
+      "descriptionTooltip": "简短说明 (选填), 便于列表/详情识别。",
+      "descriptionPlaceholder": "例: DeepSeek-V3 多机 TP/EP 推理 (LWS + sgl-gateway)"
+    },
+    "gateway": {
+      "imageLabel": "Gateway 镜像",
+      "imageTooltip": "sgl-model-gateway 镜像 (默认 lmsysorg/sgl-model-gateway:latest)。",
+      "imageRequired": "请填 gateway 镜像",
+      "instanceTypeLabel": "机型",
+      "instanceTypeTooltip": "gateway 纯 CPU 路由, 可独立选机型 (CPU 池最省; 也可跟 worker 同 GPU 机)。后端校验机型 ∈ 配额。",
+      "instanceTypeRequired": "请选择 gateway 机型",
+      "instanceTypePlaceholder": "选机型 (CPU/GPU 均可)",
+      "instanceTypePlaceholderEmpty": "无已分配机型 (联系管理员配额)",
+      "instanceTypeNotFound": "该 workspace 无机型",
+      "templateLabel": "资源模板 (CPU 路由规格)",
+      "templateTooltip": "gateway 是纯 CPU 路由层, 不吃 GPU。CPU/内存由管理员维护的 CPU 池模板管控。",
+      "templateRequired": "请选择资源模板",
+      "templatePlaceholder": "选 CPU 池资源模板 (由管理员维护)",
+      "specLabel": "gateway 规格 · 模板锁定",
+      "specTooltip": "CPU/内存由 CPU 池资源模板统一管控; 切模板自动同步。request=limit。",
+      "noTemplates": "暂无 CPU 池资源模板 · 请联系空间管理员在 管理中心 -「资源模版」创建",
+      "replicasLabel": "Gateway 副本",
+      "replicasTooltip": "sgl-model-gateway 副本数 (无状态路由, 多副本高可用)。",
+      "exposeAlbLabel": "VPC 内访问入口 (ALB)",
+      "exposeAlbTooltip": "开启后为本实例建一个内网 ALB, 拿到可直接调用的 http endpoint。不开则只能集群内访问 (可在详情页用平台代理测试)。建时定, 事后要改只能删了重建。",
+      "on": "开启",
+      "off": "关闭",
+      "extraArgsLabel": "Gateway 额外参数 (高级)",
+      "extraArgsTooltip": "追加/覆盖 sgl-model-gateway router 调优参数 (末尾追加, 同名后者生效)。留空用官方默认。一行一个参数。",
+      "extraArgsExtra": "一行一个参数, 如 --cache-threshold=0.5; 留空用官方默认 (cache_aware/queue/health-check 等)"
+    },
+    "image": {
+      "help": "从「资产管理 → 镜像」中用途含推理 (inference) 的镜像里选择, 或直接键入任意镜像完整 URI (含 tag)。llm-d worker 跑 SGLang 推理引擎, 用标准 lmsysorg/sglang 镜像即可; 私有 ECR 仅支持本平台所在 AWS 账号 + 当前区域。",
+      "label": "SGLang 镜像 (完整名, 含 tag)",
+      "loading": "正在加载镜像列表…",
+      "empty": "无镜像中心镜像时可直接用默认 lmsysorg/sglang 镜像, 或到<registry>「资产管理 → 镜像」</registry>注册自定义镜像。",
+      "hint": "下拉列出「镜像」中用途含推理 (inference) 的镜像; 也可直接键入任意镜像 URI。",
+      "required": "请选择或填写镜像 URI",
+      "format": "格式须为 <registry>/<repo>:<tag>"
+    },
+    "model": {
+      "sourceLabel": "模型源",
+      "fsxOption": "FSx Lustre (推荐)",
+      "fsxLabel": "共享存储挂载 (FSx)",
+      "fsxTooltip": "选被授权的 FSx (单选)。容器挂到 /fsx, 模型绝对路径下方填。无资源请联系管理员授权。",
+      "fsxLoading": "加载授权的 FSx...",
+      "fsxNone": "你在本 workspace 没有被授权的 FSx · 联系管理员",
+      "fsxHint": "FSx 挂到 /fsx, 模型路径写 /fsx/<模型目录>",
+      "fsxRequired": "请选择 FSx 挂载源",
+      "fsxPlaceholder": "选 FSx 挂载源 (单选)",
+      "fsxPlaceholderEmpty": "无授权 FSx (联系管理员)",
+      "fsxNotFound": "该 workspace 无授权 FSx",
+      "modelDiskHint": "模型盘挂到容器 /model; 模型路径在「启动配置」脚本里写 --model-path /model/<模型目录>。",
+      "s3Tooltip": "选 workspace 已授权 (已挂 S3) 的 bucket。后端建专属挂载, prefix 指到模型目录。",
+      "s3Required": "请选择 S3 bucket",
+      "s3Placeholder": "选 bucket (须为 workspace 已授权)",
+      "s3Loading": "加载 S3...",
+      "s3PlaceholderEmpty": "该 workspace 无授权 S3 (联系管理员)",
+      "s3NotFound": "该 workspace 无授权 S3",
+      "s3PrefixLabel": "模型 prefix (目录)",
+      "s3PrefixTooltip": "模型在 bucket 内的 prefix (指到模型目录)。挂载点根即模型, sglang 直读 /model。",
+      "s3PrefixRequired": "请填模型 prefix",
+      "s3PrefixExtra": "例: models/qwen2.5-0.5b (挂载点根即该目录)"
+    },
+    "resource": {
+      "instanceTypeLabel": "机型 (GPU 池)",
+      "instanceTypeTooltip": "worker + gateway 同机型 (GPU 池); gateway 不吃 GPU, 落 GPU 机不占配额。后端校验机型 ∈ 配额。",
+      "instanceTypeRequired": "请选择 GPU 机型",
+      "instanceTypePlaceholder": "选 GPU 池内机型",
+      "instanceTypePlaceholderEmpty": "无已分配 GPU 机型 (联系管理员配额)",
+      "instanceTypeNotFound": "该 workspace 无 GPU 机型",
+      "templateLabel": "资源模板 (单节点规格)",
+      "templateTooltip": "worker 单节点 GPU/CPU/内存/EFA 由管理员维护的模板管控。总量 = 副本 × 节点 × 模板。",
+      "templateRequired": "请选择资源模板",
+      "templatePlaceholder": "选择资源模板 (由管理员维护)",
+      "noTemplates": "暂无资源模板 · 请联系空间管理员在 管理中心 -「资源模版」创建",
+      "replicasLabel": "副本数 (replicas)",
+      "replicasTooltip": "几个独立 leader+worker 组 (LWS replicas), 数据并行。总 GPU = 副本 × 节点 × 单 pod GPU。",
+      "nodesLabel": "每组节点数 (size)",
+      "nodesTooltip": "一个推理实例跨几机做 TP/EP (LWS size)。★ 最小 2: 多机 gang, size=1 会触发 Kueue 除零 (bug#6486)。",
+      "perNodeSpec": "单节点规格 · 模板锁定",
+      "perNodeSpecTooltip": "GPU/CPU/内存/EFA 由资源模板统一管控 (锁单个 worker 节点); 切模板自动同步。",
+      "quotaNeed_other": "本服务需 {{count}} GPU 卡",
+      "quotaBreakdown": " ({{scale}})",
+      "quotaRemaining_other": " · 剩余 {{remaining}} / {{count}} GPU 卡",
+      "quotaOver": " · 超额, 提交后需等待",
+      "quotaCollecting_other": " · 共 {{count}} GPU 卡 · 余量采集中"
+    },
+    "launch": {
+      "heading": "启动脚本 (SGLang)",
+      "help": "整段脚本经 /bin/sh -c 执行 (后端渲 command=[\"/bin/sh\",\"-c\"], args=[脚本])。<br/>--model-path: FSx 挂到你开发机同样路径, 写完整绝对路径 (如 /fsx/team-a-data/models/qwen2.5-0.5b); S3 挂到 /model, 写 /model/<relPath/>。<br/>多机张量/专家并行 --tp-size / --ep-size 直接在此编辑。<br/>LWS 组网占位符 $LWS_LEADER_ADDRESS / $LWS_GROUP_SIZE / $LWS_WORKER_INDEX 已预填, 别删。",
+      "relPath": "prefix 下相对路径",
+      "scriptRequired": "必填启动脚本",
+      "scriptExtra": "默认已填 sglang.launch_server 启动命令, 按需改 --model-path / --tp-size / --ep-size",
+      "script": {
+        "fsxMount": "FSx挂载点",
+        "modelDir": "模型目录",
+        "modelName": "模型名"
+      }
+    },
+    "preview": {
+      "heading": "渲染预览",
+      "refresh": "生成 / 刷新预览 (后端渲染)",
+      "placeholder": "# 点『刷新预览』生成后端渲染的最终 YAML"
+    }
+  }
+}

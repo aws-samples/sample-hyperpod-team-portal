@@ -1,0 +1,29 @@
+{
+  "picker": {
+    "noTypesTitle": "No instance types available in this cluster",
+    "noTypesDesc": "Create an instance group in this cluster first.",
+    "searchPlaceholder": "Search instance types (e.g. g6.12xlarge)",
+    "noMatch": "No matching instance types",
+    "gpuPool": "GPU pool",
+    "gpuPoolDesc": "Instance types with accelerators are assigned to the GPU pool by default.",
+    "cpuPool": "CPU pool",
+    "cpuPoolDesc": "Instance types without accelerators are assigned to the CPU pool.",
+    "nonNegative": "Cannot be negative",
+    "summary": {
+      "selectedTypes": "Selected instance types",
+      "typeUnit_one": "type",
+      "typeUnit_other": "types",
+      "instanceUnit_one": "instance",
+      "instanceUnit_other": "instances",
+      "cardsUnit_one": "{{count}} GPU",
+      "cardsUnit_other": "{{count}} GPUs",
+      "hint": "A count of 1 or more selects the instance type. Instance types with GPUs go to the GPU pool automatically."
+    },
+    "columns": {
+      "instanceType": "Instance type",
+      "remainingTotal": "Free / total",
+      "gpuPerInstance": "GPUs / instance",
+      "allocated": "To allocate"
+    }
+  }
+}

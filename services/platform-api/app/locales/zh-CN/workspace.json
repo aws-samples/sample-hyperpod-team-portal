@@ -1,0 +1,13 @@
+{
+  "workspace.fsx_first_mount_admin_only": "首个 FSx 挂载需平台管理员操作(用于确定本 team 的 gid 基线)",
+  "workspace.fsx_gid_mismatch": "只能挂载本 team(gid={primary_gid})的目录, 该目录 gid={probed_gid}",
+  "workspace.fsx_probe_failed": "无法探测目录 {path} 的 gid (目录不存在或 fsx-admin 不可用)",
+  "workspace.fsx_verify_failed": "PVC 回读校验失败, 缺失: {missing}. 已回滚, 请重试挂载.",
+  "workspace.fsx_not_configured": "FSx {filesystem_id} 未在 PLATFORM_FSX_FILESYSTEMS 配置",
+  "workspace.invalid_path_segment": "非法路径段: {segment}",
+  "workspace.cannot_remove_self": "不能移除自己",
+  "workspace.cannot_demote_self": "不能把自己降级为普通成员",
+  "workspace.namespace_empty": "namespace 不能为空",
+  "workspace.namespace_too_long": "namespace 长度 {length} 超过 K8s 上限 {max}",
+  "workspace.namespace_pattern": "namespace 必须匹配 [a-z0-9]([-a-z0-9]*[a-z0-9])? (小写 / 数字 / 连字符, 首尾非连字符)"
+}

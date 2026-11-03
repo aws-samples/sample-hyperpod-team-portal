@@ -1,0 +1,6 @@
+{
+  "logs.page_token_invalid": "翻页 token 失效 (查询条件已变)，请重新搜索",
+  "logs.regex_syntax_error": "正则语法错误: {error}",
+  "logs.regex_slash_unsupported": "正则暂不支持斜杠 /，请去掉",
+  "logs.regex_group_unsupported": "CloudWatch 正则不支持分组括号 ()，请去掉括号"
+}

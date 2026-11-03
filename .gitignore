@@ -1,0 +1,167 @@
+# ============================================================
+# deliverables/ · 本地打包目录（内容与根目录重复，仅项目负责人本地使用）
+# ============================================================
+deliverables/
+
+# ============================================================
+# 系统 / IDE
+# ============================================================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ============================================================
+# 构建 / 依赖产物
+# ============================================================
+node_modules/
+dist/
+build/
+.vite/
+__pycache__/
+*.pyc
+*.pyo
+tsconfig.tsbuildinfo
+.env
+.env.local
+.env.*.local
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ============================================================
+# 原型产物（非源码，重跑脚本可再生）
+# ============================================================
+frontend/screenshots/
+frontend/*.pptx
+frontend/dist/
+frontend/e2e-report/
+
+# ============================================================
+# Claude Code 本地缓存（worktrees / sessions / 用户级配置，永不入库）
+# ============================================================
+.claude/
+
+# ============================================================
+# 根目录 · 旧版文件（已被 plan/22-27 覆盖）
+# ============================================================
+/effort-final-256pd.md
+/phase-task-breakdown.md
+
+# ============================================================
+# plan/ · 过程产物（v1 中间版本 + 评审过程，已被 plan/25 汇总）
+# ============================================================
+plan/01-implementation-plan.md
+plan/02-research-A-aliyun-pai.md
+plan/03-research-B-hyperpod-native.md
+plan/04-research-C-instantstart.md
+plan/05-design-review-report.md
+plan/06-revised-implementation-plan.md
+plan/07-work-breakdown-analysis.md
+plan/08-claude-code-effort-standard.md
+plan/09-effort-hours.md
+plan/10-effort-compressed.md
+plan/11-effort-mvp-200pd.md
+plan/12-effort-half.md
+plan/13-half-review-architect.md
+plan/13-half-review-pm.md
+plan/13-half-review-reality.md
+plan/13-half-review-summary.md
+plan/14-effort-final-256pd.md
+plan/15-phase-task-breakdown.md
+plan/16-effort-10weeks-parallel.md
+plan/17-plan-10weeks.md
+plan/18-karpathy-analysis.md
+plan/19-effort-v3-273pd.md
+plan/20-account-team-email-v2.md
+plan/21-feasibility-report.md
+plan/24-pm-review-v2-final.md
+plan/24-producer-review-v2-final.md
+plan/24-reality-check-v2-final.md
+
+# plan/assignments/ · 工作包备份
+plan/assignments/*.v2.bak.md
+
+# ============================================================
+# research/ · 全部过程调研（v1 + v2，已汇总到 plan/23 可行性报告）
+# ============================================================
+research/
+
+# ============================================================
+# validation/ · 过程验证（L1-L10 + v2 205 FP，已汇总到 validation/v3）
+# ============================================================
+validation/L1/
+validation/L2/
+validation/L3/
+validation/L4/
+validation/L5/
+validation/L6/
+validation/L7/
+validation/L8/
+validation/L9/
+validation/L10/
+validation/v2/
+validation/v3/poc-scripts/__pycache__/
+
+# ============================================================
+# services/platform-api/ 本地开发垃圾(M1 追加)
+# ============================================================
+services/*/.venv/
+services/*/venv/
+# uv 本地跑命令时自动生成的 lock; 本项目未采用 uv lock 工作流, 不入库
+services/*/uv.lock
+services/*/platform_api.egg-info/
+services/*/**/__pycache__/
+services/*/**/*.pyc
+services/*/.pytest_cache/
+services/*/.ruff_cache/
+services/*/.mypy_cache/
+services/*/.coverage
+
+# HANDOFF 是临时 snapshot(已合并到 plan/ 和 CLAUDE.md)
+HANDOFF.md
+
+# deploy/restart-local.sh 本地进程产物
+deploy/logs/
+
+# ============================================================
+# CDK 基础设施 · 构建产物 / 虚拟环境 (不提交)
+# ============================================================
+infrastructure/cdk.out/
+infrastructure/.venv/
+infrastructure/cdk.context.json
+
+# ============================================================
+# 后端运行配置 · 含账号/Cognito 等环境值 (不提交, 按环境本地维护)
+# ============================================================
+services/platform-api/.env.*
+!services/platform-api/.env.example
+
+# 开发机自定义镜像构建目录 (本地一次性, 不进仓库)
+docker-build/
+
+# 本地一次性运维脚本 (FSx 初始化/探测等)
+scripts-local/
+
+# 推理调用测试产物 (poc 脚本本地输出, 不进仓库)
+validation/v3/poc-scripts/.artifacts/
+.superpowers/
+
+# 内部 AI 助手说明, 不进 git
+CLAUDE.md
+PROJECT-BACKGROUND.md
+requirements.md
+
+docs/superpowers/
+
+# 本地环境配置 / 过程产物 (不进仓库)
+infrastructure/cdk_tz.json
+validation/
+
+# 旧部署参数文件 (含账号/环境值), 只放本地
+deploy.env

@@ -1,0 +1,6 @@
+{
+  "logs.page_token_invalid": "The pagination token is no longer valid (the query has changed). Please search again.",
+  "logs.regex_syntax_error": "Invalid regular expression: {error}",
+  "logs.regex_slash_unsupported": "Slashes (/) are not supported in regular expressions. Remove them.",
+  "logs.regex_group_unsupported": "CloudWatch regex does not support grouping parentheses (). Remove the parentheses."
+}

@@ -1,0 +1,134 @@
+# 生产前置条件(本 YAML 不自检,必须先满足):
+#  1. VPC CNI 已开 prefix delegation(ENABLE_PREFIX_DELEGATION=true);否则抬高 maxPods 会致 pod 卡 ContainerCreating。
+#  2. 节点能拉取下方 image(alpine:3.20 来自公网 Docker Hub):需有公网/镜像仓库出口,否则 ImagePullBackOff。
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: maxpods-patcher
+  namespace: kube-system
+  labels:
+    app: maxpods-patcher
+spec:
+  selector:
+    matchLabels:
+      app: maxpods-patcher
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: maxpods-patcher
+    spec:
+      hostPID: true
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: patcher
+          image: alpine:3.20
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: 5m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          command:
+            - /bin/sh
+            - -c
+            - |
+              # alpine 自带 nsenter (util-linux 已含), 无需装包 → 不 OOM
+              DROPIN=/etc/kubernetes/kubelet/config.json.d/40-nodeadm.conf
+              IPAMD_LOG=/var/log/aws-routed-eni/ipamd.log
+
+              # ── 取数函数(全部走 host,不依赖 k8s API;patcher 用 default SA 无 API 权限)──
+
+              # 本节点机型(IMDSv2)。需进 host network namespace 才能到 169.254.169.254。
+              get_instance_type() {
+                nsenter -t 1 -n -m sh -c '
+                  T=$(curl -s -m3 -X PUT "http://169.254.169.254/latest/api/token" \
+                        -H "X-aws-ec2-metadata-token-ttl-seconds: 120")
+                  curl -s -m3 -H "X-aws-ec2-metadata-token: $T" \
+                        http://169.254.169.254/latest/meta-data/instance-type
+                ' 2>/dev/null
+              }
+
+              # maxPods 目标值 = EKS kubelet 稳定性官方建议上限:<=30 vCPU -> 110,>30 vCPU -> 250。
+              # 开 PD 后单 ENI 供给(如 464)远超此上限,故用 vCPU 上限做目标:既守 EKS 建议、
+              # 又被 IP 供给覆盖,且跨机型自动正确。与 LCC on_create.sh 取值逻辑保持一致。
+              # nproc 在本容器内返回宿主真实 vCPU(已实测,cpu limit 不影响),无需查表/无需 IMDS。
+              get_target_maxpods() {
+                _vcpu=$(nproc 2>/dev/null || echo 0)
+                if [ "$_vcpu" -gt 30 ]; then echo 250; else echo 110; fi
+              }
+
+              # dropin 当前 maxPods(kubelet 重启后即为 node capacity.pods 的来源)。
+              get_dropin_maxpods() {
+                nsenter -t 1 -m sh -c "grep -o '\"maxPods\"[: ]*[0-9]*' '$DROPIN' 2>/dev/null | grep -o '[0-9]*'"
+              }
+
+              # ipamd 当前“生效”的 maxPods。introspection/metrics 不暴露此值,只能从日志取:
+              # 既匹配 boot 行 'IP pool manager - max pods: N',也匹配运行时刷新行
+              # 'Updated maxPods from X to N';取最后一次。日志轮转后用 *.log.gz 兜底。
+              # 只匹配两条精确短语,再取末尾数字即生效值;绝不匹配 ipamd 日志里大量无关的 'to N'
+              # (如 'to 10'/'to 30'),否则会误判并反复重启 ipamd。
+              get_ipamd_maxpods() {
+                _v=$(nsenter -t 1 -m sh -c "grep -hoE 'IP pool manager - max pods: [0-9]+|Updated maxPods from [0-9]+ to [0-9]+' '$IPAMD_LOG' 2>/dev/null | tail -1 | grep -oE '[0-9]+\$'")
+                if [ -z "$_v" ]; then
+                  _v=$(nsenter -t 1 -m sh -c "{ for f in \$(ls -1 ${IPAMD_LOG%.log}-*.log.gz 2>/dev/null | sort); do zcat \"\$f\"; done; cat '$IPAMD_LOG'; } 2>/dev/null | grep -hoE 'IP pool manager - max pods: [0-9]+|Updated maxPods from [0-9]+ to [0-9]+' | tail -1 | grep -oE '[0-9]+\$'")
+                fi
+                echo "$_v"
+              }
+
+              # 重启本节点 ipamd:host 级 kill 容器入口进程 /app/aws-vpc-cni,kubelet 自动按
+              # restartPolicy 拉起。不经 k8s API → 无需任何 RBAC。重启后 ipamd 重读 node capacity。
+              restart_ipamd() {
+                _pid=$(nsenter -t 1 -p -m pgrep -x aws-vpc-cni 2>/dev/null | head -1)
+                if [ -n "$_pid" ]; then
+                  echo "[maxpods-patcher] restarting ipamd (aws-vpc-cni pid=$_pid)"
+                  nsenter -t 1 -p -m kill "$_pid" 2>/dev/null
+                else
+                  echo "[maxpods-patcher] WARN: aws-vpc-cni not found; skip ipamd restart"
+                fi
+              }
+
+              is_num() { case "$1" in ""|*[!0-9]*) return 1;; *) return 0;; esac; }
+
+              # ── 主循环:两个独立、幂等的收敛检查;互不依赖执行顺序,任一被 restart-kubelet
+              #    打断,下一轮(300s 后)自愈。也天然兜住新节点 boot 时 ipamd 抢跑读到旧值的竞态。──
+              while true; do
+                if nsenter -t 1 -m test -f "$DROPIN" 2>/dev/null; then
+                  ITYPE=$(get_instance_type)
+                  TARGET=$(get_target_maxpods)
+                  DROP=$(get_dropin_maxpods)
+
+                  if ! is_num "$TARGET"; then
+                    echo "[maxpods-patcher] WARN: cannot resolve target (itype='$ITYPE' val='$TARGET'); skip"
+                  elif ! is_num "$DROP"; then
+                    # dropin 文件存在但 maxPods 字段尚未写入(nodeadm 创建文件与写值之间的 boot 窗口)。
+                    # 此时 sed 的正则匹配不到、不会新增字段,若仍判不等会每轮空跑重启 kubelet → 跳过本轮等下一轮。
+                    echo "[maxpods-patcher] dropin has no maxPods yet (val='$DROP'); skip this cycle"
+                  else
+                    # 检查 A:dropin ≠ 目标值 → 修 dropin + 重启 kubelet。
+                    # 注意:restart kubelet 可能中断本进程,故 A 之后不串接其它步骤;ipamd 收敛交给检查 B。
+                    if [ "$DROP" != "$TARGET" ]; then
+                      echo "[maxpods-patcher] itype=$ITYPE dropin=$DROP target=$TARGET -> patch + restart kubelet"
+                      nsenter -t 1 -m sh -c "sed -i 's/\"maxPods\"[: ]*[0-9]*/\"maxPods\": $TARGET/' '$DROPIN' && systemctl restart kubelet"
+                      echo "[maxpods-patcher] dropin patched to $TARGET, kubelet restarted"
+                    else
+                      # 检查 B:仅当 dropin 已对齐时才校验 ipamd 是否收敛(避免拿过渡值误判)。
+                      # ipamd 生效值 ≠ dropin(= node capacity)→ 重启 ipamd 使其重读。
+                      IPAMD=$(get_ipamd_maxpods)
+                      if is_num "$IPAMD" && [ "$IPAMD" != "$DROP" ]; then
+                        echo "[maxpods-patcher] ipamd=$IPAMD != dropin=$DROP -> converge ipamd"
+                        restart_ipamd
+                      fi
+                    fi
+                  fi
+                fi
+                sleep 300
+              done

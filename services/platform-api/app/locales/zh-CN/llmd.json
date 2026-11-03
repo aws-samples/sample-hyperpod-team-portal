@@ -1,0 +1,11 @@
+{
+  "llmd.instance_type_not_allowed": "instance_type '{instance_type}' 不在该 workspace 已分配的配额机型内 (可选: {allowed})。",
+  "llmd.allowed_none": "无",
+  "llmd.fsx_not_authorized": "FSx '{pvc_name}' 不在你被授权的挂载列表中 (只能选你在该 workspace 被授权的 FSx)",
+  "llmd.s3_bucket_not_mounted": "S3 bucket '{bucket}' 不在该 workspace 已挂载列表中。",
+  "llmd.forbidden_operate": "无权操作该 llm-d 推理服务 (仅创建者本人 / 工作空间管理员 / 平台超管)",
+  "llmd.model_source_fsx_required": "model_source_type=fsx 必填 model_pvc",
+  "llmd.model_source_s3_required": "model_source_type=s3 必填 s3_bucket + s3_prefix",
+  "llmd.nodes_per_replica_min": "nodes_per_replica must be >= {min} (size=1 worker count=0 + TAS → Kueue v0.12.0 除零崩集群 bug#6486)",
+  "llmd.display_name_length": "长度须 3-20 字符, 实际 {actual}"
+}

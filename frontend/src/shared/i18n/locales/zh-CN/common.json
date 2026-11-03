@@ -1,0 +1,116 @@
+{
+  "language": {
+    "zh-CN": "中文",
+    "en-US": "English"
+  },
+  "actions": {
+    "copy": "复制",
+    "close": "关闭",
+    "expand": "展开",
+    "collapse": "收起",
+    "refresh": "刷新",
+    "retry": "重试",
+    "create": "创建",
+    "delete": "删除",
+    "start": "启动",
+    "stop": "停止",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "edit": "编辑",
+    "clone": "克隆",
+    "search": "搜索",
+    "reset": "重置",
+    "submit": "提交",
+    "view": "查看",
+    "download": "下载",
+    "back": "返回"
+  },
+  "fields": {
+    "createdAt": "创建时间",
+    "name": "名称",
+    "status": "状态",
+    "description": "描述",
+    "actions": "操作",
+    "startedAt": "开始时间",
+    "endedAt": "结束时间",
+    "duration": "运行时长"
+  },
+  "messages": {
+    "copied": "已复制",
+    "copyFailed": "复制失败",
+    "loading": "加载中…",
+    "none": "(无)",
+    "loadFailed": "加载失败",
+    "noData": "暂无数据"
+  },
+  "statusDetail": {
+    "title": "状态详情",
+    "loadFailed": "加载状态详情失败: {{error}}"
+  },
+  "kueueDetail": {
+    "title": "Kueue 调度详情",
+    "emptyTitle": "无 Kueue 详情",
+    "emptyDesc": "任务可能已结束 (Workload 已回收) 或未进入 Kueue 调度。"
+  },
+  "kueueStatus": {
+    "queuedTip": "资源排队等待中，有空闲资源后自动启动",
+    "detailLink": "Kueue 详情"
+  },
+  "crPhase": {
+    "detailLink": "CR 详情"
+  },
+  "conditionsTimeline": {
+    "empty": "暂无 condition"
+  },
+  "metricsChart": {
+    "loading": "加载中...",
+    "loadFailed": "加载失败: {{error}}",
+    "noData": "暂无数据（Pod 刚启动或未运行时属正常）"
+  },
+  "labelsField": {
+    "keyRequired": "key 必填",
+    "reservedPrefix": "不能用平台保留前缀",
+    "nameRule": "字母数字起止, 中间 -_. , ≤63 字符",
+    "label": "自定义 Label",
+    "tooltip": "用于实验/项目归类 (如 project=nlp-q3)。裸 key, 仅字母数字与 -_. , 不支持中文; 最多 10 个。",
+    "add": "加 Label",
+    "max": "最多 10 个"
+  },
+  "apiToken": {
+    "expiryRequired": "请选择过期日期, 或勾选永不过期",
+    "copyNow": "请立即复制保存, 关闭后无法再次查看",
+    "curlUsage": "curl 用法",
+    "copyAgain": "再次复制",
+    "expiresAt": "过期时间",
+    "neverExpire": "永不过期",
+    "onePerPerson": "每人一把。要换新 token 请先删除当前的。",
+    "deleteConfirm": "删除后用此 token 的脚本会立即失效, 确定?",
+    "delete": "删除 Token",
+    "selectExpiry": "选择过期日期",
+    "generate": "生成 Token"
+  },
+  "storagePicker": {
+    "primary": "主",
+    "readWrite": "读写",
+    "readOnly": "只读",
+    "empty": "工作空间还没挂任何 FSx/S3, 跳过即可 · 如需挂载请联系空间管理员在「工作空间 - FSx/S3挂载」中添加",
+    "reviewTitle_other": "{{title}} · {{count}} 项",
+    "noneSelected": "未选择 {{kind}}",
+    "fsxTitle": "FSx 挂载（可多选）",
+    "fsxHelp": "标「主」的是本工作空间自己团队的 FSx 盘 (归属本团队 primary_gid); 其余为被授权访问的其他团队/共享盘。如果没有显示相关资源, 请联系管理员授权。",
+    "fsxPlaceholder": "按路径搜索选择 FSx, 可多选",
+    "s3Title": "S3 挂载（可多选）",
+    "s3Placeholder": "选择 S3 挂载, 可多选",
+    "selectedTotal": "已选挂载 ({{total}})"
+  },
+  "resourceTemplate": {
+    "specText_other": "{{gpu}} GPU · {{count}} 核 · {{mem}} GiB · {{efa}} EFA"
+  },
+  "scriptEditor": {
+    "typed_other": "已输入: {{count}} 个字符",
+    "typedTitle_other": "{{lang}} · 已输入 {{count}} 个字符",
+    "fullscreen": "全屏",
+    "exitFullscreen": "退出全屏"
+  }
+}

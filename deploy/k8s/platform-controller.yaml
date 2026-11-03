@@ -1,0 +1,88 @@
+# platform-controller: Go controller-runtime 跨集群 projection controller.
+#   watch 业务集群 3 种业务 CR + Kueue Workload → 派生六态 → 单向投影写 DDB。
+#   取代原 Python platform-worker (informer 手写 watch/重连/dedup → 框架内置)。
+#
+# 跨集群模型 (与旧 worker 一致):
+#   - 复用 platform-api SA (Pod Identity + 业务集群 access entry 已就绪, 免建独立身份)。
+#   - entrypoint 自己 aws eks update-kubeconfig 生成业务集群 kubeconfig (不挂 secret)。
+#   - 平台集群走 in-cluster (SA token); leader election lease 放平台集群 platform-system。
+#   - 无 service/ingress (后台 controller, 只 health 8081 / metrics 8080 探活)。
+#
+# ECR repo 复用 platform-worker (仓库只是名字, 塞 Go 镜像; CDK 不动)。
+#
+# leader election 需要在 platform-system 读写 leases → 复用的 platform-api SA
+# 需有该权限。下方附 Role/RoleBinding 授 platform-api SA 操作 leases (幂等 apply)。
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: platform-controller-leaderelection
+  namespace: platform-system
+rules:
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: platform-controller-leaderelection
+  namespace: platform-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: platform-controller-leaderelection
+subjects:
+  - kind: ServiceAccount
+    name: platform-api          # 复用 api SA (与 Deployment serviceAccountName 一致)
+    namespace: platform-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-controller
+  namespace: platform-system
+spec:
+  replicas: 1                      # leader election 允许多副本热备 (只 1 个干活); 单实例即可
+  selector:
+    matchLabels:
+      app: platform-controller
+  template:
+    metadata:
+      labels:
+        app: platform-controller
+    spec:
+      serviceAccountName: platform-api   # 复用 api role (Pod Identity + 业务集群 access entry)
+      nodeSelector:
+        role: platform                   # 钉平台集群 CPU node group
+      containers:
+      - name: controller
+        image: <ACCOUNT>.dkr.ecr.<REGION>.amazonaws.com/<PROJECT>-platform-worker:<TAG>
+        ports:
+        - { containerPort: 8080, name: metrics }
+        - { containerPort: 8081, name: health }
+        resources:
+          # Go controller 实测 RSS ~35Mi; 远低于 Python worker (512Mi-1Gi)。
+          requests: { cpu: "50m", memory: "64Mi" }
+          limits: { cpu: "500m", memory: "256Mi" }
+        env:
+        - { name: AWS_REGION, value: "<REGION>" }
+        # controller 用 DDB 表全名 (非前缀); 投影写 ResourceIndex 表。
+        - { name: DDB_TABLE, value: "<DDB_PREFIX>-ResourceIndex" }
+        # 业务集群名: entrypoint 用它 update-kubeconfig 生成业务集群 kubeconfig。
+        - { name: BUSINESS_EKS_CLUSTER_NAME, value: "<EKS_CLUSTER>" }
+        # PLATFORM_KUBECONFIG 不设 → in-cluster (平台集群 SA); lease 放平台集群。
+        - { name: ENABLE_LEADER_ELECTION, value: "true" }
+        - { name: LEADER_ELECTION_NAMESPACE, value: "platform-system" }
+        # 首次上线安全阀: 先 true 只 log 不写 DDB, 验证派生无误后改 false 重部署。
+        - { name: DRY_RUN, value: "false" }
+        readinessProbe:
+          httpGet: { path: /readyz, port: 8081 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet: { path: /healthz, port: 8081 }
+          initialDelaySeconds: 15
+          periodSeconds: 30

@@ -1,0 +1,17 @@
+{
+  "title": "分享",
+  "okText": "分享",
+  "pickUnshared": "请选择尚未分享的成员",
+  "shared": "已分享",
+  "shareFailed": "分享失败",
+  "unshared": "已取消分享",
+  "unshareFailed": "取消失败",
+  "pickMembers": "选择工作空间成员",
+  "loadingMembers": "加载成员中…",
+  "placeholder": "选择要分享给的成员",
+  "loading": "加载中…",
+  "noMembers": "暂无可分享的成员",
+  "sharedWith": "已分享给",
+  "noShares": "尚未分享给任何人",
+  "remove": "移除"
+}

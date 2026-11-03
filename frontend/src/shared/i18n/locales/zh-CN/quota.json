@@ -1,0 +1,26 @@
+{
+  "picker": {
+    "noTypesTitle": "集群暂无可用机型",
+    "noTypesDesc": "请先在该集群创建 InstanceGroup",
+    "searchPlaceholder": "搜索机型 (e.g. g6.12xlarge)",
+    "noMatch": "没有匹配的机型",
+    "gpuPool": "GPU 池",
+    "gpuPoolDesc": "含 GPU 卡的机型默认分配到 GPU 池",
+    "cpuPool": "CPU 池",
+    "cpuPoolDesc": "不含加速卡的机型分配到 CPU 池",
+    "nonNegative": "不能为负",
+    "summary": {
+      "selectedTypes": "已选机型",
+      "typeUnit_other": "种",
+      "instanceUnit_other": "台",
+      "cardsUnit_other": "{{count}} 卡",
+      "hint": "数量设为 ≥ 1 即视为选中 · 含 GPU 卡的机型自动进 GPU 池"
+    },
+    "columns": {
+      "instanceType": "机型",
+      "remainingTotal": "剩余 / 总台数",
+      "gpuPerInstance": "每台 GPU",
+      "allocated": "分配数量"
+    }
+  }
+}

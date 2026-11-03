@@ -1,0 +1,9 @@
+{
+  "rayjob.instance_type_not_allowed": "Instance type '{instance_type}' is not among the instance types allocated to this Workspace's quota (available: {allowed}).",
+  "rayjob.allowed_none": "none",
+  "rayjob.fsx_not_authorized": "FSx '{pvc_name}' is not in your authorized mount list (you can only select FSx mounts you are authorized to use in this Workspace).",
+  "rayjob.s3_mount_not_allowed": "S3 mount_id '{mount_id}' is not in this Workspace's mounted S3 list (only S3 datasets mounted or authorized by a Workspace admin can be selected).",
+  "rayjob.secret_keys_missing": "Your secret does not contain these keys: {keys} (add them on the secret management page first).",
+  "rayjob.forbidden_operate": "Not allowed to operate this Ray job (creator, Workspace admin or platform admin only).",
+  "rayjob.display_name_length": "Length must be 3-36 characters, got {actual}"
+}

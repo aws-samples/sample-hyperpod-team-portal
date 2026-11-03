@@ -1,0 +1,122 @@
+{
+  "use": {
+    "dev": "开发机",
+    "training": "训练",
+    "inference": "推理"
+  },
+  "hub": {
+    "title": "镜像",
+    "build": "构建镜像",
+    "register": "注册镜像",
+    "description": "管理 <b>当前工作空间</b> 可用的容器镜像。注册后, 创建开发机 / 训练 / 推理时可 直接从本空间镜像里选用, 无需手填 URI。",
+    "tabs": {
+      "images": "可用镜像",
+      "builds": "构建历史"
+    },
+    "filterAll": "全部",
+    "searchPlaceholder": "搜索镜像名 / tag",
+    "loadFailed": "加载镜像失败",
+    "unregistered": "已取消注册",
+    "unregisterFailed": "取消注册失败",
+    "columns": {
+      "image": "镜像",
+      "uses": "用途",
+      "source": "来源",
+      "creator": "注册人"
+    },
+    "source": {
+      "public": "公共 ECR",
+      "private": "ECR · 私有"
+    },
+    "unregister": "取消注册",
+    "unregisterConfirm": "取消注册 [{{name}}]?",
+    "unregisterDesc": "仅移除本工作空间的引用, 不删除 ECR 里的镜像。"
+  },
+  "buildHistory": {
+    "status": {
+      "building": "构建中",
+      "success": "成功",
+      "failed": "失败"
+    },
+    "columns": {
+      "image": "镜像",
+      "uses": "用途",
+      "spec": "规格",
+      "submitter": "提交人",
+      "logs": "日志"
+    },
+    "noLogs": "(暂无日志; 构建刚开始或日志未生成)",
+    "logsFailed": "(日志拉取失败)",
+    "loadMoreFailed": "加载更多日志失败",
+    "dockerfileCopied": "已复制 Dockerfile",
+    "dockerfileEmpty": "(无)",
+    "logTitle": "构建日志 · {{tag}}",
+    "logTitleEmpty": "构建日志",
+    "fetching": "拉取日志...",
+    "loadMore": "加载更多",
+    "dataSource": "数据源: CloudWatch Logs",
+    "openConsole": "在 CloudWatch 控制台打开"
+  },
+  "register": {
+    "title": "注册镜像",
+    "okText": "注册",
+    "modeEcr": "从本账号 ECR 选择",
+    "modeManual": "手动输入 URI (官方/其他镜像)",
+    "atLeastOneUse": "请至少选择一个适用用途",
+    "uriRequired": "请填镜像完整 URI",
+    "registered": "已注册镜像",
+    "pickRepoAndTag": "请选择仓库和至少一个 tag",
+    "registeredCount_other": "已注册 {{count}} 个镜像",
+    "failed": "注册失败",
+    "fullUri": "镜像完整 URI (含 tag)",
+    "uriPlaceholder": "如 763104351884.dkr.ecr.us-west-2.amazonaws.com/pytorch-training:2.9.0-gpu-...-ec2",
+    "uriHelp": "可注册 AWS 官方镜像 (DLC / SageMaker)、public.ecr.aws 公共镜像或其他账号 私有镜像。注意: 创建任务时业务集群节点需有权限拉取该镜像。",
+    "step1": "1. 选择仓库",
+    "repoPlaceholder": "选择 ECR 仓库",
+    "noRepos": "无仓库",
+    "step2": "2. 选择 tag",
+    "multiHint": "(可多选批量注册)",
+    "tagFilterPlaceholder": "🔍 按 tag 过滤, 如 pytorch",
+    "pickRepoFirst": "先选仓库",
+    "noMatchingTag": "无匹配 tag",
+    "uses": "适用用途",
+    "usesHint": "(可多选)",
+    "displayName": "显示名",
+    "displayNameHint": "(选填)",
+    "displayNameHintBatch": "(选填; 批量注册时忽略, 用各自 tag 名)",
+    "displayNamePlaceholder": "如 PyTorch 2.5 GPU 训练镜像",
+    "willRegister_other": "将注册 {{count}} 个镜像 ·"
+  },
+  "build": {
+    "compute": {
+      "small": "小 (2 vCPU / 3GB / 64GB 盘) · < 8GB 镜像",
+      "medium": "中 (4 vCPU / 7GB / 128GB 盘) · < 15GB 镜像",
+      "large": "大 (8 vCPU / 15GB / 128GB 盘) · < 20GB 镜像 · 默认",
+      "xlarge2": "超大 (72 vCPU / 145GB / 824GB 盘) · 20-40GB 大镜像"
+    },
+    "nameErr": "小写字母/数字开头，中间用单个 . _ - / 分隔（不可大写/连续分隔符/首尾分隔符）",
+    "tagErr": "仅允许字母/数字/. _ -（可含大写）",
+    "missingFields": "请填 Dockerfile、镜像名 和 tag",
+    "nameInvalid": "镜像名格式不符合规范",
+    "tagInvalid": "tag 格式不符合规范",
+    "pickUse": "请至少选一个用途",
+    "submitted": "构建已提交, 可在构建历史查看进度",
+    "submitFailed": "提交失败",
+    "title": "构建镜像 (Dockerfile → CodeBuild)",
+    "okText": "开始构建",
+    "imageName": "镜像名",
+    "imageNameHint": "直接作为 ECR 仓库名，建议用 namespace/repo-name 便于区分",
+    "imageNamePlaceholder": "如 namespace/repo-name",
+    "imageNameRule": "小写字母/数字开头，段用 . _ - 分隔，/ 分路径",
+    "tagPlaceholder": "如 v1",
+    "tagRule": "字母/数字/. _ -",
+    "dockerfileHint": "开发机镜像建议 FROM sagemaker-distribution, 否则可能无法启动; 训练/推理自由",
+    "uses": "适用用途",
+    "spec": "构建规格",
+    "specHint": "对应 AWS CodeBuild 机型 (BUILD_GENERAL1_*)",
+    "specHelp": "构建大镜像的瓶颈是磁盘 (docker build 峰值约为最终镜像的 2-3 倍), 并非内存; 打 20GB 以上大镜像请选「超大」(824GB 磁盘)。按构建时长计费, 大规格更贵, 按需选择。",
+    "timeout": "构建超时",
+    "timeoutHint": "超时未完成则构建失败, 默认 120 分钟 (2 小时), 最长 480 分钟 (8 小时)",
+    "minutes": "分钟"
+  }
+}

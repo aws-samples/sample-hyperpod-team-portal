@@ -1,0 +1,30 @@
+{
+  "phase": {
+    "pending": "Pending",
+    "running": "Running",
+    "succeeded": "Succeeded",
+    "failed": "Failed",
+    "creating": "Creating",
+    "stopped": "Stopped",
+    "degraded": "Degraded",
+    "deploying": "Deploying",
+    "pendingDeploy": "Pending deployment"
+  },
+  "tip": {
+    "title": "Status guide (task status / queue status)",
+    "taskStatus": "Task status",
+    "phaseSource": "Source: {{source}} (independent per task type, written by the corresponding operator)",
+    "mechanism": "⚙️ <b>How task status is derived</b>: the backend informer watches the CR's status.conditions, takes every condition with status==True, picks the one with the latest lastTransitionTime (ties are broken by a fixed priority: terminal > running > creating > suspended) and writes it to DDB. You may occasionally see a combined state such as <code>Created/Completed</code>, which means several conditions were True at the same moment and their type names are joined with /. For coloring, the highest-priority one wins.",
+    "kueueTitle": "Queue status (Kueue's six states)",
+    "kueueSource": "Source: Kueue Workload.status.conditions; shared by all three task types (dev instance / training job / inference service)",
+    "kueue": {
+      "queued": "Waiting for quota (initial state). The Workload has been submitted to the Kueue LocalQueue, but this Workspace's quota is full or its turn has not come yet, so it has not received resources. Click \"Task Overview\" to see the actual queue order.",
+      "quotaReserved": "Kueue has reserved quota for this task (about to be admitted). A transitional state that usually passes in a flash: quota reserved → scheduler takes over → Pods launched.",
+      "admitted": "Admitted by Kueue (the scheduler has taken over). Pods are being created, pulling images or waiting for nodes, but not all are ready yet.",
+      "podsReady": "All Pods are ready (Ready=True). The task is now truly running: a training job starts computing and an inference service can accept external traffic.",
+      "evicted": "Evicted (transitional state, still counted as active). Common causes: <b>① Preempted by a higher-priority task</b> (preemption is enabled for this Workspace); <b>② Actively evicted by Kueue</b> (quota change / node reclaim). After eviction the Workload is automatically re-queued (back to Queued).",
+      "finished": "Terminal state. The task has ended (succeeded / failed / stopped), and its Workload releases the quota and no longer holds resources. This is the only terminal state."
+    },
+    "note": "💡 <b>Task status ≠ queue status</b>: the former is written by each operator and reflects the task's own lifecycle (creating / running / succeeded); the latter is written by Kueue and reflects the task's position in the scheduling queue (queued / admitted / evicted). Both exist at the same time. When troubleshooting, check the queue status first (can it get resources?), then the task status (did it start running once it got resources?)."
+  }
+}

@@ -1,0 +1,63 @@
+# ⚠️⚠️ DEPRECATED (2026-08) — 请勿再 apply 此文件 ⚠️⚠️
+#
+# 优先级档权威源已迁移到 SageMaker HyperPod task governance (cluster policy),
+# 不再由平台自建 Kueue WorkloadPriorityClass。
+#   - 新安装: HyperPod 集群自带官方档; 需在 AWS Console 的 cluster policy 手动补建
+#             `common` 档 (生成 common-priority)。cluster-init 不再 apply 本文件。
+#   - 更新安装: 先删除本文件曾建的所有自建 WPC (见下方 metadata.name 清单),
+#             再在平台 UI 建 `common` 档。⚠️ 必须先删自建同名 WPC 否则 policy
+#             reconcile 冲突 (already exists and is not managed by SageMaker)。
+#
+# 下方定义仅作"需清理的自建档清单"参照, 请勿执行 apply。
+# ============================================================================
+#
+# Kueue WorkloadPriorityClass · 集群级 (non-namespaced).
+#
+# 平台 5 档优先级 (产品决策 2026-06-11). CR 通过 label
+# `kueue.x-k8s.io/priority-class: <name>` 引用. value 越大越优先
+# (抢占时优先 admit / 优先保住数值高的; 抢占需 ClusterQueue
+#  withinClusterQueue=LowerPriority).
+#
+# 三类任务 (dev/train/inference) 默认全用 common-priority(80) 同档;
+# 差异化靠"优先级管理"页手调单任务 (patch Workload) 或建任务时选别的档.
+#
+# 不建这些资源时, label 引用不存在的 class → Kueue 回退 priority 0
+# (不报错, workload 照常 admit, 只是抢占时不分高低).
+#
+# apply: kubectl apply -f deploy/k8s/workload-priority-classes.yaml
+# 注: 旧 3 档 (training/inference/devinstance-default) 已弃用, 替换为下列 5 档.
+#     旧档若已建且无任务引用, 可手动删: kubectl delete workloadpriorityclass <name>
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: WorkloadPriorityClass
+metadata:
+  name: common-priority
+value: 80
+description: "Common priority (默认档, dev/train/inference 三类任务默认用)"
+---
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: WorkloadPriorityClass
+metadata:
+  name: high-priority
+value: 95
+description: "High priority"
+---
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: WorkloadPriorityClass
+metadata:
+  name: extremely-high-priority
+value: 99
+description: "Extremely high priority"
+---
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: WorkloadPriorityClass
+metadata:
+  name: low-priority
+value: 75
+description: "Low priority"
+---
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: WorkloadPriorityClass
+metadata:
+  name: extremely-low-priority
+value: 15
+description: "Extremely low priority"

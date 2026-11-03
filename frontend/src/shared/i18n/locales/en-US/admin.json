@@ -1,0 +1,148 @@
+{
+  "shared": {
+    "readOnly": "Read-only",
+    "required": "Required",
+    "deleted": "Deleted",
+    "loadFailed": "Failed to load: {{error}}",
+    "saveFailed": "Failed to save: {{error}}",
+    "deleteFailed": "Failed to delete: {{error}}",
+    "readOnlyMode": "Read-only mode"
+  },
+  "preemption": {
+    "title": "Workspace Preemption Switch",
+    "description": "This page is visible only to platform admins. It controls whether, within each Workspace, tasks in a higher priority class can evict tasks in a lower priority class when the quota is used up.",
+    "loadWsFailed": "Failed to load Workspaces: {{error}}",
+    "enabledMsg": "Preemption enabled for {{name}}",
+    "disabledMsg": "Preemption disabled for {{name}}",
+    "switchFailed": "Failed to switch: {{error}}",
+    "columns": {
+      "status": "Preemption status",
+      "toggle": "Switch"
+    },
+    "loading": "Loading…",
+    "statusOn": "Enabled (LowerPriority)",
+    "statusOff": "Disabled (Never)",
+    "confirmOffTitle": "Turn off preemption?",
+    "confirmOnTitle": "Turn on preemption?",
+    "confirmOffDesc": "After it is turned off, tasks in this Workspace only queue and never preempt.",
+    "confirmOnDesc": "⚠️ After it is turned on, higher-priority tasks may evict running lower-priority tasks (a preempted training job rolls back to its checkpoint).",
+    "rulesTitle": "Preemption rules (platform admin view)",
+    "when": "<b>When does preemption happen?</b> All three conditions below must be met at the same time; if any one is not met, it will not happen:",
+    "cond1": "The preemption switch of this Workspace is on.",
+    "cond2": "The compute quota of this Workspace is used up.",
+    "cond3": "A task in a higher priority class is queued in the same Workspace.",
+    "boundaryTitle": "<b>Preemption boundaries:</b>",
+    "boundary1": "Preemption only takes effect inside a single Workspace; Workspaces do not affect each other.",
+    "boundary2": "Preemption evicts the task's containers, but the task itself is kept. Its queue status becomes \"Evicted\" and it then re-enters the queue.",
+    "boundary3": "A preempted training job is re-queued automatically, and it can resume only if checkpoint fault tolerance is configured on the training side.",
+    "boundary4": "When an inference service or dev instance is preempted, the online service or user session is interrupted.",
+    "advice": "<b>Recommendation:</b> Before turning on preemption, confirm that the training jobs in this Workspace have checkpoint fault tolerance.",
+    "readOnlyDesc": "Only platform admins can change the preemption switch of a Workspace."
+  },
+  "priorityLabels": {
+    "title": "Priority Class",
+    "newButton": "New priority class",
+    "description": "This page is visible only to platform admins. Priority classes are a dictionary shared by all Workspaces on the platform; every task picks its class from here.",
+    "updated": "Priority class updated",
+    "created": "Priority class created",
+    "columns": {
+      "name": "Class name (K8s)",
+      "weight": "Weight"
+    },
+    "deleteConfirm": "Delete priority class [{{name}}]?",
+    "modalEdit": "Edit priority class",
+    "modalNew": "New priority class",
+    "form": {
+      "nameLabel": "Class name (bare name; generates <name>-priority)",
+      "namePattern": "Lowercase letters, digits and hyphens",
+      "nameMax": "At most 40 characters",
+      "weightLabel": "Weight (0-100, larger = higher priority)"
+    },
+    "tipTitle": "What the class weight means",
+    "tip1": "The weight is a <b>relative value (0-100)</b> and only determines the relative order.",
+    "tip2": "A larger weight means higher priority, which shows up in two ways: (1) when tasks queue, tasks with a larger weight go first; (2) in Workspaces where the preemption switch is on, tasks in a higher-weight class can evict running tasks in a lower-weight class.",
+    "tip3": "Changing a class value <b>only affects tasks submitted afterwards</b>; tasks that are already running or queued keep the value snapshot from when they were submitted and are not recalculated.",
+    "tip4": "This page only manages the class dictionary itself. <b>Changing the class of a specific task</b> is not done here: a <b>Workspace admin or platform admin</b> does it on the <b>\"Task Overview\"</b> page of that Workspace by clicking the pencil icon in the task row's priority class column (queued tasks: the queue order is adjusted immediately; running tasks: the task restarts).",
+    "readOnlyDesc": "Only platform admins can add, edit, or delete priority classes."
+  },
+  "resourceTemplates": {
+    "title": "Resource Template",
+    "newButton": "New resource template",
+    "description": "This page manages the resource templates of the <b>current Workspace</b> (they are maintained per Workspace, so you see different templates when you switch Workspaces).",
+    "updated": "Template updated",
+    "created": "Template created",
+    "columns": {
+      "name": "Template name",
+      "resource": "Resources"
+    },
+    "deleteConfirm": "Delete template [{{name}}]?",
+    "tipTitle": "How resource templates work",
+    "tip1": "Dev instances, training jobs and inference services <b>share one set of templates</b>. When creating a task, users can only pick a template and cannot enter CPU / GPU / memory by hand.",
+    "tip2": "All Workspace members can open and view this page; only <b>Workspace admins</b> or <b>platform admins</b> can create, edit, or delete templates. Regular members get read-only access.",
+    "selectWsHint": "Resource templates are maintained per Workspace · pick a Workspace from the \"Workspace\" menu on the left first",
+    "modalEdit": "Edit template",
+    "modalNew": "New template",
+    "form": {
+      "name": "Template name",
+      "namePlaceholder": "e.g. medium",
+      "descriptionPlaceholder": "Optional",
+      "gpu": "GPUs",
+      "efa": "EFA interfaces",
+      "efaTip": "Used for the high-speed network (RDMA) of multi-node GPU training. Enter 0 for single-node jobs, dev instances and inference. The instance type must support EFA.",
+      "cpu": "CPU (cores)",
+      "cpuUnit": "cores",
+      "memory": "Memory (GiB)"
+    }
+  },
+  "fsxQuota": {
+    "title": "FSx Quota",
+    "titleTip": "Storage quotas on the shared FSx, set per top-level directory (team). Creating a directory automatically assigns a gid + setgid permission + project quota; the usage of each directory vs. its quota is shown in real time below.",
+    "requestFailed": "Request failed (HTTP {{status}})",
+    "status": {
+      "over": "Over quota",
+      "near": "Near limit",
+      "normal": "Normal"
+    },
+    "loadDirsFailed": "Failed to load directory usage",
+    "loadListFailed": "Failed to load FSx list",
+    "gidOption": "{{gid}} ({{names}})",
+    "nameSeparator": ", ",
+    "exceedsCapacity": "The total quota of {{projected}} GiB would exceed the FSx total capacity of {{total}} GiB (other directories already take up {{other}} GiB).",
+    "createdMsg": "Directory /{{name}} created (hard limit {{hard}} GiB, gid {{gid}})",
+    "createFailed": "Failed to create directory",
+    "updatedMsg": "Quota of /{{name}} updated → {{hard}} GiB",
+    "updateFailed": "Failed to update quota",
+    "columns": {
+      "directory": "Directory",
+      "usage": "Used / Soft limit / Hard limit"
+    },
+    "editQuota": "Edit quota",
+    "loadingFsx": "Loading FSx…",
+    "selectFsx": "Select FSx",
+    "createDirectory": "Create directory",
+    "stats": {
+      "total": "FSx total capacity",
+      "used": "Total used",
+      "usedTip": "Sum of the actual usage of all directories (read via lfs quota).",
+      "allocated": "Allocated quota",
+      "allocatedTip": "Sum of the hard limits of all directories. If it exceeds the FSx total capacity, the quota is over-subscribed and this value turns yellow.",
+      "dirCount": "Directories",
+      "overCount": "Over-quota directories"
+    },
+    "createForm": {
+      "alert": "The setgid permission and project id are assigned automatically by the backend. For the gid, you can reuse an existing team or leave it empty to create a new one.",
+      "nameLabel": "Directory name",
+      "nameRequired": "Enter a directory name.",
+      "namePattern": "Lowercase letters, digits and hyphens; must start with a letter or digit",
+      "nameExtra": "Creates /<directory-name> under the FSx root, e.g. team-name",
+      "gidLabel": "Owning team (gid)",
+      "gidExtra": "Reusing an existing gid = the new directory belongs to that team (shared group permissions); its quota is still counted separately. Leave empty to create a new team.",
+      "gidPlaceholder": "Not selected = create a new team (gid assigned automatically)"
+    },
+    "hardLabel": "Hard limit (GiB)",
+    "hardRequired": "Enter a hard limit.",
+    "softHintValue": "Soft-limit alert line = 80% of the hard limit ≈ {{soft}} GiB (usage above the soft limit triggers a yellow alert)",
+    "softHintEmpty": "Soft-limit alert line = 80% of the hard limit; usage above it triggers a yellow alert",
+    "editModalTitle": "Edit quota · /{{name}}"
+  }
+}

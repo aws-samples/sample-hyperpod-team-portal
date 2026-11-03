@@ -1,0 +1,229 @@
+{
+  "nav": {
+    "workspace": "工作空间",
+    "devInstance": "开发机"
+  },
+  "fields": {
+    "template": "模板",
+    "spec": "规格",
+    "image": "镜像",
+    "resourcePool": "资源池",
+    "resourceTemplate": "资源模板",
+    "sharedStorage": "共享存储",
+    "envVars": "环境变量"
+  },
+  "actions": {
+    "details": "详情",
+    "cloneConfig": "克隆配置",
+    "share": "分享",
+    "resize": "修改规格",
+    "connect": "连接",
+    "openCodeEditor": "打开 Code Editor",
+    "openJupyterLab": "打开 JupyterLab"
+  },
+  "confirm": {
+    "stopTitle": "停止开发机？",
+    "stopDesc": "EBS 卷保留，可随时启动恢复。",
+    "deleteTitle": "删除 {{name}}？",
+    "deleteTitleGeneric": "删除开发机？",
+    "deleteDesc": "此操作不可恢复，EBS 卷一并删除。"
+  },
+  "messages": {
+    "stopSent": "已发送停止指令",
+    "stopSentNamed": "已发送停止指令: {{name}}",
+    "startSent": "已发送启动指令",
+    "startSentNamed": "已发送启动指令: {{name}}",
+    "deleted": "已删除",
+    "deletedNamed": "已删除: {{name}}",
+    "stopFailed": "停止失败",
+    "startFailed": "启动失败",
+    "deleteFailed": "删除失败"
+  },
+  "statusDetailTitle": "开发机状态详情",
+  "spec": {
+    "memory": "内存",
+    "unitCard_other": "卡",
+    "unitCore_other": "核",
+    "unitAdapter_other": "张"
+  },
+  "list": {
+    "description": "基于 SageMaker Spaces 的 Jupyter / Code Editor 开发环境, 可随时启停, EBS 卷保留",
+    "filter": "筛选",
+    "filterHint": "仅支持筛选最近 5000 条",
+    "newButton": "新建开发机",
+    "meTag": "(我)",
+    "creatorMeTooltip": "{{name}}(我)",
+    "columns": {
+      "template": "模板",
+      "spec": "规格",
+      "queueStatus": "排队状态",
+      "creator": "创建人"
+    },
+    "tips": {
+      "template": "开发机使用的应用类型 (jupyter-lab / code-editor)。从模板继承默认镜像与启动命令, 资源规格在创建时按模版选择。",
+      "spec": "本开发机的资源申请: CPU 核 · 内存 · GPU 数 · EBS 存储。EBS 卷停止保留, 删除即销毁不可恢复。",
+      "status": "开发机自身运行状态 (CR phase): Available 运行中, Stopped 已停止, Provisioning 创建中, Degraded 异常等。点放大镜看完整状态详情。",
+      "queueStatus": "开发机在 Kueue 调度队列中的状态 (与开发机自身状态不同): Queued 排队等配额, Admitted 已 admit, Evicted 被驱逐等。"
+    },
+    "statusTip": {
+      "progressing": "Pod 创建中 / 拉镜像 / 挂载 EBS / 启动 SSM agent / Jupyter 或 Code Editor 初始化。最常见的\"加载等待\"态。",
+      "available": "终态目标: Pod Ready, IDE 端口就绪, 可点\"连接\"打开 IDE 或 SSM 上机。started_at 取此 condition 的 lastTransitionTime。",
+      "stopped": "用户主动点了\"停止\"(patch desiredStatus=Stopped) 或被空闲回收。Pod 销毁释放 GPU/CPU, EBS 卷保留, 点\"启动\"可恢复。",
+      "degraded": "Pod 反复 CrashLoop / 节点失联 / EBS 挂载失败 / SSM 注册超时等。看详情页\"状态时间线\"里 Conditions message 排查。"
+    },
+    "scope": {
+      "label": "范围",
+      "all": "全部",
+      "mine": "我的"
+    }
+  },
+  "detail": {
+    "title": "开发机详情",
+    "notFound": "找不到该开发机",
+    "getAccessFailed": "获取连接信息失败",
+    "summary": {
+      "crStatus": "状态（CR Phase）",
+      "kueueStatus": "排队状态（Kueue）"
+    },
+    "ebsNote": "EBS 卷 · 停止保留，删除即销毁（不可恢复）",
+    "tabs": {
+      "overview": "总览",
+      "monitoring": "监控",
+      "logs": "日志"
+    },
+    "cards": {
+      "instance": "实例详情",
+      "timeline": "状态时间线（K8s Conditions）"
+    },
+    "fields": {
+      "nameDisplay": "名称 / 显示名称",
+      "poolTag": "{{pool}} 池",
+      "instanceType": "实例类型",
+      "priority": "调度优先级",
+      "priorityDefault": "默认",
+      "mounts": "存储挂载",
+      "notMounted": "未挂载",
+      "creator": "创建者"
+    },
+    "lastStatus": "最近状态 · {{message}}"
+  },
+  "logs": {
+    "pod": "Pod 日志",
+    "all": "🔍 任务日志"
+  },
+  "connect": {
+    "title": "连接到开发机",
+    "preparing": "正在准备连接信息...",
+    "notReady": "实例尚未就绪, 暂无连接信息. 等 phase=Running + DNS 记录同步 (约 30-60s) 后点刷新.",
+    "ssh": {
+      "title": "原生 SSH · 固定 DNS 名, 停止/启动后不变",
+      "desc": "通过 VPC 内网直连开发机 (端口 22222)。首次连接前需先配置你的 SSH 公钥 (下方 ①)。 仅在与集群同 VPC / 网络已打通的机器上可解析此内网域名。"
+    },
+    "key": {
+      "title": "① 首次配置 · 贴 SSH 公钥",
+      "desc": "在你本地机器生成密钥对 (若没有): <code>ssh-keygen -t ed25519</code>。 把你本地 <code>~/.ssh/id_ed25519.pub</code> 的整行内容粘到下面, 点\"自动写入\", 平台会替你写进开发机 authorized_keys (私钥永远留在本地, 不要外传)。",
+      "autoWrite": "自动写入",
+      "manualHint": "需开发机运行中。若自动写入不可用, 可在 code editor 终端手动跑:",
+      "echoLine": "echo \"<粘贴你本地 ~/.ssh/id_ed25519.pub 的整行内容>\" >> ~/.ssh/authorized_keys && \\",
+      "empty": "请先粘贴你本地的 SSH 公钥 (.pub 整行内容)",
+      "written": "公钥已写入, 现在可以用 SSH 连接了。",
+      "writeFailed": "写入公钥失败",
+      "copied": "已复制公钥配置命令"
+    },
+    "terminal": {
+      "title": "② 终端连接 · 进开发机命令行",
+      "desc": "配好公钥后, 复制下面整行, 粘到 mac/Linux 终端直接跑, 进开发机 ({{user}})。",
+      "copied": "已复制连接命令"
+    },
+    "vscode": {
+      "title": "③ VSCode Remote-SSH · 图形化编辑代码",
+      "desc": "① VSCode 安装 Remote - SSH 插件 ② 把下面整段追加到 ~/.ssh/config ③ ⌘⇧P → \"Remote-SSH: Connect to Host\" → 选第一行 Host 后的别名。",
+      "copied": "已复制 SSH config 片段"
+    },
+    "refreshHint": "· DNS 名固定不变; 若刚创建/启动, 连接信息可能需等 DNS 同步后刷新获取。"
+  },
+  "resize": {
+    "title": "修改规格",
+    "okText": "确认修改",
+    "confirmTitle": "确认修改规格",
+    "confirmContent": "修改会重启当前 Pod，运行中的会话将中断 (/home/sagemaker-user 数据保留，内存态数据不保留)。确定要修改吗？",
+    "confirmOk": "确定修改",
+    "submitted": "已提交改规格",
+    "failed": "改规格失败",
+    "loadMountsFailed": "加载挂载列表失败",
+    "runningWarning": "改规格会重建 Pod · 当前会话中断, /home/sagemaker-user 保留, 内存态数据不保留",
+    "poolTooltip": "资源池不可修改; 如需切换 CPU/GPU 池请重建开发机。",
+    "noTemplates": "暂无资源模板 · 请联系空间管理员创建",
+    "targetSpec": "目标规格 (模板锁定)",
+    "storageTooltip": "挂载 ws 已挂的 FSx / S3 子集 · 增删即时生效 (重建 Pod 后按新挂载起)。",
+    "storageNote": "存储容量不可在此修改 (EBS 无法扩容); 如需更大 /home/sagemaker-user 请重建开发机。"
+  },
+  "create": {
+    "title": "新建开发机",
+    "breadcrumbNew": "新建",
+    "loadingConfig": "加载配置中...",
+    "sections": {
+      "basic": "基本信息",
+      "template": "模板",
+      "image": "镜像",
+      "resources": "资源"
+    },
+    "storageTooltip": "挂载 ws 已挂的 FSx / S3 子集 · 默认全不选, 留空跳过",
+    "envTooltip": "环境变量会注入容器，Key 非空即保存；可留空跳过此步。",
+    "messages": {
+      "loadMountsFailed": "加载 ws 挂载列表失败",
+      "loadTemplatesFailed": "加载模板失败",
+      "cloneTemplateChanged": "克隆: 原配置对应的资源模板已变更/删除, 请重新选择资源模板",
+      "cloneFetchFailed": "克隆: 拉取源开发机配置失败",
+      "mountMissing": "挂载 {{path}} 不在列表里 (异常)",
+      "created": "已创建开发机: {{name}}"
+    },
+    "basic": {
+      "nameLabel": "名称 (DNS label)",
+      "nameRequired": "请输入名称",
+      "namePattern": "小写字母开头，3-63 字符，允许 a-z 0-9 -",
+      "displayNameLabel": "显示名称",
+      "displayNameRequired": "请输入显示名称",
+      "displayNamePlaceholder": "我的 Notebook 环境",
+      "descriptionPlaceholder": "可选，说明用途"
+    },
+    "template": {
+      "label": "选择模板"
+    },
+    "image": {
+      "label": "镜像 (完整名, 含 tag)",
+      "help": "从「资产管理 → 镜像」中用途含开发机 (dev) 的镜像里选择, 或直接键入任意镜像完整 URI (含 tag)。私有 ECR 仅支持本平台所在 AWS 账号 + 当前区域, 跨账号/区域的镜像拉取不到。",
+      "loading": "正在加载镜像列表…",
+      "empty": "暂无可用于开发机 (dev) 的镜像，请先到<registry>「资产管理 → 镜像」</registry>注册，或直接键入镜像 URI。",
+      "hint": "下拉列出「镜像」中用途含开发机 (dev) 的镜像; 也可直接键入任意镜像 URI。",
+      "required": "请选择或填写镜像 URI",
+      "format": "格式须为 <registry>/<repo>:<tag>",
+      "placeholder": "选择镜像，或直接键入 <账号>.dkr.ecr.<区域>.amazonaws.com/my-repo:latest"
+    },
+    "resource": {
+      "poolTooltip": "选 GPU/CPU 资源池; 开发机会调度到该池任意机型 (CPU 机型可能有多种)。",
+      "poolRequired": "请选择资源池",
+      "poolPlaceholder": "选择资源池",
+      "templateTooltip": "资源 (GPU/CPU/内存) 由管理员维护的模板统一管控, 用户不可手填。",
+      "templateRequired": "请选择资源模板",
+      "templatePlaceholder": "选择资源模板 (由管理员维护)",
+      "noTemplates": "暂无资源模板 · 请联系空间管理员在 管理中心 -「资源模版」创建",
+      "poolNoTypes": "当前工作空间的 {{pool}} 资源池无可用机型 · 请联系平台管理员",
+      "poolNoTypesValidator": "当前工作空间该资源池无可用机型",
+      "storageLabel": "存储 (GiB, EBS)",
+      "storageTooltip": "开发机主目录 /home/sagemaker-user 的磁盘大小 (独立 EBS 卷)。conda 环境、pip 包、代码、中间产物都存这里, 建议留足空间 (装深度学习环境很占空间)。停止开发机时该卷保留、重启后数据仍在; 删除开发机则一并销毁, 不可恢复。大数据集/需共享的数据请改挂 FSx。",
+      "range": "范围 {{min}} - {{max}}",
+      "rangeDefault": "范围 1 - 100",
+      "perNodeSpec": "每节点规格 · 模板锁定",
+      "perNodeSpecTooltip": "GPU/CPU/内存 由资源模板统一管控, 用户不可手填; 切模板会自动同步",
+      "memoryPolicy": "官方策略硬拦 < 8 GiB, Remote Access 需要",
+      "quotaNeed_other": "本次需 {{count}} GPU 卡",
+      "quotaRemaining_other": " · 剩余 {{remaining}} / {{count}} GPU 卡",
+      "quotaOver": " · 超额, 提交后需等待",
+      "quotaCollecting_other": " · 共 {{count}} GPU 卡 · 余量采集中"
+    },
+    "env": {
+      "add": "添加环境变量"
+    }
+  }
+}

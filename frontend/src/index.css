@@ -1,0 +1,548 @@
+/* ===========================================================================
+ * HyperPod Platform — global visual polish (Stage 3)
+ *
+ * Ant Design handles most component styling through `ConfigProvider` tokens.
+ * This file only contains cross-cutting rules that are cheaper to express in
+ * CSS than in JS (shadows, gradients, pseudo states, responsive quirks).
+ * ========================================================================= */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------------------------------------------------------------------------
+ * Card / ProCard — subtle lift so panels read as distinct surfaces without
+ * being heavy. Dark mode uses a slightly stronger shadow because borders are
+ * harder to see on dark backgrounds.
+ * ------------------------------------------------------------------------- */
+.ant-card,
+.ant-pro-card {
+  box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.03),
+    0 1px 6px -1px rgba(0, 0, 0, 0.02) !important;
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+
+.ant-card.ant-card-hoverable:hover {
+  box-shadow:
+    0 4px 12px -2px rgba(9, 88, 217, 0.12),
+    0 2px 4px -1px rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-2px);
+}
+
+[data-theme='dark'] .ant-card,
+[data-theme='dark'] .ant-pro-card {
+  box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.35),
+    0 1px 6px -1px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Sidebar — align sider top affordances (collapse arrow + first menu item)
+ * with the PageContainer breadcrumb on the right. ProLayout's collapse arrow
+ * is `position: absolute; top: 18px;` relative to the sider, and the menu
+ * lives inside `.ant-layout-sider-children`. We expose one CSS variable so
+ * both anchor to the same offset, which mirrors the structural offset
+ * PageContainer uses for its breadcrumb (paddingBlockStart of header inner
+ * stack ≈ 30px under default tokens). Tweak `--hp-sider-top` if PageContainer
+ * paddings ever change.
+ * ------------------------------------------------------------------------- */
+:root {
+  --hp-sider-top: 30px;
+  /* Arrow is a 24px round button — its visual center sits ~12px below its
+   * top edge, while the breadcrumb text baseline sits closer to its top.
+   * Add a small extra offset so the arrow's *center* aligns with the
+   * breadcrumb baseline, instead of its top edge. */
+  --hp-sider-arrow-extra: 12px;
+}
+.ant-pro-layout .ant-pro-sider .ant-layout-sider-children {
+  padding-top: var(--hp-sider-top);
+}
+.ant-pro-layout .ant-pro-sider-collapsed-button {
+  inset-block-start: calc(var(--hp-sider-top) + var(--hp-sider-arrow-extra)) !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Sidebar menu — 3px accent bar on selected items, hover lift.
+ * Targets ProLayout's sidebar menu (Ant Design Menu under the hood).
+ * ------------------------------------------------------------------------- */
+.ant-pro-layout .ant-menu-light .ant-menu-item-selected,
+.ant-pro-layout .ant-menu-inline .ant-menu-item-selected {
+  position: relative;
+  font-weight: 500;
+}
+
+.ant-pro-layout .ant-menu-light .ant-menu-item-selected::before,
+.ant-pro-layout .ant-menu-inline .ant-menu-item-selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: #0958d9;
+}
+
+[data-theme='dark']
+  .ant-pro-layout
+  .ant-menu-inline
+  .ant-menu-item-selected::before {
+  background: #69b1ff;
+}
+
+.ant-pro-layout .ant-menu-item:not(.ant-menu-item-selected):hover {
+  background: rgba(9, 88, 217, 0.04);
+}
+
+/* ---------------------------------------------------------------------------
+ * 侧栏折叠态: 禁掉带子菜单的项 (如「管理中心」) hover 弹出的浮窗 —— 折叠就该
+ * 全收起, 浮窗会盖住正文很丑。要进子项先展开侧栏。
+ * ------------------------------------------------------------------------- */
+.ant-menu-submenu-popup {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Header 右侧操作区 (actionsRender) — 去掉 ProLayout 给每个 action item 自动
+ * 套的 hover 灰背景盒子: 它会撑满 header 高度、盖住底部分割线, 鼠标移到用户名
+ * 上时尤其明显。这里关掉该 wrapper 的 hover 背景与圆角, 只保留内部元素自身的
+ * 交互 (如 API Token 文本按钮的 hover)。
+ * ------------------------------------------------------------------------- */
+.ant-pro-global-header .ant-pro-global-header-header-actions-item,
+.ant-pro-global-header .ant-pro-global-header-header-actions-item:hover,
+.ant-pro-global-header-header-actions-item.ant-pro-global-header-header-actions-hover,
+.ant-pro-global-header-header-actions-item.ant-pro-global-header-header-actions-hover:hover,
+[class*='header-actions-item'],
+[class*='header-actions-item']:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  cursor: default;
+}
+
+/* ---------------------------------------------------------------------------
+ * ProTable — roomier rows for a premium feel; tighter empty states.
+ * ------------------------------------------------------------------------- */
+.ant-pro-table .ant-table-thead > tr > th {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * KPI numbers — opt-in gradient text for hero statistics. Apply by adding
+ * class `kpi-hero` on the <Statistic /> wrapper (or its valueStyle), or more
+ * broadly by using the `.kpi-gradient` class on any text element.
+ * ------------------------------------------------------------------------- */
+.kpi-gradient,
+.kpi-hero .ant-statistic-content-value,
+.kpi-hero .ant-statistic-content-value-int,
+.kpi-hero .ant-statistic-content-value-decimal {
+  background: linear-gradient(135deg, #0958d9 0%, #13c2c2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------------------
+ * Badge dot alignment — consistent vertical centering when used inline.
+ * ------------------------------------------------------------------------- */
+.ant-badge-status-dot {
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.02);
+}
+
+/* ---------------------------------------------------------------------------
+ * Login page — abstract radial-gradient blobs rendered via pseudo-elements so
+ * we don't need any extra DOM.
+ * ------------------------------------------------------------------------- */
+.login-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.login-hero::before,
+.login-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-hero::before {
+  width: 480px;
+  height: 480px;
+  top: -120px;
+  left: -80px;
+  background: radial-gradient(
+    circle,
+    rgba(19, 194, 194, 0.45) 0%,
+    rgba(19, 194, 194, 0) 70%
+  );
+}
+
+.login-hero::after {
+  width: 520px;
+  height: 520px;
+  bottom: -160px;
+  right: -120px;
+  background: radial-gradient(
+    circle,
+    rgba(105, 177, 255, 0.4) 0%,
+    rgba(105, 177, 255, 0) 70%
+  );
+}
+
+.login-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Grid mesh overlay — subtle geometric pattern gives the hero a "platform" vibe. */
+.login-hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 75%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    black 40%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Primary gradient button — used for the SSO CTA on the login screen. */
+.btn-gradient-primary {
+  background: linear-gradient(135deg, #0958d9 0%, #13c2c2 100%) !important;
+  border: none !important;
+  color: #fff !important;
+  box-shadow: 0 6px 20px -6px rgba(9, 88, 217, 0.45) !important;
+  transition: transform 150ms ease, box-shadow 200ms ease !important;
+}
+
+.btn-gradient-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px -8px rgba(9, 88, 217, 0.55) !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Gradient avatar — first-letter user chip in the header.
+ * ------------------------------------------------------------------------- */
+.avatar-gradient {
+  background: linear-gradient(135deg, #0958d9 0%, #13c2c2 100%) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+ * Header accents — notification bell / theme toggle get a slightly larger
+ * hover affordance to feel "tappable".
+ * ------------------------------------------------------------------------- */
+.ant-pro-global-header-header-actions .ant-btn {
+  border-radius: 8px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Workspace status dot — small colored pip rendered next to the workspace
+ * picker so users can tell at a glance that their current WS is healthy.
+ * ------------------------------------------------------------------------- */
+.ws-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+}
+
+.ws-status-dot--ok {
+  background: #389e0d;
+}
+.ws-status-dot--warn {
+  background: #d48806;
+}
+.ws-status-dot--danger {
+  background: #cf1322;
+}
+
+/* ---------------------------------------------------------------------------
+ * KPI cards — used by LLMKpiRow and other hero number tiles. Subtle hover
+ * lift mirrors the ant-card hoverable treatment so the whole dashboard feels
+ * consistent. Shadow color uses the primary blue to suggest "active".
+ * ------------------------------------------------------------------------- */
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px -8px rgba(9, 88, 217, 0.22),
+    0 2px 6px -2px rgba(15, 23, 42, 0.08);
+  border-color: rgba(9, 88, 217, 0.35) !important;
+}
+
+[data-theme='dark'] .kpi-card:hover {
+  box-shadow:
+    0 10px 28px -6px rgba(105, 177, 255, 0.22),
+    0 2px 6px -2px rgba(0, 0, 0, 0.45);
+  border-color: rgba(105, 177, 255, 0.38) !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Status badge pulse — Running / Processing badges get a soft breathing glow
+ * so the viewer's eye is drawn to live work. Failure badges intentionally
+ * stay static: we never want to animate something the user should *fix*.
+ * ------------------------------------------------------------------------- */
+@keyframes hp-status-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(9, 88, 217, 0.45);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(9, 88, 217, 0);
+    opacity: 0.85;
+  }
+}
+
+.ant-badge-status-processing .ant-badge-status-dot,
+.ant-badge-processing .ant-badge-status-dot {
+  animation: hp-status-pulse 1.5s ease-in-out infinite;
+}
+
+[data-theme='dark'] .ant-badge-status-processing .ant-badge-status-dot,
+[data-theme='dark'] .ant-badge-processing .ant-badge-status-dot {
+  animation-name: hp-status-pulse-dark;
+}
+
+@keyframes hp-status-pulse-dark {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(105, 177, 255, 0.55);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(105, 177, 255, 0);
+    opacity: 0.85;
+  }
+}
+
+/* Tags with color="processing" get the same treatment for consistency. */
+.ant-tag-processing {
+  position: relative;
+}
+
+/* ---------------------------------------------------------------------------
+ * GPU chip — monotone blue-family chips for GPU card selector. Each chip
+ * owns a data-gpu-index attribute 0..7 and picks a shade from a gradient.
+ * Falls back gracefully if the index isn't in range.
+ * ------------------------------------------------------------------------- */
+.gpu-chip {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.gpu-chip:hover {
+  transform: translateY(-1px);
+}
+
+/* ---------------------------------------------------------------------------
+ * Respect user preference for reduced motion — strips hover transforms and
+ * disables the pulse so the page is usable in reduced-motion environments.
+ * ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ant-card,
+  .ant-pro-card,
+  .btn-gradient-primary,
+  .kpi-card,
+  .gpu-chip {
+    transition: none !important;
+  }
+  .ant-card.ant-card-hoverable:hover,
+  .kpi-card:hover,
+  .gpu-chip:hover {
+    transform: none;
+  }
+  .ant-badge-status-processing .ant-badge-status-dot,
+  .ant-badge-processing .ant-badge-status-dot {
+    animation: none;
+  }
+}
+
+/* 全局 Tooltip: 加宽 + 字体小一号 (统一 help 问号提示观感) */
+.ant-tooltip {
+  max-width: 360px;
+}
+.ant-tooltip .ant-tooltip-inner {
+  font-size: 12px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Markdown 文档正文 (MarkdownDocPage) — 排障 Runbook 等外部 md 直接渲染,
+ * 与手写 DocPage 视觉呼应: 代码块/引用左边条颜色跟 TechBlock/UserBlock 一致。
+ * ConfigProvider 未开 cssVar 模式, 这里用静态色值 + [data-theme='dark'] 覆盖,
+ * 跟本文件其它深色适配规则 (如 .ant-card 阴影) 同一套写法。
+ * ------------------------------------------------------------------------- */
+.markdown-doc-body {
+  font-size: 13px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.88);
+}
+.markdown-doc-body h1,
+.markdown-doc-body h2 {
+  margin: 28px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 18px;
+  font-weight: 600;
+}
+.markdown-doc-body h1:first-child,
+.markdown-doc-body h2:first-child {
+  margin-top: 0;
+}
+.markdown-doc-body h3 {
+  margin: 20px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.markdown-doc-body p {
+  margin: 0 0 12px;
+}
+.markdown-doc-body ul,
+.markdown-doc-body ol {
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+.markdown-doc-body li {
+  margin-bottom: 4px;
+}
+.markdown-doc-body hr {
+  margin: 24px 0;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+.markdown-doc-body table {
+  width: 100%;
+  margin-bottom: 16px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.markdown-doc-body th,
+.markdown-doc-body td {
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  text-align: left;
+  vertical-align: top;
+}
+.markdown-doc-body th {
+  background: rgba(0, 0, 0, 0.02);
+  font-weight: 600;
+}
+.markdown-doc-body code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.04);
+  font-size: 12px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+.markdown-doc-body pre {
+  margin: 0 0 16px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.02);
+  border-left: 2px solid #87e8de;
+  overflow-x: auto;
+}
+.markdown-doc-body pre code {
+  padding: 0;
+  background: transparent;
+  font-size: 12px;
+  line-height: 20px;
+}
+.markdown-doc-body blockquote {
+  margin: 0 0 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-left: 2px solid #91caff;
+  color: rgba(0, 0, 0, 0.65);
+}
+.markdown-doc-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+.markdown-doc-body a {
+  color: #0958d9;
+}
+
+[data-theme='dark'] .markdown-doc-body {
+  color: rgba(255, 255, 255, 0.85);
+}
+[data-theme='dark'] .markdown-doc-body h1,
+[data-theme='dark'] .markdown-doc-body h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+[data-theme='dark'] .markdown-doc-body hr {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+[data-theme='dark'] .markdown-doc-body th,
+[data-theme='dark'] .markdown-doc-body td {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+[data-theme='dark'] .markdown-doc-body th {
+  background: rgba(255, 255, 255, 0.04);
+}
+[data-theme='dark'] .markdown-doc-body code,
+[data-theme='dark'] .markdown-doc-body pre {
+  background: rgba(255, 255, 255, 0.06);
+}
+[data-theme='dark'] .markdown-doc-body blockquote {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.65);
+}
+[data-theme='dark'] .markdown-doc-body a {
+  color: #69b1ff;
+}
+
+/* ---------------------------------------------------------------------------
+ * 创建表单 (训练 / 推理 / 开发机) — 统一纵向行间距。
+ * antd 默认 vertical 下 Form.Item margin-bottom 24px 偏大, 且各 section 内联
+ * 覆盖 (0/8/12) 不一致, 导致行间距乱 (如「描述」「显示名称」间距过大)。
+ * 这里把默认收紧到 16px 统一三表单。带内联 marginBottom 的特殊配对/隐藏字段
+ * 内联优先级更高, 不受影响 (保留其精调布局)。规则仅作用于 .hp-create-form,
+ * 不影响其它页面的表单。
+ * ------------------------------------------------------------------------- */
+.hp-create-form .ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 创建表单 — 输入框/文本域的灰色占位示例小一号 (12px), 弱化提示、不喧宾夺主。
+ * 只作用于 placeholder 伪元素, 用户实际输入的文字仍是默认字号 (14px)。
+ * ------------------------------------------------------------------------- */
+.hp-create-form .ant-input::placeholder,
+.hp-create-form .ant-input-textarea textarea::placeholder,
+.hp-create-form textarea.ant-input::placeholder {
+  font-size: 12px;
+}

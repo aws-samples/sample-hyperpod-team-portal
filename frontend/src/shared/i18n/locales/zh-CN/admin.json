@@ -1,0 +1,148 @@
+{
+  "shared": {
+    "readOnly": "只读",
+    "required": "必填",
+    "deleted": "已删除",
+    "loadFailed": "加载失败: {{error}}",
+    "saveFailed": "保存失败: {{error}}",
+    "deleteFailed": "删除失败: {{error}}",
+    "readOnlyMode": "只读模式"
+  },
+  "preemption": {
+    "title": "工作空间抢占开关",
+    "description": "本页面仅平台管理员可见。控制每个工作空间内部, 能否在配额用满时, 让高优先级档位的任务踢掉低优先级档位的任务",
+    "loadWsFailed": "加载 workspace 失败: {{error}}",
+    "enabledMsg": "{{name}} 抢占已开启",
+    "disabledMsg": "{{name}} 抢占已关闭",
+    "switchFailed": "切换失败: {{error}}",
+    "columns": {
+      "status": "抢占状态",
+      "toggle": "开关"
+    },
+    "loading": "加载中...",
+    "statusOn": "已开启 (LowerPriority)",
+    "statusOff": "关闭 (Never)",
+    "confirmOffTitle": "关闭抢占?",
+    "confirmOnTitle": "开启抢占?",
+    "confirmOffDesc": "关闭后该 ws 内任务只排队不抢占",
+    "confirmOnDesc": "⚠️ 开启后, 高优先级任务可能驱逐正在跑的低优任务 (训练被抢占=checkpoint回滚)",
+    "rulesTitle": "抢占规则说明（平台管理员视角）",
+    "when": "<b>何时会发生抢占？</b>必须同时满足下面三个条件, 任意一条不满足都不会发生:",
+    "cond1": "该工作空间的抢占开关已开启",
+    "cond2": "该工作空间的计算配额已经用满",
+    "cond3": "同工作空间内, 有更高优先级档位的任务正在排队",
+    "boundaryTitle": "<b>抢占的边界:</b>",
+    "boundary1": "抢占只在同一个工作空间内部生效, 工作空间之间互不影响",
+    "boundary2": "抢占踢的是任务的容器, 任务本身保留, 排队状态会变成\"被驱逐\", 之后重新进入排队",
+    "boundary3": "训练任务被踢后会自动重新排队, 需要训练侧配置了检查点容错才能续训",
+    "boundary4": "推理服务和开发机被踢, 等于在线服务中断 / 用户会话中断",
+    "advice": "<b>建议:</b>开启抢占前, 确认本工作空间的训练任务已具备检查点容错机制。",
+    "readOnlyDesc": "仅平台管理员可切换工作空间抢占开关。"
+  },
+  "priorityLabels": {
+    "title": "优先级档位",
+    "newButton": "新建优先级档位",
+    "description": "本页面仅平台管理员可见。优先级档位是平台所有工作空间公用的一份字典, 任何任务都从这里选档位。",
+    "updated": "档位已更新",
+    "created": "档位已创建",
+    "columns": {
+      "name": "档位名 (K8s)",
+      "weight": "权重 (Weight)"
+    },
+    "deleteConfirm": "删除档位 [{{name}}]?",
+    "modalEdit": "编辑档位",
+    "modalNew": "新建档位",
+    "form": {
+      "nameLabel": "档位名 (裸名, 会生成 <name>-priority)",
+      "namePattern": "小写字母数字+连字符",
+      "nameMax": "最长 40 字符",
+      "weightLabel": "权重 (0-100, 越大越优先)"
+    },
+    "tipTitle": "档位权重含义说明",
+    "tip1": "权重是<b>相对值 (0-100)</b>, 只决定相对顺序",
+    "tip2": "权重越大越优先, 体现在两件事上: ① 任务排队时权重大的排在前面; ② 在抢占开关已开启的工作空间里, 高权重档位的任务能踢掉低权重档位的运行中任务",
+    "tip3": "改档位数值<b>只对之后新提交的任务生效</b>, 已在跑/排队的任务沿用当时的数值快照, 不会重算",
+    "tip4": "本页只管理\"档位字典\"本身, <b>给具体任务换档位</b>不在这里: 由<b>工作空间管理员或平台管理员</b>在该工作空间的<b>「任务总览」</b>页, 点任务行的优先级档位列上的笔图标修改 (排队中任务: 立即调整队列顺序; 运行中任务: 任务会重启)",
+    "readOnlyDesc": "仅平台管理员可增删改优先级档位。"
+  },
+  "resourceTemplates": {
+    "title": "资源模版",
+    "newButton": "新建资源模版",
+    "description": "本页管理 <b>当前工作空间</b> 的资源模版 (按工作空间维护, 切换空间会看到不同模版)。",
+    "updated": "模版已更新",
+    "created": "模版已创建",
+    "columns": {
+      "name": "模版名",
+      "resource": "资源"
+    },
+    "deleteConfirm": "删除模版 [{{name}}]?",
+    "tipTitle": "资源模版使用说明",
+    "tip1": "开发机 / 训练 / 推理 <b>共用一套模版</b>, 用户创建任务时只能选模版, 不能手填 CPU / GPU / 内存",
+    "tip2": "所有工作空间成员可进入查看; 新建 / 编辑 / 删除仅<b> 工作空间管理员 </b>或<b> 平台管理员 </b>可操作, 普通成员为只读模式",
+    "selectWsHint": "资源模版按工作空间维护 · 请先从左侧「工作空间」选择一个工作空间",
+    "modalEdit": "编辑模版",
+    "modalNew": "新建模版",
+    "form": {
+      "name": "模版名",
+      "namePlaceholder": "如 中规格",
+      "descriptionPlaceholder": "可选",
+      "gpu": "GPU 数",
+      "efa": "EFA 网卡数",
+      "efaTip": "多节点 GPU 训练高速网络 (RDMA) 用; 单机/开发机/推理填 0。需机型支持 EFA。",
+      "cpu": "CPU (核)",
+      "cpuUnit": "核",
+      "memory": "内存 (GiB)"
+    }
+  },
+  "fsxQuota": {
+    "title": "FSx配额",
+    "titleTip": "在共享 FSx 上按一级目录（team）做存储配额。创建目录时自动分配 gid + setgid 权限 + project quota；下方实时显示各目录用量 vs 配额。",
+    "requestFailed": "请求失败 (HTTP {{status}})",
+    "status": {
+      "over": "已超额",
+      "near": "接近上限",
+      "normal": "正常"
+    },
+    "loadDirsFailed": "加载目录用量失败",
+    "loadListFailed": "加载 FSx 列表失败",
+    "gidOption": "{{gid}}（{{names}}）",
+    "nameSeparator": "、",
+    "exceedsCapacity": "配额总和 {{projected}} GiB 将超过 FSx 总容量 {{total}} GiB (其他目录已占 {{other}} GiB)",
+    "createdMsg": "已创建目录 /{{name}} (硬限 {{hard}} GiB, gid {{gid}})",
+    "createFailed": "创建目录失败",
+    "updatedMsg": "已更新 /{{name}} 配额 → {{hard}} GiB",
+    "updateFailed": "更新配额失败",
+    "columns": {
+      "directory": "目录",
+      "usage": "用量 / 软限 / 硬限"
+    },
+    "editQuota": "改配额",
+    "loadingFsx": "加载 FSx 中…",
+    "selectFsx": "选择 FSx",
+    "createDirectory": "创建目录",
+    "stats": {
+      "total": "FSx 总容量",
+      "used": "已用总量",
+      "usedTip": "各目录实际用量之和 (lfs quota 读取)。",
+      "allocated": "已分配配额",
+      "allocatedTip": "各目录硬限之和。超过 FSx 总容量时为超额分配 (over-subscription), 该值变黄提示。",
+      "dirCount": "目录数",
+      "overCount": "超额目录"
+    },
+    "createForm": {
+      "alert": "setgid 权限、project id 由后端自动分配；gid 可复用已有 team 或留空自动新建。",
+      "nameLabel": "目录名",
+      "nameRequired": "请输入目录名",
+      "namePattern": "小写字母/数字/连字符, 字母数字开头",
+      "nameExtra": "将在 FSx 根下创建 /<目录名>，如 team-name",
+      "gidLabel": "归属 team (gid)",
+      "gidExtra": "复用已有 gid = 新目录归属该 team（共享组权限）；配额仍独立计。留空则新建 team。",
+      "gidPlaceholder": "不选 = 新建 team (自动分配 gid)"
+    },
+    "hardLabel": "硬限 (GiB)",
+    "hardRequired": "请输入硬限",
+    "softHintValue": "软限告警线 = 硬限 80% ≈ {{soft}} GiB (用量超过软限即黄色告警)",
+    "softHintEmpty": "软限告警线 = 硬限的 80%, 用量超过即黄色告警",
+    "editModalTitle": "改配额 · /{{name}}"
+  }
+}

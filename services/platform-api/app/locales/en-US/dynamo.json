@@ -1,0 +1,9 @@
+{
+  "dynamo.instance_type_not_allowed": "Instance type '{instance_type}' is not among the instance types allocated to this Workspace's quota (available: {allowed}).",
+  "dynamo.allowed_none": "none",
+  "dynamo.fsx_not_authorized": "FSx '{pvc_name}' is not in your authorized mount list (you can only select FSx mounts you are authorized to use in this Workspace).",
+  "dynamo.s3_bucket_not_mounted": "S3 bucket '{bucket}' is not among the S3 buckets mounted in this Workspace.",
+  "dynamo.forbidden_operate": "Not allowed to operate this multi-node inference (Dynamo) service (creator, Workspace admin or platform admin only).",
+  "dynamo.model_source_fsx_required": "model_source_type=fsx requires fsx_pvc_name.",
+  "dynamo.model_source_s3_required": "model_source_type=s3 requires the s3 field."
+}

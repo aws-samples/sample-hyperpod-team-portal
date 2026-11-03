@@ -1,0 +1,239 @@
+{
+  "nav": {
+    "workspace": "Workspace",
+    "dynamo": "Dynamo Inference"
+  },
+  "fields": {
+    "scale": "Scale",
+    "framework": "Framework",
+    "creator": "Creator",
+    "queueStatus": "Queue status",
+    "workspace": "Workspace"
+  },
+  "actions": {
+    "details": "Details",
+    "cloneConfig": "Clone config"
+  },
+  "spec": {
+    "unitCard_one": "card",
+    "unitCard_other": "cards",
+    "unitCore_one": "core",
+    "unitCore_other": "cores",
+    "unitAdapter_one": "adapter",
+    "unitAdapter_other": "adapters",
+    "memory": "Memory",
+    "gpuCount_one": "{{count}} GPU",
+    "gpuCount_other": "{{count}} GPUs",
+    "replicaCount_one": "{{count}} replica",
+    "replicaCount_other": "{{count}} replicas",
+    "nodeCount_one": "{{count}} node",
+    "nodeCount_other": "{{count}} nodes",
+    "scale": "{{replicas}} × {{nodes}} × {{gpu}}"
+  },
+  "confirm": {
+    "stopTitle": "Stop Dynamo inference service?",
+    "stopDesc": "Deletes the CR (Grove cascades to reclaim the Pods) to release compute. The config is kept, so you can clone it to rebuild the service.",
+    "deleteTitle": "Delete Dynamo inference service?",
+    "deleteDescList": "This also deletes the DynamoGraphDeployment CR and all Pods.",
+    "deleteDescDetail": "This also deletes the DynamoGraphDeployment CR and all Pods."
+  },
+  "messages": {
+    "stopped": "Dynamo inference service stopped (the config is kept; clone it to rebuild)",
+    "stopFailed": "Failed to stop: {{error}}",
+    "deleted": "Dynamo inference service deleted",
+    "deleteFailed": "Failed to delete: {{error}}",
+    "loadFailed": "Failed to load: {{error}}"
+  },
+  "statusDetailTitle": "Dynamo inference service status details",
+  "list": {
+    "description": "Multi-node inference services based on NVIDIA Dynamo (DynamoGraphDeployment) — TP/EP across nodes, for very large models that do not fit on a single node. Scheduled through Kueue, with an OpenAI-compatible API.",
+    "newButton": "New Dynamo inference",
+    "tips": {
+      "status": "DynamoGraphDeployment status.state: initializing: initializing; pending: pending deployment; successful: running; failed: failed; Stopped: stopped.",
+      "queueStatus": "Status in the Kueue scheduling queue (via Kueue Pod integration, admitted per Pod).",
+      "scale": "Multi-node: nodes × GPUs per node (tp/ep are configured in the launch script)."
+    },
+    "scope": {
+      "label": "Scope",
+      "all": "All",
+      "mine": "Mine"
+    }
+  },
+  "detail": {
+    "forceRefresh": "Force refresh",
+    "tabs": {
+      "overview": "Overview",
+      "monitoring": "Monitoring",
+      "engine": "Dynamo Engine",
+      "logs": "Logs"
+    },
+    "summary": {
+      "kueueStatus": "Queue status (Kueue)"
+    },
+    "fields": {
+      "lastSync": "Last synced at"
+    },
+    "config": {
+      "title": "Run configuration",
+      "image": "Image",
+      "modelSource": "Model source",
+      "modelMount": "Model mount",
+      "instanceType": "Instance type",
+      "nodeCount": "Nodes (nodeCount)",
+      "replicas": "Replicas",
+      "gpuPerNode": "GPUs per node",
+      "efaPerNode": "EFA per node",
+      "memory": "Memory (req/lim)",
+      "runAsRoot": "Run as root",
+      "runAsRootYes": "Yes (runAsUser=0)",
+      "runAsRootNo": "No",
+      "launchScript": "Launch script",
+      "defaultLaunch": "Default launch",
+      "none": "None"
+    },
+    "pods": {
+      "title": "Current Pods ({{total}})",
+      "empty": "No Pods yet (they may still be initializing; click Force refresh to load)",
+      "restarts": "Restarts",
+      "reason": "Reason"
+    },
+    "timeline": "Status timeline (K8s Conditions)",
+    "monitoringBanner": "GPU / GPU memory / temperature / network (node-level DCGM/cAdvisor) · Refreshes automatically every 20-30s.",
+    "engineBanner": "Dynamo engine metrics (dynamo_*, scraped by the OTel sidecar) · Throughput / TTFT / ITL / queue / KV cache · Refreshes automatically every 20-30s."
+  },
+  "logs": {
+    "pod": "Pod logs",
+    "all": "🔍 Task logs"
+  },
+  "create": {
+    "title": "New Dynamo Inference",
+    "breadcrumbNew": "New",
+    "loadingConfig": "Loading clone configuration…",
+    "sections": {
+      "basic": "Basic info",
+      "image": "Image",
+      "model": "Model source",
+      "resource": "Compute resources",
+      "launch": "Launch configuration",
+      "preview": "Preview"
+    },
+    "messages": {
+      "cloneS3Missing": "Clone: the source S3 is not within your current mounts. Select an S3 mount source again.",
+      "cloneTemplateChanged": "Clone: the resource template for the original configuration has changed or been deleted. Select a resource template again.",
+      "cloneFetchFailed": "Clone: failed to load the source Dynamo inference configuration — {{error}}",
+      "fillRequiredYaml": "# Fill in the required fields first, then preview.",
+      "fillRequiredWarn": "Fill in the required fields before previewing.",
+      "rendering": "# Rendering…",
+      "renderFailed": "# Backend rendering failed: {{error}}",
+      "created": "Dynamo inference service created",
+      "createFailed": "Failed to create: {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "Display name",
+      "displayNameTooltip": "A human-readable name; it does not have to be unique. The task name (the K8s resource name) is generated from it automatically: lowercased, non-alphanumeric characters converted to -, Chinese characters dropped, plus a random suffix.",
+      "displayNameRequired": "Enter a display name.",
+      "displayNamePlaceholder": "e.g. deepseek-v3-multinode",
+      "taskNameLabel": "Task name (auto-generated, unique)",
+      "taskNameTooltip": "The final K8s resource name = sanitize(display name) + 10 random characters. It is generated automatically and cannot be edited (this keeps it unique in K8s and Kueue, and logs are located by it).",
+      "taskNameRequired": "Enter a display name to generate the task name.",
+      "taskNamePattern": "Lowercase letters, digits and -; must start with a letter; 3-63 characters.",
+      "taskNamePlaceholder": "Generated from the display name",
+      "descriptionTooltip": "A short description (optional), to help you recognize it in the list and details.",
+      "descriptionPlaceholder": "e.g. DeepSeek-V3 multi-node TP/EP inference"
+    },
+    "image": {
+      "help": "Choose from the images under \"Asset Management → Image\" whose purpose includes inference, or type any full image URI (including the tag). Dynamo multi-node inference needs the EFA variant of sglang-runtime (nvcr.io/nvidia/ai-dynamo/sglang-runtime:*-efa-amd64). Private ECR is only supported in the AWS account and Region this platform runs in.",
+      "label": "Image (full name, including tag)",
+      "loading": "Loading image list…",
+      "empty": "If the Image Hub has no images, you can use the default Dynamo sglang-runtime image directly, or register a custom image under <registry>\"Asset Management → Image\"</registry>.",
+      "hint": "The dropdown lists images under \"Image\" whose purpose includes inference; you can also type any image URI.",
+      "required": "Select or enter an image URI.",
+      "format": "Use the format <registry>/<repo>:<tag>"
+    },
+    "model": {
+      "sourceLabel": "Model source",
+      "fsxOption": "FSx Lustre (recommended)",
+      "fsxLabel": "Shared storage mount (FSx)",
+      "fsxTooltip": "Choose an authorized FSx file system (select one). It is mounted at /fsx in the container; in the launch script, write --model-path as the absolute model path under /fsx. If no resources are listed, contact an admin to grant access.",
+      "fsxLoading": "Loading authorized FSx…",
+      "fsxNone": "You have no authorized FSx in this Workspace · contact an admin",
+      "fsxHint": "In the launch script, write --model-path /fsx/<model-dir> (FSx is mounted at /fsx)",
+      "fsxRequired": "Select an FSx mount source.",
+      "fsxPlaceholder": "Select an FSx mount source (select one)",
+      "fsxPlaceholderEmpty": "No authorized FSx (contact an admin)",
+      "fsxNotFound": "No authorized FSx in this Workspace",
+      "s3Label": "Shared storage mount (S3)",
+      "s3Tooltip": "Choose an S3 bucket already mounted in the Workspace (select one); the bucket and Region are filled in automatically. Enter the relative model path below.",
+      "s3Required": "Select an S3 mount source.",
+      "s3Placeholder": "Select an S3 mount source (select one)",
+      "s3Loading": "Loading S3…",
+      "s3PlaceholderEmpty": "No S3 mounted in this Workspace (contact an admin)",
+      "s3NotFound": "No S3 mounted in this Workspace",
+      "s3PathLabel": "Relative model path",
+      "s3PathTooltip": "The path of the model within S3, prefetched to the mount point. In the launch script, write --model-path as the path under the mount point.",
+      "s3PathRequired": "Enter the relative model path.",
+      "s3PathExtra": "e.g. models/deepseek-v3"
+    },
+    "resource": {
+      "poolLabel": "Resource pool",
+      "poolTooltip": "Choose a GPU or CPU resource pool first. The instance type and template on the right are filtered by pool.",
+      "instanceTypeLabel": "Instance type",
+      "instanceTypeTooltip": "Instance types in this resource pool. The backend checks that the instance type is within your quota.",
+      "instanceTypeRequired": "Select an instance type.",
+      "instanceTypePlaceholder": "Select an instance type in this resource pool",
+      "instanceTypePlaceholderEmpty": "No instance types are assigned to this Workspace (contact an admin to set up a quota)",
+      "instanceTypeNotFound": "No instance types available in this resource pool",
+      "templateLabel": "Resource template (per-node spec)",
+      "templateTooltip": "Resources (GPU/CPU/memory/EFA) are governed by templates maintained by admins, which lock the spec of a single worker node. Total = nodes × template.",
+      "templateRequired": "Select a resource template.",
+      "templatePlaceholder": "Select a resource template (maintained by admins)",
+      "noTemplates": "No resource templates yet · ask a Workspace admin to create one in Admin Console → Resource Template",
+      "nodeCountLabel": "Nodes (nodeCount)",
+      "nodeCountTooltip": "Number of nodes that cooperate on one inference instance (multinode.nodeCount). 1 = single node. Total GPUs = nodes × GPUs per node.",
+      "perNodeSpec": "Per-node spec · locked by template",
+      "perNodeSpecTooltip": "GPU, CPU, memory and EFA are governed by the resource template (locked to a single worker node); switching templates syncs them automatically.",
+      "efaNote": "(used for inter-node communication)",
+      "replicasLabel": "Replicas",
+      "replicasTooltip": "Number of independent worker instances (worker.replicas); data parallelism is handled by the Dynamo frontend. 1 = a single instance. Total GPUs = replicas × nodes × GPUs per node.",
+      "quotaNeed_one": "This service needs {{count}} GPU",
+      "quotaNeed_other": "This service needs {{count}} GPUs",
+      "quotaBreakdown": " ({{scale}})",
+      "quotaRemaining_one": " · {{remaining}} remaining of {{count}} GPU",
+      "quotaRemaining_other": " · {{remaining}} remaining of {{count}} GPUs",
+      "quotaOver": " · over quota; it will wait for quota after you submit",
+      "quotaCollecting_one": " · {{count}} GPU in total · remaining quota is being collected",
+      "quotaCollecting_other": " · {{count}} GPUs in total · remaining quota is being collected"
+    },
+    "launch": {
+      "heading": "Launch script (Dynamo · sglang)",
+      "help": "The whole script runs via /bin/sh -c (the backend renders command=[\"/bin/sh\",\"-c\"], args=[script]).<br/>Use exec to take over the main process. --model-path is required (FSx is mounted at /fsx, so write /fsx/<modelDir/>).<br/>Edit the multi-node tensor/expert parallelism flags --tp-size / --ep-size directly here.",
+      "scriptRequired": "Launch script is required.",
+      "scriptExtra": "The dynamo.sglang launch command is pre-filled; edit --model-path / --tp-size / --ep-size as needed",
+      "script": {
+        "fsxMount": "fsx-mount",
+        "modelDir": "model-dir",
+        "modelName": "model-name"
+      }
+    },
+    "preview": {
+      "heading": "Rendered preview",
+      "refresh": "Generate / refresh preview (backend rendering)",
+      "placeholder": "# Click \"Generate / refresh preview\" to generate the final YAML rendered by the backend"
+    }
+  },
+  "invoke": {
+    "title": "Invocation commands",
+    "ready": "External invocation address is ready",
+    "clusterOnly": "Reachable only from inside the cluster for now",
+    "clusterOnlyDesc": "The frontend SVC is a ClusterIP (callable from inside the cluster or from a dev instance in the same Workspace). External access (an in-VPC ALB) is a planned capability; once it is ready, the real address will appear here.",
+    "connInfo": "Connection info",
+    "addrCluster": "Address (in-cluster)",
+    "protocol": "Protocol",
+    "protocolValue": "OpenAI-compatible HTTP (/v1/models, /v1/chat/completions)",
+    "modelValue": "\"model\" value",
+    "examples": "Invocation examples (from an in-cluster dev instance)",
+    "code": {
+      "samplePrompt": "Say hello in three words"
+    }
+  }
+}

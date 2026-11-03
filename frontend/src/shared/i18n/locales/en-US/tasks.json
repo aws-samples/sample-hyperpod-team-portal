@@ -1,0 +1,74 @@
+{
+  "overview": {
+    "title": "Task Overview",
+    "kind": {
+      "dev": "Dev Instance",
+      "train": "Training Job",
+      "inference": "Single-node Inference",
+      "dynamo": "Dynamo Inference",
+      "llmd": "Multi-node Inference",
+      "rayjob": "Ray Job"
+    },
+    "loadFailed": "Failed to load Task Overview: {{error}}",
+    "forbidden": {
+      "title": "No access to Task Overview",
+      "subTitle": "Task Overview is used to adjust task priority and is visible only to Workspace admins and platform admins."
+    },
+    "search": "Search task name",
+    "filter": "Filter",
+    "filterLimit": "Filtering covers only the latest 5,000 tasks",
+    "description": "This page is visible only to Workspace admins and platform admins. It shows all active tasks in this Workspace and lets you change the Kueue priority class of queued tasks (running tasks cannot be changed).",
+    "columns": {
+      "type": "Type",
+      "queueOrder": "Queue position",
+      "queueOrderTip": "The task's actual position in this Workspace's Kueue queue (1 = front; a smaller number is scheduled sooner). For a multi-node task made up of several scheduling units (LWS replica groups / gateway), the main value is the frontmost position; click the arrow at the left of the row to expand the queue details of each unit. Tasks that are not queued show \"-\".",
+      "statusTip": "The task's own run status (CR phase, same as on the detail page): queued / running / succeeded / failed / evicted, etc. Do not confuse it with queue status — this column reflects the task itself, not its position in the scheduling queue.",
+      "gpuTip": "The number of GPUs and the instance type the task requested (nodes × GPUs per node / instance type). Dev instances and inference are usually single-node; training can be multi-node.",
+      "priorityClass": "Priority class",
+      "priorityTipIntro": "The priority class the task uses (the number in parentheses is the class value; a larger value means higher priority). Click the pencil icon to change the class:",
+      "priorityTipQueued": "Queued tasks: re-queued immediately under the new class",
+      "priorityTipRunning": "Running tasks: containers are recreated so the new class takes effect, which restarts them",
+      "priorityTipDict": "The class list is maintained by platform admins in \"Admin Console → Priority Class\".",
+      "creator": "Creator",
+      "priority": "Priority"
+    },
+    "tips": {
+      "rules": "Priority change rules",
+      "status": "What Status / Queue position mean",
+      "rule1": "Click the pencil icon in the <b>\"Priority class\"</b> column to change a task's class. The class list is maintained by platform admins in \"Admin Console → Priority Class\"; on this page you can only pick from it, not add new classes.",
+      "rule2": "Changing the class of a <b>queued</b> task: it is re-queued immediately under the new class, higher classes move forward, and the task does not restart.",
+      "rule3": "Changing the class of a <b>running</b> task: the platform recreates the task's containers so the new class takes effect. Training jobs are re-queued automatically (they can resume only if a checkpoint exists); for inference and dev instances this means a service interruption / session interruption.",
+      "rule4": "Changing the class does <b>not trigger preemption</b> by itself. To have running tasks evicted automatically, also turn on the switch for this Workspace in \"Admin Console → Workspace Preemption Switch\".",
+      "queueHeading": "<b>Queue position column</b>",
+      "queueScopeNote": "Shown only when Scope = Queued",
+      "queue1": "The number is the task's <b>actual position</b> in the Kueue queue (1 = front; a smaller number is scheduled sooner). It is an absolute queue position, so it <b>may skip numbers</b> (e.g. 2/8/13, with scheduling units of other tasks in between).",
+      "queue2": "Source: <code>positionInLocalQueue</code> from the Kueue visibility API (Workload level). A <b>multi-node task</b> has several scheduling units (Workloads); the main value is the <b>frontmost</b> position among them. Click the arrow at the left of the row to expand each unit's queue position and priority.",
+      "queue3": "Shown as <b>-</b>: the task is not queued, the query failed, or the task was just submitted and has not entered the queue yet. Such rows are sorted to the bottom of the table.",
+      "queue4": "The order is decided by <b>priority class (higher first)</b> + submission time (first come, first served within the same class). Changing the class affects the order immediately.",
+      "queue5": "When resources are released, Kueue admits tasks one by one in this order, which is <b>not necessarily the arrival order</b>.",
+      "statusHeading": "<b>Status column</b>",
+      "statusSourceNote": "Each task type's own lifecycle, written by each Operator into CR.status.conditions",
+      "status1": "This page mixes several task types (dev instance / training / inference). Their status values differ, so they are not normalized or translated; the raw CR phase is shown to make troubleshooting easier.",
+      "status2": "<b>Dev instance</b>: Initialized / Progressing / Available (running) / Stopped / Degraded",
+      "status3": "<b>Training</b>: Suspended (held by Kueue) / Created / Created/Running (running) / PodsRunning / Faulted (auto-resume in progress) / Complete / Completed / Failed",
+      "status4": "<b>Inference</b>: DeploymentPending / DeploymentInProgress / DeploymentComplete (running) / DeploymentFailed / Stopped / Deleted",
+      "status5": "You may occasionally see a <b>combined state</b> (e.g. <code>Created/Completed</code>): when several conditions are True at the same moment, their type names are joined with /. For details, see the \"Status guide\" tip on each task list page.",
+      "footnote": "💡 <b>Status ≠ queue status</b>: the Status column is written by each Operator and shows the task's own lifecycle (created / running / completed); queue position shows the task's relative position in the Kueue queue. A task may be \"running\" but not in the queue (already admitted), or \"pending\" but at the head of the queue (about to get resources)."
+    },
+    "filters": {
+      "scope": "Scope",
+      "type": "Type",
+      "all": "All",
+      "queued": "Queued",
+      "running": "Running"
+    }
+  },
+  "changePriority": {
+    "title": "Change priority — {{name}}",
+    "placeholder": "Select priority class",
+    "loadFailed": "Failed to load priority list: {{error}}",
+    "missingCrName": "The task has no CR name, so its priority cannot be changed.",
+    "success": "Priority updated",
+    "failed": "Failed to update: {{error}}"
+  }
+}

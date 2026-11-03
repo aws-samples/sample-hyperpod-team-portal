@@ -1,0 +1,118 @@
+# platform-api 后端: SA + Deployment + Service.
+# SA 名 platform-api 必须与 CDK 的 Pod Identity association 一致.
+# <...> 占位符部署时用 CDK CfnOutput + cdk.json context 值替换 (见部署文档).
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-api
+  namespace: platform-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-api
+  namespace: platform-system
+spec:
+  replicas: 2   # 无状态 HTTP, 可水平扩; informer 单例在 platform-worker 不在此, 多副本安全
+  selector:
+    matchLabels:
+      app: platform-api
+  template:
+    metadata:
+      labels:
+        app: platform-api
+    spec:
+      serviceAccountName: platform-api
+      nodeSelector:
+        role: platform              # 钉 CPU node group, 不落 GPU 节点
+      containers:
+      - name: api
+        image: <ACCOUNT>.dkr.ecr.<REGION>.amazonaws.com/<PROJECT>-platform-api:<TAG>
+        ports:
+        - containerPort: 8800
+        resources:
+          requests: { cpu: "500m", memory: "1Gi" }
+          limits: { cpu: "2", memory: "4Gi" }
+        env:
+        - { name: APP_ENV, value: "prod" }
+        - { name: LOG_FORMAT, value: "json" }
+        # INFO 级别: 默认 DEBUG 会刷大量 botocore 签名细节淹没业务日志
+        - { name: LOG_LEVEL, value: "INFO" }
+        - { name: AUTH_MODE, value: "cognito" }
+        - { name: AWS_REGION, value: "<REGION>" }
+        # 必须显式置空, 覆盖代码默认 localhost:8000 (DDB Local), 走真实 AWS DDB
+        - { name: DDB_ENDPOINT_URL, value: "" }
+        - { name: DDB_TABLE_PREFIX, value: "<DDB_PREFIX>" }
+        - { name: COGNITO_USER_POOL_ID, value: "<COGNITO_POOL_ID>" }
+        - { name: COGNITO_CLIENT_ID, value: "<COGNITO_CLIENT_ID>" }
+        - { name: COGNITO_DOMAIN, value: "<COGNITO_DOMAIN>" }
+        - { name: COGNITO_REGION, value: "<REGION>" }
+        # PKCE redirect_uri (前端从 /auth/config 取). 必须与 Cognito App Client
+        # 注册的 callback URL 精确一致 (含 http/端口/路径), 否则 redirect_mismatch.
+        - { name: LOCAL_CALLBACK_URL, value: "<LOCAL_CALLBACK_URL>" }
+        # 放行 /dev-instances/{id}/proxy/?access_token= query 鉴权 (浏览器开
+        # Code Editor/JupyterLab 是导航/WS 请求, 无法设 Authorization header)。
+        # 无 ALB authenticate-cognito (SSM 隧道 / 无域名联调) 时必须 true。
+        - { name: ENABLE_DEV_PROXY_QUERY_TOKEN, value: "true" }
+        - { name: EKS_CLUSTER_NAME, value: "<EKS_CLUSTER>" }
+        - { name: HYPERPOD_CLUSTER_NAME, value: "<HYPERPOD_CLUSTER>" }
+        # HyperPod 集群 CloudWatch 日志组全名 (训练/开发机日志快路径, 单集群部署直配)。
+        # 值来自 cdk.json hyperpodClusterLogGroupName。空则 logs 走反查兜底。
+        - { name: LOG_GROUP_NAME, value: "<LOG_GROUP_NAME>" }
+        # 多 FSx: 逗号分隔 fs-id (值来自 cdk.json platformFsxFilesystems)。
+        - { name: PLATFORM_FSX_FILESYSTEMS, value: "<FSX_FILESYSTEMS>" }
+        # fsx-admin pod 所在 ns (须 == cluster-prereq.sh step_fsxadmin 部署的 ns)。
+        - { name: FSX_ADMIN_NAMESPACE, value: "hyperpod-platform-system" }
+        - { name: AMP_WORKSPACE_ID, value: "<AMP_WS_ID>" }
+        - { name: IDC_IDENTITY_STORE_ID, value: "<IDC_STORE_ID>" }
+        - { name: IDC_REGION, value: "<IDC_REGION>" }
+        # 跨账号 IdC: 管理账号只读角色 ARN (后端先 AssumeRole 再查 IdC)。
+        # render 脚本对同账号部署替换成空串 (留空 = 走本地 Pod Identity 凭证)。
+        - { name: IDC_ASSUME_ROLE_ARN, value: "<IDC_ASSUME_ROLE_ARN>" }
+        - { name: PLATFORM_S3_BUCKETS, value: "<S3_BUCKETS>" }
+        - { name: PLATFORM_POD_ROLE_ARN, value: "<POD_ROLE_ARN>" }
+        - { name: SSM_MANAGED_NODE_ROLE_ARN, value: "<SSM_ROLE_ARN>" }
+        # 镜像中心在线构建 (CodeBuild): 两者非空才启用构建功能。值来自 CDK Output
+        # CodeBuildProjectName / ImageBuildSourceBucket (ImageBuildConstruct 建的)。
+        - { name: CODEBUILD_PROJECT_NAME, value: "<CODEBUILD_PROJECT>" }
+        - { name: IMAGE_BUILD_SOURCE_BUCKET, value: "<IMAGE_BUILD_BUCKET>" }
+        # FSX_ADMIN_NAMESPACE 用代码默认 hyperpod-platform-system, 不显式设
+        # ===== 跨集群: 后端 pod 在平台集群, 操作业务集群 =====
+        # render 脚本对单集群部署会把这三个替换成空/false (不影响单集群).
+        - { name: CROSS_CLUSTER_MODE, value: "<CROSS_CLUSTER_MODE>" }
+        - { name: KUBE_CONTEXT, value: "<KUBE_CONTEXT>" }
+        # 指向业务集群的 kubeconfig (exec 模式, aws eks get-token 自动轮转 token).
+        # 由 cross-cluster-kubeconfig secret 提供; 单集群部署该 secret 可不建,
+        # KUBECONFIG 指向不存在文件时 kubernetes-asyncio 回退 in-cluster/默认.
+        - { name: KUBECONFIG, value: "<KUBECONFIG_PATH>" }
+        volumeMounts:
+        - name: business-kubeconfig
+          mountPath: /etc/business-kube
+          readOnly: true
+        readinessProbe:
+          httpGet: { path: /healthz, port: 8800 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet: { path: /healthz, port: 8800 }
+          initialDelaySeconds: 15
+          periodSeconds: 30
+      volumes:
+      # 业务集群 kubeconfig (跨集群部署用). optional=true: 单集群部署没建这个
+      # secret 也不会让 pod 卡 ContainerCreating.
+      - name: business-kubeconfig
+        secret:
+          secretName: cross-cluster-kubeconfig
+          optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: platform-api
+  namespace: platform-system
+spec:
+  selector:
+    app: platform-api
+  ports:
+  - port: 80
+    targetPort: 8800

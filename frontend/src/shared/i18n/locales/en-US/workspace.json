@@ -1,0 +1,369 @@
+{
+  "status": {
+    "active": "Running",
+    "suspended": "Suspended",
+    "deleting": "Deleting",
+    "paused": "Suspended"
+  },
+  "list": {
+    "title": "Workspace",
+    "searchPlaceholder": "Search name / namespace",
+    "createButton": "New Workspace",
+    "description": "A Workspace is the platform's resource boundary: one Workspace per team or project, each with its own exclusive GPU quota. Dev instances, training jobs, and inference services all run inside your own Workspace.",
+    "descriptionAdmin": "Admin view: showing all Workspaces on the platform.",
+    "descriptionMember": "Showing the Workspaces you belong to.",
+    "loadFailed": "Failed to load Workspaces",
+    "notConfigured": "Not configured",
+    "none": "None",
+    "noGpuQuota": "No GPU quota",
+    "noDescription": "No description yet",
+    "currentGpuUsage": "Current GPU quota usage",
+    "cards_one": "{{count}} GPU",
+    "cards_other": "{{count}} GPUs",
+    "usedOfCards_one": "{{used}} / {{count}} GPU",
+    "usedOfCards_other": "{{used}} / {{count}} GPUs",
+    "peopleCount_one": "{{count}} member",
+    "peopleCount_other": "{{count}} members",
+    "quotaCollecting_one": "Quota: {{count}} GPU · collecting usage",
+    "quotaCollecting_other": "Quota: {{count}} GPUs · collecting usage",
+    "createdAgo": "Created {{time}}",
+    "columns": {
+      "gpuUsage": "GPU usage",
+      "members": "Members",
+      "quickEdit": "Quick edit"
+    },
+    "quickEdit": {
+      "members": "Edit members",
+      "membersShort": "Members",
+      "fsx": "Edit FSx mounts",
+      "s3": "Edit S3 mounts"
+    },
+    "summary": {
+      "workspaces": "Workspaces",
+      "totalMembers": "Total members",
+      "totalGpuUsage": "Current total GPU quota usage",
+      "computing": "Calculating…"
+    },
+    "empty": {
+      "admin": "No Workspaces yet. Create one to get started.",
+      "member": "You have not joined any Workspace. Contact an admin to be added.",
+      "noMatch": "No matching Workspaces",
+      "createNow": "Create now"
+    },
+    "messages": {
+      "loadClustersFailed": "Failed to load the cluster list",
+      "needOneType": "Set a count of at least 1 for at least one instance type.",
+      "created": "Workspace and quota created. Next, mount FSx and add members.",
+      "nameTaken": "This name is already taken.",
+      "createFailed": "Failed to create"
+    },
+    "intro": {
+      "title": "About Workspaces",
+      "whatIs": "What is a Workspace",
+      "resourceBoundary": "<b>Resource boundary</b>: an independent GPU / CPU / memory quota assigned by platform admins. Tasks in a Workspace share this quota, and Workspaces do not affect each other by default.",
+      "permissionBoundary": "<b>Permission boundary</b>: only Workspace members can see its dev instances, training jobs, inference services, and templates. There are two roles: member (manages only their own tasks) and Workspace admin (manages all tasks in the Workspace, edits resource templates, and adjusts task priority).",
+      "assetBoundary": "<b>Asset boundary</b>: resource templates are maintained per Workspace and are independent across Workspaces. FSx / S3 mount points for tasks are also isolated per Workspace.",
+      "k8sMapping": "Mapping to K8s",
+      "k8sMappingHint": "A Workspace maps to a set of K8s / Kueue objects, all provisioned together by the AWS HyperPod team API on creation.",
+      "k8sNamespace": "<b>1 Namespace</b>: named <code/>. All Pods / CRs / Services of the Workspace's tasks live here.",
+      "k8sNamespacePattern": "hyperpod-ns-<Workspace name>",
+      "k8sResourceQuota": "<b>1 ResourceQuota</b>: the native K8s quota that rejects over-limit requests (a hard wall).",
+      "k8sKueue": "<b>1 Kueue ClusterQueue + LocalQueue</b>: task queueing, admission, and preemption all rely on it. The preemption switch (<code>spec.preemption.withinClusterQueue</code>) also acts at this level.",
+      "k8sComputeQuota": "<b>1 AWS ComputeQuota (Team)</b>: equivalent to the nominalQuota of the Kueue ClusterQueue, synced automatically by AWS. The lend/borrow policy (DontLend / Lend / LendAndBorrow) is configured at this level.",
+      "k8sIamRole": "<b>1 IAM Role</b>: all Pods in the Workspace bind to this Role through Pod Identity to access S3 / FSx / SageMaker, and so on.",
+      "summary": "💡 <b>In short</b>: a Workspace is roughly a bundle of a K8s namespace + a Kueue ClusterQueue + an IAM Role. Deleting a Workspace cascades to all of these objects (including the tasks inside) and cannot be undone."
+    },
+    "createModal": {
+      "title": "New Workspace",
+      "hint": "Creating this calls AWS CreateComputeQuota and automatically creates the K8s namespace and Kueue queue.",
+      "noClusters": "The cluster list is empty",
+      "noClustersDesc": "Check that the backend /api/v1/clusters is reachable (and whether HYPERPOD_CLUSTER_NAME is configured).",
+      "cluster": "Cluster",
+      "clusterRequired": "Select a cluster",
+      "clusterPlaceholder": "Select a cluster",
+      "nameLabel": "Name (slug · DNS label)",
+      "nameTooltip": "Lowercase letters, digits, and -; 3-63 characters; must start with a letter. The K8s namespace is derived automatically as hyperpod-ns-{name}",
+      "nameRequired": "Enter a name",
+      "namePattern": "Format: ^[a-z][a-z0-9-]{2,62}$",
+      "namePlaceholder": "e.g. team-a-nlp",
+      "namespaceLabel": "K8s namespace (automatic)",
+      "namespacePlaceholder": "Derived automatically from the name",
+      "displayName": "Display name",
+      "displayNameRequired": "Enter a display name",
+      "displayNameMax": "At most 128 characters",
+      "displayNamePlaceholder": "e.g. Team A — NLP research group",
+      "descriptionLabel": "Description (optional)",
+      "descriptionPlaceholder": "A one-line note on its purpose",
+      "quotaDivider": "Instance quota"
+    }
+  },
+  "dashboard": {
+    "messages": {
+      "infoUpdated": "Basic info updated",
+      "saveFailed": "Failed to save",
+      "needOneType": "Set a count of at least 1 for at least one instance type.",
+      "quotaUpdated": "Quota updated",
+      "quotaConflict": "The quota was modified by someone else. Refresh the page and try again."
+    },
+    "notFound": {
+      "title": "Workspace not found",
+      "subTitle": "No Workspace found with id {{wsId}}",
+      "backToList": "Back to list"
+    },
+    "loadFailed": "Failed to load Workspace",
+    "noDescription": "No description yet",
+    "editInfo": "Edit basic info",
+    "adjustQuota": "Adjust quota",
+    "breadcrumb": "Workspace",
+    "tabs": {
+      "overview": "Overview",
+      "fsx": "FSx Mounts",
+      "s3": "S3 Mounts",
+      "members": "Members"
+    },
+    "fields": {
+      "cluster": "Cluster"
+    },
+    "infoForm": {
+      "displayName": "Display name",
+      "displayNameRequired": "Enter a display name",
+      "displayNameMax": "At most 128 characters",
+      "displayNamePlaceholder": "e.g. Team A — NLP research group",
+      "descriptionLabel": "Description (optional)",
+      "descriptionMax": "At most 200 characters",
+      "descriptionPlaceholder": "A one-line note on its purpose"
+    },
+    "mounts": {
+      "title": "Mounted storage",
+      "emptyFsx": "No FSx mounted yet. Add one in the \"FSx Mounts\" tab.",
+      "emptyS3": "No S3 mounted yet. Add one in the \"S3 Mounts\" tab.",
+      "count_one": "{{count}} mount",
+      "count_other": "{{count}} mounts"
+    },
+    "quota": {
+      "title": "Current quota usage",
+      "apiUnavailable": "Quota API is temporarily unavailable",
+      "notAssigned": "No quota has been assigned yet. Contact an admin.",
+      "noResources": "No resources",
+      "collecting": "· collecting usage",
+      "memory": "Memory",
+      "cardsUnit_one": "GPU",
+      "cardsUnit_other": "GPUs",
+      "coresUnit_one": "core",
+      "coresUnit_other": "cores"
+    },
+    "pool": {
+      "gpu": "GPU pool",
+      "cpu": "CPU pool",
+      "instanceUnit_one": "instance",
+      "instanceUnit_other": "instances",
+      "showAll_one": "Show all {{count}} instance type",
+      "showAll_other": "Show all {{count}} instance types",
+      "typeCount_one": "{{count}} instance type",
+      "typeCount_other": "{{count}} instance types",
+      "modalTitle_one": "{{title}} · all {{count}} instance type",
+      "modalTitle_other": "{{title}} · all {{count}} instance types"
+    }
+  },
+  "fsx": {
+    "messages": {
+      "attached": "FSx mount added",
+      "attachFailed": "Failed to mount",
+      "detached": "FSx unmounted",
+      "detachFailed": "Failed to unmount",
+      "loadGrantsFailed": "Failed to load members and grants",
+      "granted_one": "Access granted to {{count}} member",
+      "granted_other": "Access granted to {{count}} members",
+      "grantFailed": "Failed to grant access",
+      "revoked": "Access revoked",
+      "revokeFailed": "Failed to revoke access"
+    },
+    "inUse": {
+      "title": "This FSx mount is in use by a Pod",
+      "content": "{{message}} Forcing removal will cause running Pods to hit IO errors. Continue?",
+      "forceRemove": "Force remove"
+    },
+    "intro": "FSx for Lustre file systems mounted to the Workspace. You can mount subdirectories from multiple teams; members must be granted access (read-only or read-write) before they can mount them on dev instances.",
+    "firstMountBlocked": "The first FSx mount must be done by a platform admin (it sets this team's gid baseline).",
+    "addButton": "Add FSx mount",
+    "primaryGid": {
+      "label": "Team primary group (gid) =",
+      "tooltip": "The primary group represents this team's identity: dev instances and tasks run as this identity by default, which determines the FSx directories they can read and write. Mounting another team's shared directory grants extra access to that directory, but the primary identity does not change.",
+      "unset": "This Workspace has no primary group (gid) yet. Mount your own team's directory first.",
+      "unsetTooltip": "The primary group represents this team's identity: dev instances and tasks run as this identity by default, which determines the FSx directories they can read and write. The group that owns the first mounted directory becomes the team's primary gid and never changes afterwards, so mount your own team's directory first."
+    },
+    "empty": "No FSx mounted yet",
+    "columns": {
+      "mountId": "Mount ID",
+      "mountPoint": "Mount point",
+      "subdirGid": "Subdirectory / gid"
+    },
+    "remove": "Remove",
+    "removeConfirm": {
+      "title": "Remove this mount?",
+      "description": "This deletes the K8s PV/PVC and related grants, but not the FSx file system itself."
+    },
+    "addModal": {
+      "title": "Add FSx mount",
+      "ok": "Add",
+      "hint": "Select an existing FSx file system. The backend detects the directory gid and creates the PV/PVC automatically (one rw set and one ro set).",
+      "loadingCandidates": "Loading available FSx file systems…",
+      "noCandidates": "No FSx available. Contact an admin.",
+      "loading": "Loading…",
+      "mountIdTooltip": "Unique among FSx mounts in the Workspace. PVC name = pvc-ws-fsx-{mount ID}-{rw|ro}. Used as the mount path in the Pod by default (/fsx/{mount ID}).",
+      "mountIdRequired": "Enter a mount ID",
+      "mountIdPattern": "Start with a lowercase letter; use lowercase letters, digits, and - only; 3-40 characters",
+      "mountIdPlaceholder": "e.g. team-a-data",
+      "filesystemLabel": "FSx file system",
+      "filesystemRequired": "Select an FSx",
+      "filesystemPlaceholder": "Select an FSx",
+      "topDirLabel": "Top-level directory (Team)",
+      "topDirTooltip": "Choose a team directory under /fsx. Cross-team sharing: you can choose another team's directory; the backend detects the real gid.",
+      "topDirRequired": "Select a top-level directory",
+      "topDirPlaceholder": "Select an FSx first to list directories",
+      "topDirEmpty": "No subdirectories in this FSx. Run mkdir on a node first.",
+      "subPathLabel": "Deeper subpath (optional)",
+      "subPathTooltip": "A deeper path under the top-level directory, such as train/proj-b. Final mount = /fsx/<top-level directory>/<subpath>. The gid is detected from the final directory (it may differ from the top-level directory).",
+      "subPathPattern": "Letters, digits, _, and - only; separate levels with /; do not start or end with /",
+      "subPathPlaceholder": "e.g. train/project-b (leave empty to mount the top-level directory itself)",
+      "mountPathLabel": "Mount path in Pod",
+      "mountPathTooltip": "Defaults to /fsx/<mount ID> and follows the mount ID. You can change it to any path that starts with /.",
+      "mountPathRequired": "Enter a mount path in the Pod",
+      "mountPathPattern": "Start with /; letters, digits, _ and - only",
+      "mountPathPlaceholder": "Defaults to /fsx/<mount ID>; editable",
+      "descriptionLabel": "Description (optional)",
+      "descriptionTooltip": "A one-line note on what this mount is for. It is only displayed to other users, with no functional effect. Chinese characters are supported.",
+      "descriptionMax": "At most 200 characters",
+      "descriptionPlaceholder": "e.g. ImageNet dataset shared by team-a"
+    },
+    "grant": {
+      "action": "Grant access",
+      "actionWithCount_one": "Grant access to {{count}} member",
+      "actionWithCount_other": "Grant access to {{count}} members",
+      "title": "Grant access to members",
+      "titleWithMount": "Grant access to members · {{mountId}} ({{mountPath}})",
+      "hint": "Members can mount this directory when creating a dev instance only after being granted access. Read-only = not writable in the Pod (enforced at the kernel level by PV mountOptions:[ro]); read-write = readable and writable.",
+      "memberPlaceholder": "Select Workspace members (multiple allowed, granted together)",
+      "allGranted": "All members have been granted access (or the Workspace has no members).",
+      "access": {
+        "ro": "Read-only",
+        "rw": "Read-write"
+      },
+      "empty": "No members have been granted access yet",
+      "columns": {
+        "member": "Member",
+        "access": "Permission"
+      },
+      "revokeConfirm": "Revoke this member's access?",
+      "revoke": "Revoke"
+    }
+  },
+  "s3": {
+    "messages": {
+      "attached": "S3 mount added",
+      "attachFailed": "Failed to mount",
+      "detached": "S3 unmounted",
+      "detachFailed": "Failed to unmount"
+    },
+    "inUse": {
+      "title": "This S3 mount is in use by a Pod",
+      "content": "{{message}} Forcing removal will cause running Pods to hit IO errors. Continue?",
+      "forceRemove": "Force remove"
+    },
+    "intro": "S3 buckets mounted to the Workspace. Read-write by default, but Mountpoint for S3 does not support rename, random writes, or writes after fsync. Use the boto3 SDK to write checkpoints.",
+    "addButton": "Add S3 mount",
+    "empty": "No S3 mounted yet",
+    "columns": {
+      "mountId": "Mount ID",
+      "mountPoint": "Mount point"
+    },
+    "remove": "Remove",
+    "removeConfirm": {
+      "title": "Remove this mount?",
+      "description": "This deletes the K8s PV/PVC but not the S3 bucket."
+    },
+    "addModal": {
+      "title": "Add S3 mount",
+      "ok": "Add",
+      "hint": "Select an S3 bucket created by the platform. The backend creates the PV and PVC automatically.",
+      "loadingCandidates": "Loading available S3 buckets…",
+      "noCandidates": "No S3 buckets available. Contact an admin.",
+      "mountIdTooltip": "Unique among S3 mounts in the Workspace. PVC name = pvc-ws-s3-{mount ID}. Example: imagenet",
+      "mountIdRequired": "Enter a mount ID",
+      "mountIdPattern": "Start with a lowercase letter; use lowercase letters, digits, and - only; 3-40 characters",
+      "mountIdPlaceholder": "e.g. imagenet",
+      "bucketRequired": "Select a bucket",
+      "bucketPlaceholder": "Select a bucket",
+      "prefixLabel": "Prefix within the bucket (optional)",
+      "prefixTooltip": "Mounts only the objects under this prefix. Leave empty to mount the whole bucket. Example: datasets/imagenet/",
+      "mountPathLabel": "Mount path in Pod",
+      "mountPathTooltip": "Must start with /; only letters, digits, -, and _ are allowed. Example: /s3/imagenet",
+      "mountPathRequired": "Enter a mount path",
+      "mountPathPattern": "Start with /; only letters, digits, -, and _ are allowed",
+      "descriptionLabel": "Description (optional)",
+      "descriptionTooltip": "A one-line note on what this mount is for. It is only displayed to other users, with no functional effect. Chinese characters are supported.",
+      "descriptionMax": "At most 200 characters",
+      "descriptionPlaceholder": "e.g. ImageNet dataset, for training"
+    }
+  },
+  "members": {
+    "roles": {
+      "admin": "Workspace admin",
+      "member": "Member"
+    },
+    "messages": {
+      "added": "Member added",
+      "addFailed": "Failed to add member",
+      "roleChanged": "Role changed to {{role}}",
+      "updateFailed": "Failed to update role",
+      "removed": "Member removed",
+      "removeFailed": "Failed to remove member"
+    },
+    "intro": "Members of this Workspace. Admins can add or remove members and adjust queue priority; regular members can submit tasks and create dev instances.",
+    "addButton": "Add member",
+    "empty": "No members added yet",
+    "columns": {
+      "username": "Username (IdC)",
+      "email": "Email",
+      "role": "Role",
+      "joinedAt": "Joined at"
+    },
+    "selfDisabledOption": "{{role}} (you cannot demote yourself)",
+    "changeRole": "Change role",
+    "cannotActOnSelf": "You cannot remove yourself",
+    "removeConfirm": "Remove {{userId}}?",
+    "remove": "Remove",
+    "addModal": {
+      "title": "Add member",
+      "ok": "Add",
+      "hint": "Enter the full IdC username or email. Partial matching is not supported; matches appear once you enter the complete string.",
+      "userLabel": "IdC user",
+      "userRequired": "Select an IdC user",
+      "userPlaceholder": "Enter the full username or email",
+      "userNotFound": "Not found. Check that the username or email is complete.",
+      "roleRequired": "Select a role"
+    }
+  },
+  "gpuUtil": {
+    "avgUtil": "Average utilization",
+    "peakUtil": "Peak utilization",
+    "seriesOccupied": "Occupied GPUs",
+    "countTitle": "Occupied GPUs",
+    "utilTitle": "GPU utilization",
+    "title": "GPU utilization and occupancy",
+    "cardsValue_one": "{{count}} GPU",
+    "cardsValue_other": "{{count}} GPUs",
+    "loadFailed": "Failed to load: {{error}}",
+    "noData": "No GPUs were occupied in this period",
+    "zoom": "Enlarge",
+    "timeRange": "Time range",
+    "dayOption_one": "{{count}}d",
+    "dayOption_other": "{{count}}d",
+    "utilSubtitle_one": "Past {{count}} day · utilization of occupied GPUs",
+    "utilSubtitle_other": "Past {{count}} days · utilization of occupied GPUs",
+    "countSubtitle_one": "Past {{count}} day · number of GPUs in use",
+    "countSubtitle_other": "Past {{count}} days · number of GPUs in use",
+    "past_one": "Past {{count}} day",
+    "past_other": "Past {{count}} days"
+  }
+}

@@ -1,0 +1,3 @@
+{
+  "prometheus.amp_workspace_missing": "AMP_WORKSPACE_ID is not configured. Monitoring depends on AMP; set it and retry."
+}

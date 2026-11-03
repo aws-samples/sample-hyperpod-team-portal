@@ -1,0 +1,230 @@
+{
+  "nav": {
+    "workspace": "工作空间",
+    "dynamo": "多机推理"
+  },
+  "fields": {
+    "scale": "规模",
+    "framework": "框架",
+    "creator": "创建者",
+    "queueStatus": "排队状态",
+    "workspace": "工作空间"
+  },
+  "actions": {
+    "details": "详情",
+    "cloneConfig": "克隆配置"
+  },
+  "spec": {
+    "unitCard_other": "卡",
+    "unitCore_other": "核",
+    "unitAdapter_other": "张",
+    "memory": "内存",
+    "gpuCount_other": "{{count}} GPU",
+    "replicaCount_other": "{{count}} 副本",
+    "nodeCount_other": "{{count}} 节点",
+    "scale": "{{replicas}} × {{nodes}} × {{gpu}}"
+  },
+  "confirm": {
+    "stopTitle": "停止多机推理服务",
+    "stopDesc": "删 CR (grove 级联回收 pod) 释放算力, 保留配置, 可克隆重建",
+    "deleteTitle": "删除多机推理服务",
+    "deleteDescList": "会级联删除 DynamoGraphDeployment CR + 所有 pod",
+    "deleteDescDetail": "级联删除 DynamoGraphDeployment CR + 所有 pod"
+  },
+  "messages": {
+    "stopped": "多机推理服务已停止 (保留配置, 可克隆重建)",
+    "stopFailed": "停止失败: {{error}}",
+    "deleted": "多机推理服务已删除",
+    "deleteFailed": "删除失败: {{error}}",
+    "loadFailed": "加载失败: {{error}}"
+  },
+  "statusDetailTitle": "多机推理状态详情",
+  "list": {
+    "description": "基于 NVIDIA Dynamo (DynamoGraphDeployment) 的多机推理服务 — 跨机 TP/EP, 单机装不下的超大模型。走 Kueue 统一调度, OpenAI 兼容 API。",
+    "newButton": "新建多机推理",
+    "tips": {
+      "status": "DynamoGraphDeployment status.state: initializing 初始化 / pending 待部署 / successful 运行中 / failed 失败 / Stopped 已停止。",
+      "queueStatus": "Kueue 调度队列状态 (走 Kueue pod integration, per-pod 准入)。",
+      "scale": "多机: 节点数 × 单节点 GPU (tp/ep 在启动脚本里配)。"
+    },
+    "scope": {
+      "label": "范围",
+      "all": "全部",
+      "mine": "我的"
+    }
+  },
+  "detail": {
+    "forceRefresh": "强制刷新",
+    "tabs": {
+      "overview": "总览",
+      "monitoring": "监控",
+      "engine": "Dynamo 引擎",
+      "logs": "日志"
+    },
+    "summary": {
+      "kueueStatus": "排队状态（Kueue）"
+    },
+    "fields": {
+      "lastSync": "最后同步"
+    },
+    "config": {
+      "title": "运行配置",
+      "image": "镜像",
+      "modelSource": "模型源",
+      "modelMount": "模型挂载",
+      "instanceType": "实例类型",
+      "nodeCount": "节点数 (nodeCount)",
+      "replicas": "副本数 (replicas)",
+      "gpuPerNode": "单节点 GPU",
+      "efaPerNode": "单节点 EFA",
+      "memory": "内存 (req/lim)",
+      "runAsRoot": "以 root 运行",
+      "runAsRootYes": "是 (runAsUser=0)",
+      "runAsRootNo": "否",
+      "launchScript": "启动脚本",
+      "defaultLaunch": "默认启动",
+      "none": "无"
+    },
+    "pods": {
+      "title": "当前运行的 Pods ({{total}})",
+      "empty": "暂无 pod (可能初始化中, 强制刷新拉)",
+      "restarts": "重启",
+      "reason": "原因"
+    },
+    "timeline": "状态时间线（K8s Conditions）",
+    "monitoringBanner": "GPU / 显存 / 温度 / 网络 (节点级 DCGM/cAdvisor) · 每 20-30s 自动刷新。",
+    "engineBanner": "Dynamo 引擎指标 (dynamo_*, OTel sidecar 抓取) · 吞吐 / TTFT / ITL / 队列 / KV cache · 每 20-30s 自动刷新。"
+  },
+  "logs": {
+    "pod": "Pod 日志",
+    "all": "🔍 任务日志"
+  },
+  "create": {
+    "title": "新建多机推理",
+    "breadcrumbNew": "新建",
+    "loadingConfig": "加载克隆配置中...",
+    "sections": {
+      "basic": "基本信息",
+      "image": "镜像",
+      "model": "模型来源",
+      "resource": "计算资源",
+      "launch": "启动配置",
+      "preview": "预览"
+    },
+    "messages": {
+      "cloneS3Missing": "克隆: 源 S3 不在你当前挂载范围, 请重选 S3 挂载源",
+      "cloneTemplateChanged": "克隆: 原配置对应的资源模板已变更/删除, 请重新选择资源模板",
+      "cloneFetchFailed": "克隆: 拉取源多机推理配置失败 — {{error}}",
+      "fillRequiredYaml": "# 请先补全表单必填项, 再预览。",
+      "fillRequiredWarn": "请先填写必填项再预览",
+      "rendering": "# 渲染中...",
+      "renderFailed": "# 后端渲染失败: {{error}}",
+      "created": "多机推理服务创建成功",
+      "createFailed": "创建失败: {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "显示名称",
+      "displayNameTooltip": "给人看的名字, 可重复。任务名 (K8s 资源名) 跟随它自动生成: 转小写、非字母数字转 -、中文丢弃, 再加随机后缀。",
+      "displayNameRequired": "请输入显示名称",
+      "displayNamePlaceholder": "例 deepseek-v3-多机推理",
+      "taskNameLabel": "任务名 (自动生成, 唯一)",
+      "taskNameTooltip": "最终 K8s 资源名 = sanitize(显示名) + 10 随机字符, 自动生成、不可编辑 (保证 k8s/kueue 唯一, 日志按它定位)。",
+      "taskNameRequired": "请输入显示名称以生成任务名",
+      "taskNamePattern": "小写字母/数字/-, 字母开头, 长度 3-63",
+      "taskNamePlaceholder": "随显示名自动生成",
+      "descriptionTooltip": "简短说明 (选填), 便于列表/详情识别。",
+      "descriptionPlaceholder": "例: DeepSeek-V3 多机 TP/EP 推理"
+    },
+    "image": {
+      "help": "从「资产管理 → 镜像」中用途含推理 (inference) 的镜像里选择, 或直接键入任意镜像完整 URI (含 tag)。Dynamo 多机推理需 sglang-runtime EFA 变体 (nvcr.io/nvidia/ai-dynamo/sglang-runtime:*-efa-amd64)。私有 ECR 仅支持本平台所在 AWS 账号 + 当前区域。",
+      "label": "镜像 (完整名, 含 tag)",
+      "loading": "正在加载镜像列表…",
+      "empty": "无镜像中心镜像时可直接用默认 dynamo sglang-runtime 镜像, 或到<registry>「资产管理 → 镜像」</registry>注册自定义镜像。",
+      "hint": "下拉列出「镜像」中用途含推理 (inference) 的镜像; 也可直接键入任意镜像 URI。",
+      "required": "请选择或填写镜像 URI",
+      "format": "格式须为 <registry>/<repo>:<tag>"
+    },
+    "model": {
+      "sourceLabel": "模型源",
+      "fsxOption": "FSx Lustre (推荐)",
+      "fsxLabel": "共享存储挂载 (FSx)",
+      "fsxTooltip": "选被授权的 FSx (单选)。容器挂到 /fsx, 启动脚本 --model-path 写 /fsx 下的模型绝对路径。无资源请联系管理员授权。",
+      "fsxLoading": "加载授权的 FSx...",
+      "fsxNone": "你在本 workspace 没有被授权的 FSx · 联系管理员",
+      "fsxHint": "启动脚本里写 --model-path /fsx/<模型目录> (FSx 挂到 /fsx)",
+      "fsxRequired": "请选择 FSx 挂载源",
+      "fsxPlaceholder": "选 FSx 挂载源 (单选)",
+      "fsxPlaceholderEmpty": "无授权 FSx (联系管理员)",
+      "fsxNotFound": "该 workspace 无授权 FSx",
+      "s3Label": "共享存储挂载 (S3)",
+      "s3Tooltip": "选一个 workspace 已挂载的 S3 (单选), bucket/region 自动带出。模型相对路径下方填。",
+      "s3Required": "请选择 S3 挂载源",
+      "s3Placeholder": "选 S3 挂载源 (单选)",
+      "s3Loading": "加载 S3...",
+      "s3PlaceholderEmpty": "该 workspace 无挂载 S3 (联系管理员)",
+      "s3NotFound": "该 workspace 无挂载 S3",
+      "s3PathLabel": "模型相对路径",
+      "s3PathTooltip": "模型在 S3 的相对路径, prefetch 到挂载点。启动脚本 --model-path 写挂载点下路径。",
+      "s3PathRequired": "请填模型相对路径",
+      "s3PathExtra": "例: models/deepseek-v3"
+    },
+    "resource": {
+      "poolLabel": "资源池",
+      "poolTooltip": "先选 GPU/CPU 资源池, 右侧机型与模板按池筛选。",
+      "instanceTypeLabel": "实例类型",
+      "instanceTypeTooltip": "该资源池内的机型; 后端校验机型 ∈ 配额.",
+      "instanceTypeRequired": "请选择实例类型",
+      "instanceTypePlaceholder": "选该资源池内的机型",
+      "instanceTypePlaceholderEmpty": "该 workspace 无已分配机型 (联系管理员配额)",
+      "instanceTypeNotFound": "该资源池下无可用机型",
+      "templateLabel": "资源模板 (单节点规格)",
+      "templateTooltip": "资源 (GPU/CPU/内存/EFA) 由管理员维护的模板管控, 锁单个 worker 节点的规格。总量 = 节点数 × 模板。",
+      "templateRequired": "请选择资源模板",
+      "templatePlaceholder": "选择资源模板 (由管理员维护)",
+      "noTemplates": "暂无资源模板 · 请联系空间管理员在 管理中心 -「资源模版」创建",
+      "nodeCountLabel": "节点数 (nodeCount)",
+      "nodeCountTooltip": "多机协同一个推理实例的节点数 (multinode.nodeCount)。1 = 单机; 总 GPU = 节点数 × 单节点 GPU。",
+      "perNodeSpec": "单节点规格 · 模板锁定",
+      "perNodeSpecTooltip": "GPU/CPU/内存/EFA 由资源模板统一管控 (锁单个 worker 节点); 切模板自动同步。",
+      "efaNote": "（多机机间通信用）",
+      "replicasLabel": "副本数",
+      "replicasTooltip": "独立 worker 实例数 (worker.replicas), 数据并行由前端分流。1 = 单实例; 总 GPU = 副本数 × 节点数 × 单节点 GPU。",
+      "quotaNeed_other": "本服务需 {{count}} GPU 卡",
+      "quotaBreakdown": " ({{scale}})",
+      "quotaRemaining_other": " · 剩余 {{remaining}} / {{count}} GPU 卡",
+      "quotaOver": " · 超额, 提交后需等待",
+      "quotaCollecting_other": " · 共 {{count}} GPU 卡 · 余量采集中"
+    },
+    "launch": {
+      "heading": "启动脚本 (Dynamo · sglang)",
+      "help": "整段脚本经 /bin/sh -c 执行 (后端渲 command=[\"/bin/sh\",\"-c\"], args=[脚本])。<br/>用 exec 接管主进程; --model-path 不能省 (FSx 挂到 /fsx, 写 /fsx/<modelDir/>)。<br/>多机张量/专家并行 --tp-size / --ep-size 直接在此编辑。",
+      "scriptRequired": "必填启动脚本",
+      "scriptExtra": "默认已填 dynamo.sglang 启动命令, 按需改 --model-path / --tp-size / --ep-size",
+      "script": {
+        "fsxMount": "FSx挂载点",
+        "modelDir": "模型目录",
+        "modelName": "模型名"
+      }
+    },
+    "preview": {
+      "heading": "渲染预览",
+      "refresh": "生成 / 刷新预览 (后端渲染)",
+      "placeholder": "# 点『刷新预览』生成后端渲染的最终 YAML"
+    }
+  },
+  "invoke": {
+    "title": "调用指令",
+    "ready": "对外调用地址已就绪",
+    "clusterOnly": "当前仅集群内可达",
+    "clusterOnlyDesc": "frontend SVC 是 ClusterIP (集群内 / 同 ws 开发机可调)。对外 (VPC 内 ALB) 暴露为后续能力, 就绪后此处显示真实地址。",
+    "connInfo": "连接信息",
+    "addrCluster": "地址 (集群内)",
+    "protocol": "协议",
+    "protocolValue": "OpenAI 兼容 HTTP (/v1/models, /v1/chat/completions)",
+    "modelValue": "model 值",
+    "examples": "调用样例 (集群内开发机)",
+    "code": {
+      "samplePrompt": "用三个词打个招呼"
+    }
+  }
+}

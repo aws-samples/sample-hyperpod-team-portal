@@ -1,0 +1,120 @@
+{
+  "language": {
+    "zh-CN": "中文",
+    "en-US": "English"
+  },
+  "actions": {
+    "copy": "Copy",
+    "close": "Close",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "create": "Create",
+    "delete": "Delete",
+    "start": "Start",
+    "stop": "Stop",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "clone": "Clone",
+    "search": "Search",
+    "reset": "Reset",
+    "submit": "Submit",
+    "view": "View",
+    "download": "Download",
+    "back": "Back"
+  },
+  "fields": {
+    "createdAt": "Created at",
+    "name": "Name",
+    "status": "Status",
+    "description": "Description",
+    "actions": "Actions",
+    "startedAt": "Started at",
+    "endedAt": "Ended at",
+    "duration": "Duration"
+  },
+  "messages": {
+    "copied": "Copied",
+    "copyFailed": "Copy failed",
+    "loading": "Loading…",
+    "none": "(none)",
+    "loadFailed": "Failed to load",
+    "noData": "No data"
+  },
+  "statusDetail": {
+    "title": "Status details",
+    "loadFailed": "Failed to load status details: {{error}}"
+  },
+  "kueueDetail": {
+    "title": "Kueue scheduling details",
+    "emptyTitle": "No Kueue details",
+    "emptyDesc": "The task may have ended (its Workload has been reclaimed) or never entered Kueue scheduling."
+  },
+  "kueueStatus": {
+    "queuedTip": "Waiting in the queue for resources. It will start automatically once resources are free.",
+    "detailLink": "Kueue details"
+  },
+  "crPhase": {
+    "detailLink": "CR details"
+  },
+  "conditionsTimeline": {
+    "empty": "No conditions"
+  },
+  "metricsChart": {
+    "loading": "Loading…",
+    "loadFailed": "Failed to load: {{error}}",
+    "noData": "No data yet (normal while the Pod is starting or not running)"
+  },
+  "labelsField": {
+    "keyRequired": "Key is required.",
+    "reservedPrefix": "Platform-reserved prefixes are not allowed.",
+    "nameRule": "Must start and end with a letter or digit, and may contain letters, digits, hyphens, underscores and dots in between (max 63 characters).",
+    "label": "Custom labels",
+    "tooltip": "Used to categorize experiments and projects (e.g. project=nlp-q3). Use plain keys without a prefix; only letters, digits and -_. are allowed (no Chinese characters); at most 10 labels.",
+    "add": "Add label",
+    "max": "Up to 10 labels"
+  },
+  "apiToken": {
+    "expiryRequired": "Select an expiration date, or check \"Never expires\".",
+    "copyNow": "Copy and save it now. It cannot be viewed again after you close this dialog.",
+    "curlUsage": "curl usage",
+    "copyAgain": "Copy again",
+    "expiresAt": "Expires at",
+    "neverExpire": "Never expires",
+    "onePerPerson": "One token per person. To get a new token, delete the current one first.",
+    "deleteConfirm": "Scripts that use this token will stop working immediately after deletion. Are you sure?",
+    "delete": "Delete token",
+    "selectExpiry": "Select expiration date",
+    "generate": "Generate token"
+  },
+  "storagePicker": {
+    "primary": "Primary",
+    "readWrite": "Read-write",
+    "readOnly": "Read-only",
+    "empty": "No FSx/S3 is mounted on this Workspace yet, so you can skip this. To add a mount, ask a Workspace admin to add one in the \"FSx Mounts\" or \"S3 Mounts\" tab of the Workspace page.",
+    "reviewTitle_one": "{{title}} · {{count}} item",
+    "reviewTitle_other": "{{title}} · {{count}} items",
+    "noneSelected": "No {{kind}} selected",
+    "fsxTitle": "FSx mounts (multi-select)",
+    "fsxHelp": "File systems marked \"Primary\" are the FSx file systems of this Workspace's own team (owned by the team's primary_gid); the rest belong to other teams or are shared file systems you have been authorized to access. If the expected resources are not listed, contact an admin to grant access.",
+    "fsxPlaceholder": "Search by path and select FSx (multiple allowed)",
+    "s3Title": "S3 mounts (multi-select)",
+    "s3Placeholder": "Select S3 mounts (multiple allowed)",
+    "selectedTotal": "Selected mounts ({{total}})"
+  },
+  "resourceTemplate": {
+    "specText_one": "{{gpu}} GPU · {{count}} core · {{mem}} GiB · {{efa}} EFA",
+    "specText_other": "{{gpu}} GPU · {{count}} cores · {{mem}} GiB · {{efa}} EFA"
+  },
+  "scriptEditor": {
+    "typed_one": "{{count}} character entered",
+    "typed_other": "{{count}} characters entered",
+    "typedTitle_one": "{{lang}} · {{count}} character entered",
+    "typedTitle_other": "{{lang}} · {{count}} characters entered",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen"
+  }
+}

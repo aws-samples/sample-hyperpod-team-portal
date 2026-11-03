@@ -1,0 +1,14 @@
+{
+  "fsx_quota.not_configured": "FSx {filesystem_id} is not configured in PLATFORM_FSX_FILESYSTEMS, so its quota cannot be managed.",
+  "fsx_quota.quota_sum_exceeded": "The total quota of {projected} GiB would exceed the FSx capacity of {total} GiB ({others} GiB already allocated to other directories).",
+  "fsx_quota.dir_name_not_single": "Invalid directory name: {name} (must be a single-level directory name).",
+  "fsx_quota.dir_name_charset": "Invalid directory name: only letters, digits, '.', '_' and '-' are allowed.",
+  "fsx_quota.admin_unavailable": "fsx-admin is unavailable or the lfs command failed",
+  "fsx_quota.gid_unknown": "gid {gid} does not belong to any existing directory and cannot be reused.",
+  "fsx_quota.dir_exists": "Directory {name} already exists.",
+  "fsx_quota.create_failed": "Failed to create directory {name} ({error}). Check the Pod and lfs permissions.",
+  "fsx_quota.create_readback_failed": "The directory was created, but the quota read-back check failed (expected {expected}G, got {actual}G). Check whether project quota is enabled (requires a native Lustre 2.15 file system).",
+  "fsx_quota.dir_not_found": "Directory {name} does not exist.",
+  "fsx_quota.update_failed": "Failed to update the quota ({error}): {name}",
+  "fsx_quota.update_readback_failed": "Quota read-back check failed (expected {expected}G, got {actual}G)."
+}

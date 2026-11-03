@@ -1,0 +1,6 @@
+{
+  "sharing.res_type_unsupported": "res_type 只支持 {supported}, 收到: {res_type}",
+  "sharing.creator_only": "仅资源创建者本人可分享/取消分享",
+  "sharing.cannot_share_with_self": "不能把资源分享给自己",
+  "sharing.target_not_member": "用户 '{username}' 不是本工作空间成员, 无法分享"
+}

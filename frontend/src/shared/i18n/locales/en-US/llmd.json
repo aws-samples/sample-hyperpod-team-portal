@@ -1,0 +1,273 @@
+{
+  "nav": {
+    "workspace": "Workspace",
+    "llmd": "Multi-node Inference"
+  },
+  "fields": {
+    "scale": "Scale",
+    "creator": "Creator",
+    "queueStatus": "Queue status",
+    "workspace": "Workspace",
+    "role": "Role"
+  },
+  "actions": {
+    "details": "Details",
+    "cloneConfig": "Clone config"
+  },
+  "spec": {
+    "unitCard_one": "card",
+    "unitCard_other": "cards",
+    "unitCore_one": "core",
+    "unitCore_other": "cores",
+    "unitAdapter_one": "adapter",
+    "unitAdapter_other": "adapters",
+    "memory": "Memory",
+    "gpuCount_one": "{{count}} GPU",
+    "gpuCount_other": "{{count}} GPUs",
+    "replicaCount_one": "{{count}} replica",
+    "replicaCount_other": "{{count}} replicas",
+    "nodeCount_one": "{{count}} node",
+    "nodeCount_other": "{{count}} nodes",
+    "scale": "{{replicas}} × {{nodes}} × {{gpu}}"
+  },
+  "confirm": {
+    "stopTitle": "Stop llm-d inference service?",
+    "stopDesc": "Deletes the CR (cascading to reclaim the Pods) to release compute. The config is kept, so you can clone it to rebuild the service.",
+    "deleteTitle": "Delete llm-d inference service?",
+    "deleteDescList": "This also deletes the LWS and gateway resources and all Pods.",
+    "deleteDescDetail": "This also deletes the LWS and gateway resources and all Pods."
+  },
+  "messages": {
+    "stopped": "llm-d inference service stopped (the config is kept; clone it to rebuild)",
+    "stopFailed": "Failed to stop: {{error}}",
+    "deleted": "llm-d inference service deleted",
+    "deleteFailed": "Failed to delete: {{error}}",
+    "loadFailed": "Failed to load: {{error}}"
+  },
+  "list": {
+    "description": "Multi-node TP/EP deployment based on llm-d (LeaderWorkerSet + sgl-model-gateway).",
+    "filter": "Filter",
+    "filterHint": "Filtering is limited to the latest 5000 items.",
+    "newButton": "New multi-node inference",
+    "tips": {
+      "status": "LWS/gateway status.state: initializing: initializing; pending: pending deployment; successful: running; failed: failed; Stopped: stopped.",
+      "queueStatus": "Status in the Kueue scheduling queue (via Kueue Pod integration, admitted per Pod).",
+      "scale": "Multi-node gang: replicas × nodes per group × GPUs per Pod (see the details page for tp/ep)."
+    },
+    "scope": {
+      "label": "Scope",
+      "all": "All",
+      "mine": "Mine"
+    }
+  },
+  "detail": {
+    "forceRefresh": "Force refresh",
+    "tabs": {
+      "overview": "Overview",
+      "monitoring": "Monitoring",
+      "sglang": "SGLang Performance",
+      "logs": "Logs"
+    },
+    "summary": {
+      "kueueStatus": "Queue status (Kueue)"
+    },
+    "fields": {
+      "lastSync": "Last synced at"
+    },
+    "endpoint": {
+      "label": "In-VPC access endpoint",
+      "albReady": "ALB is ready (<dns/>); waiting for the gateway replicas to be Ready.",
+      "albCreating": "ALB is being created (about 1-2 minutes). If no address appears for a long time, ask an admin to check the node security groups.",
+      "disabled": "Not enabled · reachable only from inside the cluster (you can select \"In-VPC access endpoint (ALB)\" at creation)"
+    },
+    "gateway": {
+      "title": "Gateway configuration (routing layer)",
+      "image": "Gateway image",
+      "instanceType": "Instance type (Gateway)",
+      "replicas": "Gateway replicas",
+      "memory": "Gateway memory",
+      "extraArgs": "Gateway extra arguments"
+    },
+    "worker": {
+      "title": "Worker configuration (inference engine)",
+      "sglangImage": "SGLang image",
+      "modelSource": "Model source",
+      "modelMount": "Model mount",
+      "instanceType": "Instance type (GPU)",
+      "replicas": "Replicas",
+      "nodesPerGroup": "Nodes per group (size)",
+      "gpuPerPod": "GPUs per Pod",
+      "efaPerPod": "EFA per Pod",
+      "cpuPerPod": "CPU per Pod",
+      "memoryPerPod": "Memory per Pod",
+      "launchScript": "Launch script",
+      "none": "None"
+    },
+    "pods": {
+      "title": "Current Pods ({{total}})",
+      "empty": "No Pods yet (they may still be initializing; click Force refresh to load)",
+      "groupGateway": "Gateway",
+      "groupReplica": "Replica group {{index}}",
+      "restarts": "Restarts",
+      "reason": "Reason"
+    },
+    "containers": {
+      "name": "Container name",
+      "ready": "Ready",
+      "notReady": "Not ready",
+      "empty": "No container status",
+      "roles": {
+        "engine": "Inference engine",
+        "gateway": "Gateway",
+        "metrics": "Metrics collector",
+        "other": "Container"
+      }
+    },
+    "timeline": "Status timeline (K8s Conditions)",
+    "monitoringBanner": "GPU / GPU memory / temperature / CPU / network (node-level DCGM/cAdvisor, covering worker and gateway Pods) · Refreshes automatically every 20-30s.",
+    "sglangBanner": "SGLang engine metrics (the OTel sidecar scrapes /metrics, filtered by resource_name) · Throughput / TTFT / KV cache / queue concurrency · Refreshes automatically every 20-30s."
+  },
+  "logs": {
+    "pod": "Pod logs",
+    "all": "🔍 Task logs"
+  },
+  "create": {
+    "title": "New Multi-node Inference",
+    "breadcrumbNew": "New",
+    "loadingConfig": "Loading clone configuration…",
+    "sections": {
+      "basic": "Basic info",
+      "gateway": "Gateway (routing layer)",
+      "worker": "Worker (inference engine)",
+      "launch": "Launch configuration",
+      "preview": "Preview"
+    },
+    "messages": {
+      "cloneFsxReadOnly": "Clone: you only have read-only access to the source FSx, so it was not preselected. Select it again.",
+      "cloneFsxReadWrite": "Clone: you only have read/write access to the source FSx, so it was not preselected. Select it again.",
+      "cloneFsxMissing": "Clone: the source FSx is not within your authorization, so it was not preselected. Select an FSx mount source again.",
+      "cloneFetchFailed": "Clone: failed to load the source llm-d configuration — {{error}}",
+      "fillRequiredYaml": "# Fill in the required fields first, then preview.",
+      "fillRequiredWarn": "Fill in the required fields before previewing.",
+      "rendering": "# Rendering…",
+      "renderFailed": "# Backend rendering failed: {{error}}",
+      "created": "llm-d inference service created",
+      "createFailed": "Failed to create: {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "Display name",
+      "displayNameTooltip": "Also used as the prefix of the K8s task name, so it must be a valid DNS name: start with a lowercase letter, be 3-20 characters long, contain only a-z, 0-9 and '-', and end with a letter or digit. For notes in other languages such as Chinese, use the \"Description\" field below. The final task name = this name + '-' + 10 random characters, generated by the backend at creation. Multi-node inference names are 9 characters shorter than training and inference names, because Kueue embeds the task name in a length-limited label.",
+      "displayNameRequired": "Enter a display name.",
+      "displayNameAscii": "Chinese and full-width characters are not allowed. Put any notes in the \"Description\" field below.",
+      "displayNameLength": "Must be 3-20 characters.",
+      "displayNamePattern": "Must start with a lowercase letter, contain only a-z, 0-9 and '-', and end with a letter or digit.",
+      "displayNamePlaceholder": "e.g. deepseek-v3-llmd",
+      "descriptionTooltip": "A short description (optional), to help you recognize it in the list and details.",
+      "descriptionPlaceholder": "e.g. DeepSeek-V3 multi-node TP/EP inference (LWS + sgl-gateway)"
+    },
+    "gateway": {
+      "imageLabel": "Gateway image",
+      "imageTooltip": "The sgl-model-gateway image (default: lmsysorg/sgl-model-gateway:latest).",
+      "imageRequired": "Enter the gateway image.",
+      "instanceTypeLabel": "Instance type",
+      "instanceTypeTooltip": "The gateway is a CPU-only router, so it can use its own instance type (the CPU pool is the cheapest option; it can also share the worker's GPU instance). The backend checks that the instance type is within your quota.",
+      "instanceTypeRequired": "Select a gateway instance type.",
+      "instanceTypePlaceholder": "Select an instance type (CPU or GPU)",
+      "instanceTypePlaceholderEmpty": "No assigned instance types (contact an admin to set up a quota)",
+      "instanceTypeNotFound": "No instance types in this Workspace",
+      "templateLabel": "Resource template (CPU routing spec)",
+      "templateTooltip": "The gateway is a CPU-only routing layer and uses no GPUs. CPU and memory are governed by CPU pool templates maintained by admins.",
+      "templateRequired": "Select a resource template.",
+      "templatePlaceholder": "Select a CPU pool resource template (maintained by admins)",
+      "specLabel": "Gateway spec · locked by template",
+      "specTooltip": "CPU and memory are governed by the CPU pool resource template; switching templates syncs them automatically. Request = limit.",
+      "noTemplates": "No CPU pool resource templates yet · ask a Workspace admin to create one in Admin Console → Resource Template",
+      "replicasLabel": "Gateway replicas",
+      "replicasTooltip": "Number of sgl-model-gateway replicas (stateless routing; multiple replicas give high availability).",
+      "exposeAlbLabel": "In-VPC access endpoint (ALB)",
+      "exposeAlbTooltip": "If on, an internal ALB is created for this instance, giving you an HTTP endpoint you can call directly. If off, the service is reachable only from inside the cluster (you can test it through the platform proxy on the details page). This is set at creation; to change it later you must delete and recreate the service.",
+      "on": "On",
+      "off": "Off",
+      "extraArgsLabel": "Gateway extra arguments (advanced)",
+      "extraArgsTooltip": "Append or override sgl-model-gateway router tuning arguments (appended at the end; for duplicate names the later one wins). Leave empty to use the official defaults. One argument per line.",
+      "extraArgsExtra": "One argument per line, e.g. --cache-threshold=0.5; leave empty to use the official defaults (cache_aware, queue, health-check, etc.)"
+    },
+    "image": {
+      "help": "Choose from the images under \"Asset Management → Image\" whose purpose includes inference, or type any full image URI (including the tag). The llm-d worker runs the SGLang inference engine, so the standard lmsysorg/sglang image is enough. Private ECR is only supported in the AWS account and Region this platform runs in.",
+      "label": "SGLang image (full name, including tag)",
+      "loading": "Loading image list…",
+      "empty": "If the Image Hub has no images, you can use the default lmsysorg/sglang image directly, or register a custom image under <registry>\"Asset Management → Image\"</registry>.",
+      "hint": "The dropdown lists images under \"Image\" whose purpose includes inference; you can also type any image URI.",
+      "required": "Select or enter an image URI.",
+      "format": "Use the format <registry>/<repo>:<tag>"
+    },
+    "model": {
+      "sourceLabel": "Model source",
+      "fsxOption": "FSx Lustre (recommended)",
+      "fsxLabel": "Shared storage mount (FSx)",
+      "fsxTooltip": "Choose an authorized FSx file system (select one). It is mounted at /fsx in the container; enter the absolute model path below. If no resources are listed, contact an admin to grant access.",
+      "fsxLoading": "Loading authorized FSx…",
+      "fsxNone": "You have no authorized FSx in this Workspace · contact an admin",
+      "fsxHint": "FSx is mounted at /fsx; write the model path as /fsx/<model-dir>",
+      "fsxRequired": "Select an FSx mount source.",
+      "fsxPlaceholder": "Select an FSx mount source (select one)",
+      "fsxPlaceholderEmpty": "No authorized FSx (contact an admin)",
+      "fsxNotFound": "No authorized FSx in this Workspace",
+      "modelDiskHint": "The model disk is mounted at /model in the container. In the \"Launch configuration\" script, write: --model-path /model/<model-dir>",
+      "s3Tooltip": "Choose a bucket the Workspace is authorized for (S3 already mounted). The backend creates a dedicated mount, with the prefix pointing at the model directory.",
+      "s3Required": "Select an S3 bucket.",
+      "s3Placeholder": "Select a bucket (must be authorized for the Workspace)",
+      "s3Loading": "Loading S3…",
+      "s3PlaceholderEmpty": "No authorized S3 in this Workspace (contact an admin)",
+      "s3NotFound": "No authorized S3 in this Workspace",
+      "s3PrefixLabel": "Model prefix (directory)",
+      "s3PrefixTooltip": "The prefix of the model within the bucket (pointing at the model directory). The mount root is the model itself, and sglang reads /model directly.",
+      "s3PrefixRequired": "Enter the model prefix.",
+      "s3PrefixExtra": "e.g. models/qwen2.5-0.5b (the mount root is this directory)"
+    },
+    "resource": {
+      "instanceTypeLabel": "Instance type (GPU pool)",
+      "instanceTypeTooltip": "The worker and gateway use the same instance type (GPU pool). The gateway uses no GPUs, so placing it on a GPU instance does not consume quota. The backend checks that the instance type is within your quota.",
+      "instanceTypeRequired": "Select a GPU instance type.",
+      "instanceTypePlaceholder": "Select an instance type in the GPU pool",
+      "instanceTypePlaceholderEmpty": "No assigned GPU instance types (contact an admin to set up a quota)",
+      "instanceTypeNotFound": "No GPU instance types in this Workspace",
+      "templateLabel": "Resource template (per-node spec)",
+      "templateTooltip": "Per-node GPU, CPU, memory and EFA of a worker are governed by templates maintained by admins. Total = replicas × nodes × template.",
+      "templateRequired": "Select a resource template.",
+      "templatePlaceholder": "Select a resource template (maintained by admins)",
+      "noTemplates": "No resource templates yet · ask a Workspace admin to create one in Admin Console → Resource Template",
+      "replicasLabel": "Replicas",
+      "replicasTooltip": "Number of independent leader + worker groups (LWS replicas), for data parallelism. Total GPUs = replicas × nodes × GPUs per Pod.",
+      "nodesLabel": "Nodes per group (size)",
+      "nodesTooltip": "How many nodes one inference instance spans for TP/EP (LWS size). ★ Minimum 2: this is a multi-node gang, and size=1 triggers a Kueue division by zero (bug#6486).",
+      "perNodeSpec": "Per-node spec · locked by template",
+      "perNodeSpecTooltip": "GPU, CPU, memory and EFA are governed by the resource template (locked to a single worker node); switching templates syncs them automatically.",
+      "quotaNeed_one": "This service needs {{count}} GPU",
+      "quotaNeed_other": "This service needs {{count}} GPUs",
+      "quotaBreakdown": " ({{scale}})",
+      "quotaRemaining_one": " · {{remaining}} remaining of {{count}} GPU",
+      "quotaRemaining_other": " · {{remaining}} remaining of {{count}} GPUs",
+      "quotaOver": " · over quota; it will wait for quota after you submit",
+      "quotaCollecting_one": " · {{count}} GPU in total · remaining quota is being collected",
+      "quotaCollecting_other": " · {{count}} GPUs in total · remaining quota is being collected"
+    },
+    "launch": {
+      "heading": "Launch script (SGLang)",
+      "help": "The whole script runs via /bin/sh -c (the backend renders command=[\"/bin/sh\",\"-c\"], args=[script]).<br/>--model-path: FSx is mounted at the same path as in your dev instance, so use the full absolute path (e.g. /fsx/team-a-data/models/qwen2.5-0.5b); S3 is mounted at /model, so use /model/<relPath/>.<br/>Edit the multi-node tensor/expert parallelism flags --tp-size / --ep-size directly here.<br/>The LWS networking placeholders $LWS_LEADER_ADDRESS / $LWS_GROUP_SIZE / $LWS_WORKER_INDEX are pre-filled; do not delete them.",
+      "relPath": "relative path under the prefix",
+      "scriptRequired": "Launch script is required.",
+      "scriptExtra": "The sglang.launch_server launch command is pre-filled; edit --model-path / --tp-size / --ep-size as needed",
+      "script": {
+        "fsxMount": "fsx-mount",
+        "modelDir": "model-dir",
+        "modelName": "model-name"
+      }
+    },
+    "preview": {
+      "heading": "Rendered preview",
+      "refresh": "Generate / refresh preview (backend rendering)",
+      "placeholder": "# Click \"Generate / refresh preview\" to generate the final YAML rendered by the backend"
+    }
+  }
+}

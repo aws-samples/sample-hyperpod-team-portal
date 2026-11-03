@@ -1,0 +1,74 @@
+{
+  "filters": {
+    "startTime": "Start time",
+    "endTime": "End time",
+    "localTime": "· Local time",
+    "searchLabel": "Search",
+    "keyword": "Keyword",
+    "regex": "Regex",
+    "noMatch": "No matching logs",
+    "startBeforeEnd": "Start time must be earlier than end time."
+  },
+  "viewer": {
+    "loadingStreams": "Loading log streams…",
+    "loadFailed": "Failed to load logs: {{error}}",
+    "pipelineHint": "Data pipeline: Fluent Bit (HyperPod Obs Add-on) → CloudWatch. Check that the Obs Add-on is ACTIVE and the cluster ARN has been written to the DB.",
+    "anyTime": "Any time",
+    "openAt": "Open at",
+    "openAtSearchTip": "When searching, results start from the earliest (chronological order). This cannot be changed.",
+    "openAtTip": "Latest: open at the end to see the newest logs. Earliest: open at the beginning (e.g. startup / environment variable logs).",
+    "openAtLatest": "Latest (end)",
+    "openAtEarliest": "Earliest (start)",
+    "searchHintRegex": "· Case-sensitive · Regex does not support parentheses ()",
+    "searchHintKeyword": "· Case-sensitive · Substring match, leave empty for no filter",
+    "status": {
+      "search_one": "Search results · oldest to newest · scroll down to load newer · {{count}} line loaded",
+      "search_other": "Search results · oldest to newest · scroll down to load newer · {{count}} lines loaded",
+      "browse_one": "Anchored at latest · scroll up for earlier / scroll down for newer · {{count}} line loaded",
+      "browse_other": "Anchored at latest · scroll up for earlier / scroll down for newer · {{count}} lines loaded"
+    },
+    "downloadTip": "Download the full log of this stream",
+    "querying": "Querying…",
+    "loadEarlier": "↑ Scroll up to load earlier",
+    "loadNewer": "↓ Scroll down to load newer",
+    "reachedStart": "Reached the start of the logs",
+    "reachedLatest": "Reached the latest logs"
+  },
+  "wholeSearch": {
+    "startPlaceholder": "Last 24h",
+    "endPlaceholder": "Now",
+    "hintRegex": "· Case-sensitive · Regex supported",
+    "hintKeyword": "· Case-sensitive · Substring match, leave empty to search all logs of the task",
+    "truncated": "Too many results; truncated to the first 10,000 rows. Narrow the time window or add a keyword.",
+    "matched_one": "{{count}} line matched",
+    "matched_other": "{{count}} lines matched",
+    "setConditions": "Set your conditions, then click \"Search\"",
+    "querying": "Querying…"
+  },
+  "sources": {
+    "training": {
+      "empty": "No logs (the task produced no output, or the 106-day retention period has passed)",
+      "banner": "Task logs: across all Pods of this task (Logs Insights). Asynchronous query; up to 10,000 rows per result."
+    },
+    "inference": {
+      "empty": "No logs (the inference service produced no output, or the CloudWatch retention period has passed)",
+      "banner": "Endpoint logs: across all Pods of this endpoint (Logs Insights). Asynchronous query; up to 10,000 rows per result."
+    },
+    "dynamo": {
+      "empty": "No logs (Dynamo inference produced no output, or the CloudWatch retention period has passed)",
+      "banner": "Task logs: across all Pods of this Dynamo inference service (frontend + worker, Logs Insights). Asynchronous query; up to 10,000 rows per result."
+    },
+    "rayjob": {
+      "empty": "No logs (the Ray Job produced no system logs, or the CloudWatch retention period has passed)",
+      "banner": "Task logs: across all Pods of this Ray Job (head + worker, Logs Insights). Asynchronous query; up to 10,000 rows per result. Includes Ray system logs and the driver log on the head (output of your training script)."
+    },
+    "llmd": {
+      "empty": "No logs (llm-d inference produced no output, or the CloudWatch retention period has passed)",
+      "banner": "Task logs: across all Pods of this llm-d inference service (LWS worker + gateway, Logs Insights). Asynchronous query; up to 10,000 rows per result."
+    },
+    "devinstance": {
+      "empty": "No logs (the dev instance produced no logs, or the CloudWatch retention period has passed)",
+      "banner": "Task logs: across all Pods of this dev instance (Logs Insights). Asynchronous query; up to 10,000 rows per result. Includes logs from the main container workspace and the SSH setup container direct-ssh-init."
+    }
+  }
+}

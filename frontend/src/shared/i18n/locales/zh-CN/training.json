@@ -1,0 +1,304 @@
+{
+  "nav": {
+    "workspace": "工作空间",
+    "training": "训练任务"
+  },
+  "fields": {
+    "spec": "规格",
+    "creator": "创建者",
+    "queueStatus": "排队状态",
+    "image": "镜像",
+    "instanceType": "实例类型",
+    "resourcePool": "资源池",
+    "resourceTemplate": "资源模板",
+    "nodeCount": "节点数",
+    "spares": "额外节点",
+    "envVars": "环境变量",
+    "priority": "优先级",
+    "launchCommand": "启动命令"
+  },
+  "actions": {
+    "details": "详情",
+    "cloneConfig": "克隆配置",
+    "share": "分享"
+  },
+  "spec": {
+    "memory": "内存",
+    "unitCard_other": "卡",
+    "unitCore_other": "核",
+    "unitAdapter_other": "张",
+    "gpuCount_other": "{{count}} GPU"
+  },
+  "confirm": {
+    "stopTitle": "停止训练任务",
+    "stopDesc": "删 K8s Job 释放 GPU, 保留记录与配置 (可克隆重跑, 不可恢复继续)",
+    "deleteTitle": "删除训练任务",
+    "deleteDescList": "会级联删除 K8s Job + Pods",
+    "deleteDescDetail": "会级联删除 K8s Job + Pods, 不可恢复"
+  },
+  "messages": {
+    "stopped": "训练任务已停止 (释放 GPU, 保留记录与配置, 可克隆重跑)",
+    "stopFailed": "停止失败: {{error}}",
+    "deleted": "训练任务已删除",
+    "deleteFailed": "删除失败: {{error}}",
+    "loadFailed": "加载失败: {{error}}"
+  },
+  "list": {
+    "description": "基于 HyperPod Training Operator 的多节点 GPU 训练作业, 支持 Kueue 排队 / 拓扑感知调度",
+    "filter": "筛选",
+    "filterHint": "仅支持筛选最近 5000 条",
+    "newButton": "新建训练任务",
+    "tips": {
+      "status": "训练任务自身运行状态 (CR phase): Running 运行中, Suspended 被 Kueue 暂挂等配额, Complete 训练完成, Failed 失败等。点放大镜看完整状态详情。",
+      "queueStatus": "训练任务在 Kueue 调度队列中的状态 (与任务自身状态不同): Queued 排队等配额, Admitted 已 admit, Evicted 被抢占踢回排队等。",
+      "spec": "训练任务申请的资源: 节点数 × 单节点 GPU 数。鼠标悬停 Tag 看每节点 CPU 核 / 内存。多节点训练通过 NCCL/EFA 互联。"
+    },
+    "scope": {
+      "label": "范围",
+      "all": "全部",
+      "mine": "我的"
+    },
+    "statusDetailTitle": "训练任务状态详情",
+    "statusTip": {
+      "suspended": {
+        "label": "被 Kueue 暂挂",
+        "detail": "spec.suspend=true, Operator 不会创建 Pod。常见于刚提交 + 配额满时。Kueue admit 后自动 unsuspend → 进入 Created/Running。"
+      },
+      "created": {
+        "label": "已创建 (Pod 排队 / 启动中)",
+        "detail": "Operator 已 unsuspend 创建子资源 (Pod / 网络), 但还没全部 Running。Pod 可能在拉镜像、等节点、SchedulingGated 等。"
+      },
+      "podsRunning": {
+        "label": "Pod 全部就绪",
+        "detail": "Operator 副本检测态, 所有 worker Pod 全部 Running 且就绪 (区别于 Running 是 Job 维度, PodsRunning 是 Pod 维度)。"
+      },
+      "running": {
+        "detail": "所有 Pod 进入 Running 状态, 训练进程在跑。如果 Created 已被 Operator 反向标 False 才会单显 Running。"
+      },
+      "faulted": {
+        "label": "故障 (HyperPod auto-resume 中)",
+        "detail": "某 Pod 异常 (节点失联 / OOM / CUDA error 等), HyperPod 在尝试 auto-resume (默认重试 3 次)。重试成功回到 Running, 失败转 Failed。"
+      },
+      "completed": {
+        "detail": "同 Complete, 不同 Operator 版本的别名。两者后端等价处理 (子串 \"Complete\" 都识别为终态)。"
+      },
+      "failed": {
+        "detail": "终态, auto-resume 已耗尽重试次数仍失败, 或代码主动 exit !=0。看 Pod 日志或\"状态时间线\"里 reason/message 排查。"
+      }
+    }
+  },
+  "detail": {
+    "title": "训练任务详情",
+    "crumbLoading": "加载中",
+    "tabs": {
+      "overview": "总览",
+      "monitoring": "监控",
+      "logs": "日志"
+    },
+    "summary": {
+      "crStatus": "状态（CR Phase）",
+      "kueueStatus": "排队状态（Kueue）"
+    },
+    "sparesSuffix": " (+{{count}} 额外)",
+    "fields": {
+      "lastSync": "最后同步",
+      "startedAt": "启动时间"
+    },
+    "config": {
+      "title": "运行配置",
+      "gpuPerNode": "每节点 GPU",
+      "cpuPerNode": "每节点 CPU",
+      "memPerNode": "每节点内存",
+      "topologyMode": "拓扑调度",
+      "topologyLevel": "拓扑层级",
+      "fsxMounts": "FSx 挂载",
+      "s3Datasets": "S3 数据集",
+      "none": "无",
+      "runPolicy": "运行策略"
+    },
+    "pods": {
+      "title": "当前运行的 Pods ({{total}})",
+      "empty": "暂无 Pod (Job 刚创建时尚未调度)",
+      "restarts": "重启",
+      "reason": "原因",
+      "node": "节点",
+      "logs": "日志",
+      "terminal": "终端"
+    },
+    "liveLogsTitle": "实时日志 · {{pod}}",
+    "viewInLogsTab": "在日志页查看",
+    "terminalTitle": "终端 · {{pod}}",
+    "timeline": "状态时间线（K8s Conditions）"
+  },
+  "logs": {
+    "pod": "Pod 日志",
+    "all": "🔍 任务日志"
+  },
+  "create": {
+    "title": "新建训练任务",
+    "breadcrumbNew": "新建",
+    "loadingConfig": "加载配置中...",
+    "submit": "提交训练任务",
+    "sections": {
+      "basic": "基本信息",
+      "image": "镜像",
+      "storage": "共享存储",
+      "resource": "计算资源",
+      "launch": "启动配置",
+      "preview": "预览"
+    },
+    "access": {
+      "ro": "只读",
+      "rw": "读写"
+    },
+    "messages": {
+      "fsxNeed": "{{path}} (需{{need}}, 你只有{{have}})",
+      "fsxNoAccess": "{{path}} (你无此盘权限)",
+      "cloneFsxDropped_other": "克隆: {{count}} 块 FSx 你没有相应权限, 已不预选 — {{details}}",
+      "cloneTemplateChanged": "克隆: 原配置对应的资源模板已变更/删除, 请重新选择资源模板",
+      "cloneFetchFailed": "克隆: 拉取源训练配置失败 — {{error}}",
+      "submitted": "训练任务已提交 · K8s Job: {{name}}",
+      "fieldInvalid": "字段 [{{field}}] 校验失败: {{error}}",
+      "submitFailed": "提交失败: {{error}}"
+    },
+    "yamlComments": {
+      "runPolicyParseFailed": "# runPolicy YAML 解析失败:\n# {{error}}",
+      "renderFailed": "# 后端渲染失败 (检查 runPolicy):\n# {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "显示名称",
+      "displayNameTooltip": "同时作为 K8s 任务名的前缀, 所以要符合 DNS 命名: 小写字母开头, 3-29 字符, 只含 a-z 0-9 '-', 结尾须字母或数字。中文说明请写在下面的「描述」里。最终任务名 = 本名 + '-' + 10 位随机, 由后端在创建时生成。",
+      "displayNameRequired": "请输入显示名称",
+      "displayNameAscii": "不能含中文或全角字符, 中文说明请写在下面的「描述」里",
+      "displayNameLength": "长度 3-29 字符",
+      "displayNamePattern": "小写字母开头, 只含 a-z 0-9 '-', 结尾须字母或数字",
+      "displayNamePlaceholder": "例 ddp-smoke-test",
+      "descriptionTooltip": "对本次训练任务的简短说明 (选填), 便于后续在列表/详情识别。",
+      "descriptionPlaceholder": "例: Qwen 0.6B DDP 冒烟测试, 验证多卡通信"
+    },
+    "image": {
+      "help": "从「资产管理 → 镜像」中用途含训练 (training) 的镜像里选择, 或直接键入任意镜像完整 URI (含 tag)。私有 ECR 仅支持本平台所在 AWS 账号 + 当前区域, 跨账号/区域的镜像拉取不到。",
+      "label": "镜像 (完整名, 含 tag)",
+      "loading": "正在加载镜像列表…",
+      "empty": "暂无可用于训练 (training) 的镜像，请先到<registry>「资产管理 → 镜像」</registry>注册，或直接键入镜像 URI。",
+      "hint": "下拉列出「镜像」中用途含训练 (training) 的镜像; 也可直接键入任意镜像 URI。",
+      "required": "请选择或填写镜像 URI",
+      "format": "格式须为 <registry>/<repo>:<tag>",
+      "placeholder": "选择镜像，或直接键入 public.ecr.aws/sagemaker/sagemaker-distribution:latest-gpu"
+    },
+    "resource": {
+      "poolTooltip": "先选 GPU/CPU 资源池, 右侧实例类型与资源模板按池筛选。",
+      "poolPlaceholder": "选择资源池",
+      "instanceTypeTooltip": "该资源池内的机型; 池内通常单机型, 自动选中首个, 可改。后端校验机型 ∈ 配额.",
+      "instanceTypeRequired": "请选择实例类型",
+      "instanceTypePlaceholder": "选该资源池内的机型",
+      "noAssignedTypes": "该 workspace 无已分配机型 (联系管理员配额)",
+      "noTypesInPool": "该资源池下无可用机型",
+      "templateTooltip": "每节点资源 (GPU/CPU/内存) 由管理员维护的模板统一管控, 用户不可手填。",
+      "templateRequired": "请选择资源模板",
+      "templatePlaceholder": "选择资源模板 (由管理员维护)",
+      "noTemplates": "暂无资源模板 · 请联系空间管理员在 管理中心 -「资源模版」创建",
+      "nodeCountTooltip": "多节点分布式训练 (DDP); HyperPodPyTorchJob replicas. 千卡训练不限节点数, 由配额/调度卡。",
+      "nodeCountRequired": "必填",
+      "sparesTooltip": "多申请几个节点供故障时顶上 (HyperPodPyTorchJob spares). 这些节点会真实启动并占配额, 不是空着待命; 谁参与训练由训练脚本读 NSPARES 决定.",
+      "perNodeSpec": "每节点规格 · 模板锁定",
+      "perNodeSpecTooltip": "GPU/CPU/内存 由资源模板统一管控, 用户不可手填; 切模板会自动同步",
+      "quotaNeed_other": "本任务需 {{count}} GPU 卡",
+      "quotaRemaining_other": " · 剩余 {{remaining}} / {{count}} GPU 卡",
+      "quotaOver": " · 超额, 提交后需等待",
+      "quotaCollecting_other": " · 共 {{count}} GPU 卡 · 余量采集中",
+      "topology": {
+        "title": "拓扑感知调度 (TAS · 选填)",
+        "help": "g6 节点不在 TAS 支持列表 (仅 p3dn/p4d/p5+/trn 才生效). 选了 g6.12xlarge 等不支持的机型也不报错, K8s 静默忽略, 只是不实际生效.",
+        "annotation": "对应 Kueue annotation:",
+        "modeLabel": "调度策略",
+        "modeTooltip": "preferred=优先同层降级上层 / required=必须同层等到 / none=不约束",
+        "modeNone": "不约束",
+        "modePreferred": "优先同层 (preferred)",
+        "modeRequired": "必须同层 (required)",
+        "levelTooltip": "可选层级由该机型所属 ResourceFlavor 关联的 Topology 决定 (读集群真值), 由细到粗排列",
+        "queryFailed": "查询失败",
+        "levelQueryFailed": "层级查询失败: {{error}}",
+        "noLevels": "该机型无可选拓扑层级",
+        "pickModeFirst": "先选调度策略",
+        "noLevelsShort": "该机型无可选层级",
+        "pickLevel": "选拓扑层级",
+        "levelLabel": "拓扑层级"
+      },
+      "priorityDefault": "优先级默认 <tag/>",
+      "priorityTooltip": "仅平台管理员可调整任务优先级档位",
+      "quotaBreakdown_other": " ({{count}} 节点 × {{gpu}})"
+    },
+    "launch": {
+      "scriptHeading": "启动脚本",
+      "scriptHelp": "直接编写整个启动脚本, 平台透传原样跑 (你全控分布式启动, 脚本里自己写 hyperpodrun). 容器层已注入 NNODES / NPROC_PER_NODE / JOB_NAME. 参考右侧示例。",
+      "scriptLabel": "脚本内容 (直接编写, 整段作为启动命令)",
+      "scriptTooltip": "整段脚本平台原样跑, 你全控分布式启动 (自己写 hyperpodrun)<br/>也可只写一行执行 FSx 上的脚本, 如 bash /fsx/.../run.sh<br/>容器已注入 NNODES / NPROC_PER_NODE / JOB_NAME<br/>右侧两个示例 (点开抽屉查看): 『hyperpodrun 示例』自己写分布式启动; 『裸代码封装』把命令塞进 payload 平台代托管",
+      "scriptRequired": "必填脚本内容",
+      "exampleDefault": "hyperpodrun 示例",
+      "exampleWrap": "裸代码封装示例",
+      "exampleWrapDesc": "只读参考 · 命令塞进 <code>PAYLOAD</code> heredoc, 平台用 hyperpodrun<code> --no-python</code> 托管并透传退出码。<warn> 暂仅支持 hyperpodrun 封装的任务。</warn>",
+      "exampleDefaultDesc": "只读参考 · 你全控分布式启动 (自己写 hyperpodrun)。容器层已注入 NNODES / NPROC_PER_NODE / JOB_NAME。",
+      "envHeading": "环境变量 (选填多个)",
+      "envHelp": "容器层已自动注入 NNODES / NPROC_PER_NODE / JOB_NAME (脚本里直接用 $JOB_NAME 等, 勿在此设置 — operator 保留变量, 自设会被拒)。此处填你自己的变量, 如 WANDB_PROJECT。",
+      "envReserved": "NNODES/NPROC_PER_NODE/JOB_NAME 是 operator 保留变量, 勿设",
+      "envAdd": "加环境变量",
+      "secretHeading": "从 Secret 注入环境变量 (选填)",
+      "secretHelp": "选你在「Secret 管理」建的 key, 注入成同名环境变量 (值不写进配置明文, 走 secretKeyRef)。env 名 = key 名。",
+      "secretKeyRequired": "选 key",
+      "secretPlaceholder": "选 Secret key (= 环境变量名)",
+      "secretEmpty": "无可用 key (先到 Secret 管理页添加)",
+      "secretAdd": "从 Secret 加环境变量",
+      "scripts": {
+        "inline": "#!/bin/bash\n# ============================================================\n# 训练启动脚本 (inline) · 平台透传原样跑, 你全控分布式启动\n# 容器层已注入环境变量: NNODES / NPROC_PER_NODE / JOB_NAME\n# 把 TRAIN_SCRIPT 改成你的训练入口 (FSx 上的 .py)\n# ============================================================\nset -e\n\necho \"NPROC_PER_NODE: ${NPROC_PER_NODE}\"\necho \"NNODES:         ${NNODES}\"\necho \"JOB_NAME:       ${JOB_NAME}\"\necho \"Hostname:       $(hostname)\"\necho \"=============================================\"\n\n# 安装 hyperpod elastic agent（提供 hyperpodrun）\npip install --upgrade hyperpod-elastic-agent\n\nhyperpodrun \\\n    --nnodes=${NNODES} \\\n    --nproc-per-node=${NPROC_PER_NODE} \\\n    --server-host=0.0.0.0 \\\n    --server-port=8080 \\\n    --server-log-level=warning \\\n    --tee=3 \\\n    --log_dir=/tmp/hyperpod \\\n    ${TRAIN_SCRIPT} \\\n        --total-epochs 200 \\\n        --save-every 2 \\\n        --batch-size 32 \\\n        --snapshot-path /fsx/hyperpodrun-elastic-ddp/${JOB_NAME}.snapshot.pt\n",
+        "wrap": "set +e\nbash <<'PAYLOAD'\n# ↓↓↓ 用户命令 ↓↓↓\necho \"hello from scientist\"\nsleep 20\n# ↑↑↑ 用户命令结束;正常 exit 0 / 非0 ↑↑↑\nPAYLOAD\nrc=$?\necho \"[platform] payload exited rc=$rc -> deliver completion signal\"\ncommand -v hyperpodrun >/dev/null || pip install -q hyperpod-elastic-agent\nexec hyperpodrun --nnodes=1 --nproc-per-node=1 \\\n  --server-host=0.0.0.0 --server-port=8080 \\\n  --no-python bash -c \"exit $rc\"\n"
+      }
+    },
+    "preview": {
+      "heading": "渲染预览",
+      "refresh": "刷新预览 (后端渲染)",
+      "rendering": "# 渲染中...",
+      "placeholder": "# 点『刷新预览』生成后端渲染的最终 YAML",
+      "runPolicyLabel": "runPolicy (可编辑 · 重启/重试/清理策略)",
+      "refDocs": "参考文档 ↗",
+      "runPolicyTooltip": "只此段可改, 其余 CR 字段平台锁死。evalPeriodSeconds 是 CRD 必填。后端做白名单+类型校验。改完点上方『刷新预览』看效果。"
+    }
+  },
+  "metrics": {
+    "banner": "数据来自集群内 Prometheus · 三维度: Job 聚合 / Pod 分线 / GPUCard 分卡 · 图表每 20-30s 自动刷新"
+  },
+  "terminal": {
+    "disconnected": "[已断开] {{reason}}",
+    "close": {
+      "unauthorized": "未授权",
+      "forbidden": "无权访问该 pod",
+      "notFound": "任务不存在",
+      "idleTimeout": "空闲超时, 连接已断",
+      "tooMany": "终端连接数超限 (每用户最多 3)",
+      "noShell": "无法开 shell"
+    }
+  },
+  "logViewer": {
+    "pause": "暂停",
+    "live": "● 实时",
+    "connecting": "○ 连接中",
+    "sseFailed": "✗ SSE 失败 · 已降级轮询",
+    "history": "历史 (CW)",
+    "container": "容器",
+    "podAll": "全部",
+    "keywordPlaceholder": "关键字过滤(客户端)",
+    "reload": "重新加载",
+    "downloaded_other": "已下载 {{count}} 行",
+    "downloadFailed": "下载失败: {{error}}",
+    "loadFailed": "日志加载失败: {{error}}",
+    "pipelineDesc": "数据管道：Fluent Bit (HyperPod Obs Add-on) → CloudWatch Logs Insights。请检查 Obs Add-on 是否 ACTIVE 且 cluster ARN 已写入 DB。",
+    "warmingUp": "预热中 · Pod 刚启动或 Fluent Bit 缓冲未刷新, 通常 30s 内开始流入",
+    "fetching": "拉取日志...",
+    "noMatch": "无匹配 \"{{keyword}}\" 的日志",
+    "empty": "暂无日志",
+    "source": "数据源: CloudWatch Logs Insights (Fluent Bit → /aws/sagemaker/Clusters/...)",
+    "shownLines_other": "显示 {{shown}}/{{count}} 行",
+    "autoRefresh": "每 {{sec}}s 自动刷新",
+    "paused": "已暂停"
+  }
+}

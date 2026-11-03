@@ -1,0 +1,124 @@
+{
+  "use": {
+    "dev": "Dev instance",
+    "training": "Training",
+    "inference": "Inference"
+  },
+  "hub": {
+    "title": "Image",
+    "build": "Build image",
+    "register": "Register image",
+    "description": "Manage the container images available in the <b>current Workspace</b>. Once registered, you can pick them directly when creating a dev instance, training job or inference service, without typing the URI by hand.",
+    "tabs": {
+      "images": "Available Images",
+      "builds": "Build History"
+    },
+    "filterAll": "All",
+    "searchPlaceholder": "Search image name / tag",
+    "loadFailed": "Failed to load images",
+    "unregistered": "Image unregistered",
+    "unregisterFailed": "Failed to unregister",
+    "columns": {
+      "image": "Image",
+      "uses": "Purpose",
+      "source": "Source",
+      "creator": "Registered by"
+    },
+    "source": {
+      "public": "Public ECR",
+      "private": "Private ECR"
+    },
+    "unregister": "Unregister",
+    "unregisterConfirm": "Unregister [{{name}}]?",
+    "unregisterDesc": "This only removes the reference from this Workspace; the image in ECR is not deleted."
+  },
+  "buildHistory": {
+    "status": {
+      "building": "Building",
+      "success": "Succeeded",
+      "failed": "Failed"
+    },
+    "columns": {
+      "image": "Image",
+      "uses": "Purpose",
+      "spec": "Spec",
+      "submitter": "Submitted by",
+      "logs": "Logs"
+    },
+    "noLogs": "(No logs yet; the build has just started or its logs have not been generated)",
+    "logsFailed": "(Failed to fetch logs)",
+    "loadMoreFailed": "Failed to load more logs",
+    "dockerfileCopied": "Dockerfile copied",
+    "dockerfileEmpty": "(none)",
+    "logTitle": "Build logs · {{tag}}",
+    "logTitleEmpty": "Build logs",
+    "fetching": "Fetching logs…",
+    "loadMore": "Load more",
+    "dataSource": "Data source: CloudWatch Logs",
+    "openConsole": "Open in the CloudWatch console"
+  },
+  "register": {
+    "title": "Register image",
+    "okText": "Register",
+    "modeEcr": "Pick from this account's ECR",
+    "modeManual": "Enter URI manually (official / other images)",
+    "atLeastOneUse": "Select at least one purpose.",
+    "uriRequired": "Enter the full image URI.",
+    "registered": "Image registered",
+    "pickRepoAndTag": "Select a repository and at least one tag.",
+    "registeredCount_one": "{{count}} image registered",
+    "registeredCount_other": "{{count}} images registered",
+    "failed": "Failed to register",
+    "fullUri": "Full image URI (including tag)",
+    "uriPlaceholder": "e.g. 763104351884.dkr.ecr.us-west-2.amazonaws.com/pytorch-training:2.9.0-gpu-...-ec2",
+    "uriHelp": "You can register official AWS images (DLC / SageMaker), public.ecr.aws public images, or private images from other accounts. Note: when a task is created, the nodes of the cluster must have permission to pull the image.",
+    "step1": "1. Select a repository",
+    "repoPlaceholder": "Select an ECR repository",
+    "noRepos": "No repositories",
+    "step2": "2. Select tags",
+    "multiHint": "(select several to register in bulk)",
+    "tagFilterPlaceholder": "🔍 Filter by tag, e.g. pytorch",
+    "pickRepoFirst": "Select a repository first",
+    "noMatchingTag": "No matching tags",
+    "uses": "Purpose",
+    "usesHint": "(select one or more)",
+    "displayName": "Display name",
+    "displayNameHint": "(optional)",
+    "displayNameHintBatch": "(optional; ignored in bulk registration, where each tag name is used)",
+    "displayNamePlaceholder": "e.g. PyTorch 2.5 GPU training image",
+    "willRegister_one": "Will register {{count}} image ·",
+    "willRegister_other": "Will register {{count}} images ·"
+  },
+  "build": {
+    "compute": {
+      "small": "Small (2 vCPU / 3GB / 64GB disk) · images < 8GB",
+      "medium": "Medium (4 vCPU / 7GB / 128GB disk) · images < 15GB",
+      "large": "Large (8 vCPU / 15GB / 128GB disk) · images < 20GB · default",
+      "xlarge2": "2XLarge (72 vCPU / 145GB / 824GB disk) · large images of 20-40GB"
+    },
+    "nameErr": "Must start with a lowercase letter or digit, with single . _ - / separators in between (no uppercase, consecutive separators, or leading/trailing separators)",
+    "tagErr": "Only letters, digits and . _ - are allowed (uppercase is allowed)",
+    "missingFields": "Enter the Dockerfile, image name and tag.",
+    "nameInvalid": "The image name format is invalid.",
+    "tagInvalid": "The tag format is invalid.",
+    "pickUse": "Select at least one purpose.",
+    "submitted": "Build submitted. You can follow its progress in Build History.",
+    "submitFailed": "Failed to submit",
+    "title": "Build image (Dockerfile → CodeBuild)",
+    "okText": "Start build",
+    "imageName": "Image name",
+    "imageNameHint": "Used directly as the ECR repository name; namespace/repo-name is recommended for easier grouping",
+    "imageNamePlaceholder": "e.g. namespace/repo-name",
+    "imageNameRule": "Start with a lowercase letter or digit; separate segments with . _ -, and use / for paths",
+    "tagPlaceholder": "e.g. v1",
+    "tagRule": "Letters, digits and . _ -",
+    "dockerfileHint": "For dev instance images, FROM sagemaker-distribution is recommended, otherwise the instance may fail to start; training and inference images are unrestricted",
+    "uses": "Purpose",
+    "spec": "Build spec",
+    "specHint": "Maps to an AWS CodeBuild instance type (BUILD_GENERAL1_*)",
+    "specHelp": "The bottleneck when building large images is disk (the docker build peak is about 2-3 times the final image), not memory. For images above 20GB, choose \"2XLarge\" (824GB disk). Billing is by build time, so larger specs cost more; choose what you need.",
+    "timeout": "Build timeout",
+    "timeoutHint": "The build fails if it does not finish in time. Default 120 minutes (2 hours), maximum 480 minutes (8 hours)",
+    "minutes": "minutes"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "registry.build_disabled": "镜像在线构建未启用 (CodeBuild 未配置)",
+  "registry.repo_name_too_long": "ECR repo 名过长 ({length}>{max}): {repo_name}。请用更短的镜像名。",
+  "registry.build_not_found": "构建记录不存在",
+  "registry.not_ws_member": "你不是该 workspace 成员, 无权访问其镜像中心"
+}

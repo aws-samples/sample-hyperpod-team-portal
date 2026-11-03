@@ -1,0 +1,40 @@
+# ALB Ingress — AWS Load Balancer Controller 据此自动建 ALB.
+# /api/* → 后端, /* → 前端.
+#
+# listen-ports / certificate-arn / ssl-redirect 由 render-and-apply.sh 根据
+# cdk.json 的 albCertificateArn 注入 <ALB_HTTPS_ANNOTATIONS> 占位符:
+#   - 有证书: 同时开 HTTP:80 + HTTPS:443, 80 自动 301 → 443.
+#   - 留空 : 仅 HTTP:80 (开发/没证书环境).
+#
+# 路由顺序: /api 规则要在 / 之前 (ALB 按 Ingress rule 顺序匹配, 更具体的在前).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: platform
+  namespace: platform-system
+  annotations:
+    # internal: ALB 仅 VPC 内可访问, 不暴露公网 (安全; 避免无认证服务暴露在公网).
+    # 内网访问走 VPN / 跳板机 / 同 VPC; 本地测试可 kubectl port-forward.
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+<ALB_HTTPS_ANNOTATIONS>
+spec:
+  ingressClassName: alb
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: platform-api
+            port:
+              number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80

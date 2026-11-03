@@ -1,0 +1,40 @@
+# platform-worker 在 EKS 上的最小权限 RBAC。
+#
+# 配合 EKS access entry 使用: access entry 把 worker 的 IAM task role 映射成
+# 下面 ClusterRoleBinding 里引用的 K8s group "platform-worker", apiserver 据此授权。
+#
+#   kubectl apply -f deploy/rbac.yaml
+#
+# worker 只读 CR + pods (informer watch + 详情页 live 拉 pod), 不需要任何写权限。
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: platform-worker-informer
+rules:
+  # 训练 CR (当前 watch 的)
+  - apiGroups: ["sagemaker.amazonaws.com"]
+    resources: ["hyperpodpytorchjobs"]
+    verbs: ["get", "list", "watch"]
+  # 推理 CR (未来扩 informer 时启用; 现在留着不影响)
+  - apiGroups: ["inference.sagemaker.aws.amazon.com"]
+    resources: ["inferenceendpointconfigs", "jumpstartmodels"]
+    verbs: ["get", "list", "watch"]
+  # 详情页 live 视图直读 pod (training/api/router.py 的 live 参数)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: platform-worker-informer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: platform-worker-informer
+subjects:
+  # 这个 group 名要和 access entry 的 --kubernetes-groups 一致 (见部署文档)。
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: platform-worker

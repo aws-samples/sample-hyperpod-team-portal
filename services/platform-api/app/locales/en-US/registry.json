@@ -1,0 +1,6 @@
+{
+  "registry.build_disabled": "Online image build is not enabled (CodeBuild is not configured).",
+  "registry.repo_name_too_long": "ECR repo name is too long ({length}>{max}): {repo_name}. Use a shorter image name.",
+  "registry.build_not_found": "Image build not found.",
+  "registry.not_ws_member": "You are not a member of this Workspace and cannot access its image hub."
+}

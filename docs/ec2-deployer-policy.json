@@ -1,0 +1,75 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CdkDeployCore",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:*",
+        "ssm:*",
+        "sts:AssumeRole",
+        "sts:GetCallerIdentity",
+        "sts:GetServiceBearerToken"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CdkBucket",
+      "Effect": "Allow",
+      "Action": ["s3:*"],
+      "Resource": [
+        "arn:aws:s3:::cdk-*",
+        "arn:aws:s3:::cdk-*/*"
+      ]
+    },
+    {
+      "Sid": "PlatformResources",
+      "Effect": "Allow",
+      "Action": [
+        "eks:*",
+        "dynamodb:*",
+        "cognito-idp:*",
+        "ecr:*",
+        "ecr-public:*",
+        "lambda:*",
+        "iam:*",
+        "sagemaker:*",
+        "fsx:DescribeFileSystems",
+        "aps:*",
+        "logs:*",
+        "ec2:*",
+        "identitystore:*",
+        "sso:*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Route53PrivateZone",
+      "Effect": "Allow",
+      "Action": [
+        "route53:CreateHostedZone",
+        "route53:GetHostedZone",
+        "route53:ListHostedZones",
+        "route53:ListHostedZonesByName",
+        "route53:AssociateVPCWithHostedZone",
+        "route53:ChangeResourceRecordSets",
+        "route53:ListResourceRecordSets",
+        "route53:GetChange"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "BedrockClaudeCode",
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream",
+        "bedrock:ListFoundationModels",
+        "bedrock:ListInferenceProfiles",
+        "bedrock:GetInferenceProfile",
+        "bedrock:GetFoundationModel"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

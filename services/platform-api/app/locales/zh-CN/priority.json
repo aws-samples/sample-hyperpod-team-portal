@@ -1,0 +1,9 @@
+{
+  "priority.class_not_found": "未找到优先级档: {name}",
+  "priority.dynamo_unsupported": "多机推理 (dynamo) 暂不支持调整优先级",
+  "priority.workload_not_found": "未找到任务 {cr_name} 对应的 Kueue Workload (可能未提交/已完成)",
+  "priority.target_class_not_found": "优先级档不存在: {name}",
+  "priority.task_finished": "任务已完成, 无法改优先级",
+  "priority.note_workload": "已改 CR label + 删 Workload {name}, Kueue 将按新优先级重建",
+  "priority.note_deployment": "已改 CR label + 删 Deployment {name} (operator 重建, 容器重启), Kueue 将按新优先级重建"
+}

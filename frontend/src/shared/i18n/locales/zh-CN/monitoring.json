@@ -1,0 +1,77 @@
+{
+  "tabPanel": {
+    "dimension": "维度",
+    "timeRange": "时间范围",
+    "refreshInterval": "刷新频率",
+    "refreshPaused": "暂停",
+    "filter": {
+      "button": "指标 ({{visible}}/{{total}})",
+      "selectAll": "全选",
+      "selectNone": "全不选",
+      "unit": "单位: {{unit}}",
+      "noDescription": "无说明"
+    },
+    "loadFailed": "加载模板失败: {{error}}",
+    "emptyDimension": "当前维度没有指标",
+    "allHidden": "所有指标已被隐藏 · 点上方\"指标\"按钮重选"
+  },
+  "group": {
+    "other": "其他"
+  },
+  "pages": {
+    "fsx": {
+      "title": "FSx性能",
+      "dataSource": "数据源: CloudWatch",
+      "loadingFsx": "加载 FSx 中…",
+      "selectFsx": "选择 FSx",
+      "loadListFailed": "加载 FSx 列表失败",
+      "loadMetricsFailed": "加载监控指标失败",
+      "requestFailed": "请求失败 (HTTP {{status}})",
+      "range": {
+        "h1": "近 1 小时",
+        "h6": "近 6 小时",
+        "h24": "近 24 小时"
+      }
+    },
+    "kueue": {
+      "title": "队列 (Kueue)",
+      "description": "各工作空间当前在 Kueue 队列中排队等待的任务数量。平台管理员可见全部工作空间, 普通用户仅可见自己作为 owner / 成员的工作空间。数据源: AWS Managed Prometheus (AMP), 指标由 Kueue controller 暴露; AMP 不可用时各项按 0 显示。每 30 秒自动刷新。点「排队中的Pod（Inadmissible）」数字可向下展开该工作空间「排队中」的任务列表。",
+      "loadFailed": "加载排队情况失败",
+      "workspace": "工作空间",
+      "activeHeader": "审核中的Pod（Active）",
+      "activeTip": "Kueue 已受理、正在评估准入的 Pod (active): 等前面的任务跑完 / 资源就绪即可进入调度, 一般无需人工处理。",
+      "inadmissibleHeader": "排队中的Pod（Inadmissible）",
+      "inadmissibleTip": "当前无法准入的 Pod (inadmissible): 请求量超出配额或拓扑不满足, 继续等待也进不来 —— 需要调整任务规格或增加配额。点击数字向下展开本工作空间「排队中」的任务列表。",
+      "expandTip": "点击展开本工作空间「排队中」的任务列表"
+    }
+  },
+  "kueueTasks": {
+    "kind": {
+      "dev": "开发机",
+      "train": "训练任务",
+      "inference": "单机推理",
+      "dynamo": "Dynamo 推理",
+      "llmd": "多机推理",
+      "rayjob": "Ray 训练"
+    },
+    "columns": {
+      "queueOrder": "排队顺序",
+      "priority": "优先级",
+      "type": "类型",
+      "taskName": "任务名称",
+      "queueOrderTip": "该任务在本工作空间 Kueue 队列中的真实身位 (1 = 最前, 数字越小越先被调度)。多调度单元任务取最靠前身位, 展开「+」查看每个单元的排队明细。不在排队中显示 -。",
+      "kueueStatus": "Kueue 状态"
+    },
+    "detailUnsupported": "多机推理 / Dynamo 暂不支持在此查看 Kueue 详情",
+    "forbidden": {
+      "title": "无权查看任务明细",
+      "description": "任务明细仅工作空间管理员 / 平台管理员可见。你能看到本工作空间的排队计数, 但查看具体任务需要管理员权限。"
+    },
+    "loadFailed": "加载任务失败",
+    "empty": {
+      "title": "当前无排队中的任务",
+      "description": "该工作空间暂无「排队中」(Queued) 的任务。若表头仍显示计数, 可能是指标尚未刷新 (最长约 30s 延迟)。"
+    },
+    "intro": "本工作空间「排队中」的任务 (Kueue 状态 = Queued)。Queued 既可能正常排队也可能无法准入 (指标计约 {{inadmissible}} 个无法准入), 点「Kueue 详情」看 conditions 的 Reason / Message 确认。"
+  }
+}

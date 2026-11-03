@@ -1,0 +1,290 @@
+{
+  "nav": {
+    "workspace": "工作空间",
+    "inference": "单机推理"
+  },
+  "fields": {
+    "spec": "规格",
+    "framework": "框架",
+    "creator": "创建者",
+    "queueStatus": "排队状态",
+    "image": "镜像",
+    "workspace": "工作空间"
+  },
+  "actions": {
+    "details": "详情",
+    "cloneConfig": "克隆配置"
+  },
+  "spec": {
+    "unitCard_other": "卡",
+    "unitCore_other": "核",
+    "unitAdapter_other": "张",
+    "memory": "内存",
+    "gpuCount_other": "{{count}} GPU"
+  },
+  "confirm": {
+    "stopTitle": "停止推理服务",
+    "stopDesc": "删 CR/Pod/ALB/SageMaker endpoint 释放算力, 保留配置与日志, 可克隆重建",
+    "deleteTitle": "删除推理服务",
+    "deleteDescList": "会级联删除 IEC CR + Pods + ALB",
+    "deleteDescDetail": "级联删 IEC CR + Pods + ALB"
+  },
+  "messages": {
+    "stopped": "推理服务已停止 (保留配置与日志, 可克隆重建)",
+    "stopFailed": "停止失败: {{error}}",
+    "deleted": "推理服务已删除",
+    "deleteFailed": "删除失败: {{error}}",
+    "loadFailed": "加载失败: {{error}}"
+  },
+  "statusDetailTitle": "推理服务状态详情",
+  "list": {
+    "description": "基于 HyperPod InferenceEndpointConfig 的推理服务 (SGLang 引擎), 模型从 FSx / S3 加载, OpenAI 兼容 API",
+    "filter": "筛选",
+    "filterHint": "仅支持筛选最近 5000 条",
+    "newButton": "新建单机推理",
+    "tips": {
+      "status": "推理服务运行状态 (CR phase): DeploymentComplete 运行中, DeploymentInProgress 部署中, DeploymentFailed 失败, Stopped 已停止, Deleted 已删除。点放大镜看完整状态详情。",
+      "queueStatus": "推理服务在 Kueue 调度队列中的状态 (与服务自身状态不同): Queued 排队等配额, Admitted 已 admit, Evicted 被驱逐等。",
+      "framework": "推理引擎: SGLang (高吞吐, 主用) / vLLM / TRT-LLM。框架决定启动参数集与可用优化项 (如 KV Cache, 量化方案)。",
+      "spec": "推理服务申请的资源: 副本数 × 单副本 GPU 数。鼠标悬停 Tag 看实例类型。多副本由 ALB 做负载均衡。"
+    },
+    "scope": {
+      "label": "范围",
+      "all": "全部",
+      "mine": "我的"
+    },
+    "statusTip": {
+      "phaseSource": "InferenceEndpointConfig CR.status.deploymentStatus.deploymentObjectOverallState (缺失则回退 status.state)",
+      "pending": {
+        "detail": "CR 已创建, IEC Operator 还没开始处理 (排队等 reconcile)。"
+      },
+      "deploying": {
+        "detail": "Operator 正在创建 Deployment / 拉模型权重 (FSx / S3 / HuggingFace Hub) / 启动 SGLang 或 vLLM 引擎 / 配置 ALB target group。最常见的\"加载等待\"态。"
+      },
+      "running": {
+        "detail": "终态目标: Pod Ready, ALB 健康检查通过, SageMaker endpoint InService, 可对外接 OpenAI 兼容流量。多副本时由 ALB 做负载均衡。"
+      },
+      "failed": {
+        "label": "部署失败",
+        "detail": "部署失败终态: 模型权重拉取失败 / SGLang 启动 OOM / GPU 不足 / ALB target group 健康检查不过等。看 Pod 日志或详情页\"状态时间线\"排查。"
+      },
+      "stopped": {
+        "detail": "业务哨兵态 (非 CR 原值, 由后端 stop 接口写): Pod / ALB / SageMaker endpoint 全部销毁释放算力, CR 仍保留 (DDB), 配置和日志可查, 可\"克隆配置\"重建。"
+      }
+    }
+  },
+  "detail": {
+    "forceRefresh": "强制刷新",
+    "tabs": {
+      "overview": "总览",
+      "monitoring": "监控",
+      "sglang": "SGLang 性能",
+      "logs": "日志"
+    },
+    "summary": {
+      "crStatus": "状态（CR Phase）",
+      "kueueStatus": "排队状态（Kueue）"
+    },
+    "fields": {
+      "lastSync": "最后同步"
+    },
+    "config": {
+      "title": "运行配置",
+      "modelSource": "模型源",
+      "sharedMount": "共享存储挂载",
+      "instanceType": "实例类型",
+      "replicas": "副本数",
+      "gpuPerReplica": "每副本 GPU",
+      "containerPort": "容器端口 (Pod)",
+      "memory": "内存 (request / limit)",
+      "launchScript": "启动脚本",
+      "defaultLaunch": "默认启动",
+      "metricsEnabled": "启用 metrics",
+      "publicEndpoint": "SageMaker Endpoint (公网)",
+      "enabled": "已启用",
+      "disabled": "未启用",
+      "none": "无"
+    },
+    "pods": {
+      "title": "当前运行的 Pods ({{total}})",
+      "empty": "暂无 pod (可能 Provisioning 中, 强制刷新拉)",
+      "replica": "副本 (replica)",
+      "restarts": "重启",
+      "reason": "原因"
+    },
+    "containers": {
+      "role": "角色",
+      "name": "容器名",
+      "ready": "就绪",
+      "notReady": "未就绪",
+      "empty": "无容器状态",
+      "roles": {
+        "proxy": "反向代理",
+        "metrics": "指标采集",
+        "engine": "推理引擎"
+      }
+    },
+    "timeline": "状态时间线（K8s Conditions）",
+    "sglangArgs": "SGLang 启动参数",
+    "monitoringBanner": "数据来自集群内 Prometheus · CPU / GPU / 显存 / 网络 · 每 20-30s 自动刷新",
+    "sglangBanner": "SGLang /metrics 自带指标 · 吞吐 / cache 命中率 / 队列 / KV 用量 · 每 20-30s 自动刷新"
+  },
+  "logs": {
+    "pod": "Pod 日志",
+    "all": "🔍 任务日志"
+  },
+  "create": {
+    "title": "新建单机推理",
+    "breadcrumbNew": "新建",
+    "loadingConfig": "加载配置中...",
+    "sections": {
+      "basic": "基本信息",
+      "image": "镜像",
+      "model": "模型来源",
+      "resource": "计算资源",
+      "launch": "启动配置",
+      "preview": "预览"
+    },
+    "messages": {
+      "fsxNotAuthorized": "FSx 挂载源 {{id}} 不在你被授权的列表里",
+      "cloneFsxMissing": "克隆: 源 FSx 不在你当前授权范围, 请重选 FSx 挂载源",
+      "cloneS3Missing": "克隆: 源 S3 不在你当前挂载范围, 请重选 S3 挂载源",
+      "cloneTemplateChanged": "克隆: 原配置对应的资源模板已变更/删除, 请重新选择资源模板",
+      "cloneFetchFailed": "克隆: 拉取源推理配置失败 — {{error}}",
+      "fillRequiredYaml": "# 请先补全表单必填项 (如显示名), 再预览。",
+      "fillRequiredWarn": "请先填写必填项 (如显示名) 再预览",
+      "rendering": "# 渲染中...",
+      "renderFailed": "# 后端渲染失败 ({{error}}), 以下为本地近似预览:",
+      "created": "推理服务创建成功",
+      "createFailed": "创建失败: {{error}}"
+    },
+    "basic": {
+      "displayNameLabel": "显示名称",
+      "displayNameTooltip": "同时作为 K8s 任务名的前缀, 所以要符合 DNS 命名: 小写字母开头, 3-29 字符, 只含 a-z 0-9 '-', 结尾须字母或数字。中文说明请写在下面的「描述」里。最终任务名 = 本名 + '-' + 10 位随机, 由后端在创建时生成。",
+      "displayNameRequired": "请输入显示名称",
+      "displayNameAscii": "不能含中文或全角字符, 中文说明请写在下面的「描述」里",
+      "displayNameLength": "长度 3-29 字符",
+      "displayNamePattern": "小写字母开头, 只含 a-z 0-9 '-', 结尾须字母或数字",
+      "displayNamePlaceholder": "例 qwen3-06b-infer",
+      "descriptionTooltip": "对本次推理服务的简短说明 (选填), 便于后续在列表/详情识别。",
+      "descriptionPlaceholder": "例: Qwen3 0.6B 在线推理, 供 XX 业务测试用"
+    },
+    "image": {
+      "help": "从「资产管理 → 镜像」中用途含推理 (inference) 的镜像里选择, 或直接键入任意镜像完整 URI (含 tag)。私有 ECR 仅支持本平台所在 AWS 账号 + 当前区域, 跨账号/区域的镜像拉取不到。",
+      "label": "镜像 (完整名, 含 tag)",
+      "loading": "正在加载镜像列表…",
+      "empty": "暂无可用于推理 (inference) 的镜像，请先到<registry>「资产管理 → 镜像」</registry>注册，或直接键入镜像 URI。",
+      "hint": "下拉列出「镜像」中用途含推理 (inference) 的镜像; 也可直接键入任意镜像 URI。",
+      "required": "请选择或填写镜像 URI",
+      "format": "格式须为 <registry>/<repo>:<tag>",
+      "placeholder": "选择镜像，或直接键入 lmsysorg/sglang:latest"
+    },
+    "model": {
+      "sourceLabel": "模型源",
+      "fsxOption": "FSx Lustre (推荐)",
+      "fsxLabel": "共享存储挂载 (FSx)",
+      "fsxTooltip": "选被授权的 FSx (单选)。容器里 FSx 挂载点与开发机一致 — 启动脚本 --model-path 直接写开发机里看到的模型绝对路径。如果没有显示相关资源, 请联系管理员授权。",
+      "fsxLoading": "加载授权的 FSx...",
+      "fsxNone": "你在本 workspace 没有被授权的 FSx · 联系管理员",
+      "fsxHint": "启动脚本里写 --model-path <开发机里看到的模型绝对路径> (FSx 挂载点一致, 路径原样填)",
+      "fsxRequired": "请选择 FSx 挂载源",
+      "fsxPlaceholder": "选 FSx 挂载源 (单选)",
+      "fsxPlaceholderEmpty": "无授权 FSx (联系管理员)",
+      "fsxNotFound": "该 workspace 无授权 FSx",
+      "s3Label": "共享存储挂载 (S3)",
+      "s3Tooltip": "选一个 workspace 已挂载的 S3 (单选), bucket/region 自动带出。模型相对路径下方填。如果没有显示相关资源, 请联系管理员授权。",
+      "s3Required": "请选择 S3 挂载源",
+      "s3Placeholder": "选 S3 挂载源 (单选)",
+      "s3Loading": "加载 S3...",
+      "s3PlaceholderEmpty": "该 workspace 无挂载 S3 (联系管理员)",
+      "s3NotFound": "该 workspace 无挂载 S3",
+      "s3PathLabel": "模型相对路径",
+      "s3PathTooltip": "模型在 S3 的相对路径。其内容 prefetch 到挂载点根 /opt/ml/model — 启动脚本 --model-path 写 /opt/ml/model (不带此子路径, 与 FSx 不同)。",
+      "s3PathRequired": "请填模型相对路径",
+      "s3PathExtra": "例: models/qwen3-0-6b · 脚本里 --model-path 仍写 /opt/ml/model"
+    },
+    "resource": {
+      "poolLabel": "资源池",
+      "poolTooltip": "先选 GPU/CPU 资源池, 右侧实例类型与资源模板按池筛选。",
+      "poolPlaceholder": "选择资源池",
+      "instanceTypeLabel": "实例类型",
+      "instanceTypeTooltip": "该资源池内的机型; 池内通常单机型, 自动选中首个, 可改. 后端校验机型 ∈ 配额.",
+      "instanceTypeRequired": "请选择实例类型",
+      "instanceTypePlaceholder": "选该资源池内的机型",
+      "noAssignedTypes": "该 workspace 无已分配机型 (联系管理员配额)",
+      "noTypesInPool": "该资源池下无可用机型",
+      "templateLabel": "资源模板",
+      "templateTooltip": "资源 (GPU/CPU/内存) 由管理员维护的模板统一管控, 用户不可手填。推理 req=lim。",
+      "templateRequired": "请选择资源模板",
+      "templatePlaceholder": "选择资源模板 (由管理员维护)",
+      "noTemplates": "暂无资源模板 · 请联系空间管理员在 管理中心 -「资源模版」创建",
+      "replicasLabel": "副本数",
+      "replicasTooltip": "副本数 (1-256)，多副本由 ALB 负载均衡，占用 GPU = 副本数 × 每副本 GPU",
+      "perReplicaSpec": "每副本规格 · 模板锁定",
+      "perReplicaSpecTooltip": "GPU/CPU/内存 由资源模板统一管控, 用户不可手填; 切模板会自动同步 (推理 req=lim)",
+      "efaNote": "（备注：推理不申请EFA）",
+      "quotaNeed_other": "本服务需 {{count}} GPU 卡",
+      "quotaBreakdown_other": " ({{count}} 副本 × {{gpu}})",
+      "quotaRemaining_other": " · 剩余 {{remaining}} / {{count}} GPU 卡",
+      "quotaOver": " · 超额, 提交后需等待",
+      "quotaCollecting_other": " · 共 {{count}} GPU 卡 · 余量采集中",
+      "containerPortLabel": "容器端口 (Pod)",
+      "containerPortTooltip": "SGLang 服务监听端口 = Pod modelInvocationPort + metrics 端口。默认 8000。"
+    },
+    "launch": {
+      "heading": "启动脚本 (SGLang)",
+      "help": "整段脚本经 /bin/sh -c 执行 (后端渲 command=[\"/bin/sh\",\"-c\"], args=[脚本])。<br/>用 exec 接管主进程; --model-path 不能省, 填模型绝对路径 (FSx 写开发机里看到的路径, 如 /fsx/checkpoint)。<br/>改 --tp / --mem-fraction-static / --context-length 等直接在此编辑。",
+      "scriptExtra": "默认已填完整 SGLang 启动命令, 按需修改 (端口需与计算资源里的容器端口一致; 避开 8081, 该端口由平台反向代理占用)",
+      "scriptRequired": "必填启动脚本",
+      "scriptModelPathPlaceholder": "开发机绝对路径",
+      "metricsLabel": "启用 metrics (SGLang /metrics + DCGM 自动接 AMP)",
+      "metricsHint": "关闭则脚本里勿带 --enable-metrics。",
+      "publicLabel": "创建 SageMaker Endpoint (公网访问)",
+      "publicHint": "默认关: 仅集群内 / VPC 内 (ClusterIP / ALB) 调用。开启则额外建公网 SageMaker endpoint (boto3/CLI SigV4 调用), 每子网多占 1 个 IP。"
+    },
+    "preview": {
+      "heading": "渲染预览",
+      "refresh": "生成 / 刷新预览 (后端渲染)",
+      "placeholder": "# 点『刷新预览』生成后端渲染的最终 YAML",
+      "archive": "提交后自动存档到 S3: <path/> (workspace 已挂 S3 桶时; 未挂则跳过)。"
+    }
+  },
+  "invoke": {
+    "title": "调用指令",
+    "tabs": {
+      "alb": "VPC 内（通过 ALB 调用）",
+      "sagemaker": "公网（通过 SageMaker Endpoint 调用）",
+      "cluster": "集群内（通过本平台工作空间开发机调用）"
+    },
+    "connInfo": "连接信息",
+    "examples": "调用样例",
+    "rows": {
+      "addrSameNs": "地址 (同 ns)",
+      "sameNsNote": "同 namespace 用短名",
+      "addrCrossNs": "地址 (跨 ns)",
+      "crossNsNote": "全限定域名",
+      "addr": "地址",
+      "albPending": "internal ALB (未就绪, 见下查询)",
+      "endpointName": "Endpoint 名",
+      "protocol": "协议",
+      "protocolValue": "HTTPS + SigV4 自动签名",
+      "credential": "凭证",
+      "credentialNote": "须属 endpoint 所在账号"
+    },
+    "notes": {
+      "albLookup": "查 ALB 地址",
+      "albCall": "调用 (仅 chat completions, -k 跳过自签证书)",
+      "smCli": "AWS CLI (SigV4 自动签名)"
+    },
+    "disabled": {
+      "title": "该推理未开启公网访问",
+      "desc": "创建时勾选「创建 SageMaker Endpoint (公网访问)」才有此入口。当前请走集群内或 VPC 内 (ALB) 调用。"
+    },
+    "code": {
+      "samplePrompt": "用三个词打个招呼",
+      "albLookupComment": "ALB 地址未就绪时, 集群侧查:",
+      "albPlaceholder": "上面查到的地址",
+      "awsProfileComment": "AWS_PROFILE 用 endpoint 所在账号的凭证"
+    }
+  }
+}

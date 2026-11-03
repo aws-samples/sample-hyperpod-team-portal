@@ -1,0 +1,95 @@
+# platform-controller: Go controller-runtime projection controller.
+#
+# 跑在平台集群 (集群 X), 跨集群 watch 业务集群 (集群 Y) 的 CR → 投影写 DDB。
+#   - watch 业务集群:  BUSINESS_EKS_CLUSTER_NAME (entrypoint aws eks update-kubeconfig 生成 kubeconfig)
+#   - leader election: lease 放本(平台)集群 (in-cluster SA) — 见下方 Role/RoleBinding
+#   - 无 service/ingress (后台 controller, 只 health 8081 / metrics 8080 探活)
+#
+# 占位符 <ACCOUNT>/<REGION>/<PROJECT>/<TAG>/<DDB_TABLE>/<BUSINESS_EKS_CLUSTER> 替换后 apply。
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-controller
+  namespace: platform-system
+  # Pod Identity / IRSA 关联 IAM role: 需 eks:DescribeCluster(业务集群) + DynamoDB 读写
+  # + 业务集群 access entry。若用 IRSA 在此加 annotation:
+  #   eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT>:role/<PROJECT>-platform-controller
+---
+# 本集群 (集群 X) RBAC: leader election 只需在自己 namespace 读写 leases。
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: platform-controller-leaderelection
+  namespace: platform-system
+rules:
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # controller-runtime leader election 会发 event (可选, 缺了不致命)
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: platform-controller-leaderelection
+  namespace: platform-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: platform-controller-leaderelection
+subjects:
+  - kind: ServiceAccount
+    name: platform-controller
+    namespace: platform-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-controller
+  namespace: platform-system
+spec:
+  replicas: 1                      # 单实例即可; leader election 允许多副本热备 (只1个干活)
+  selector:
+    matchLabels:
+      app: platform-controller
+  template:
+    metadata:
+      labels:
+        app: platform-controller
+    spec:
+      serviceAccountName: platform-controller
+      nodeSelector:
+        role: platform              # 钉平台集群 CPU node group
+      containers:
+      - name: controller
+        image: <ACCOUNT>.dkr.ecr.<REGION>.amazonaws.com/<PROJECT>-platform-controller:<TAG>
+        ports:
+        - { containerPort: 8080, name: metrics }
+        - { containerPort: 8081, name: health }
+        resources:
+          # Go controller 实测 RSS ~35Mi (含 cache); 给足余量但远低于 Python worker。
+          requests: { cpu: "50m", memory: "64Mi" }
+          limits: { cpu: "500m", memory: "256Mi" }
+        env:
+        - { name: AWS_REGION, value: "<REGION>" }
+        # DDB 表全名 (controller 用 DDB_TABLE, 非前缀)。
+        - { name: DDB_TABLE, value: "<DDB_TABLE>" }
+        # 业务集群名: entrypoint 用它 update-kubeconfig 生成 BUSINESS_KUBECONFIG。
+        # Pod 部署只需传这一个集群名; 两个 *_KUBECONFIG 都不用手动传:
+        #   BUSINESS_KUBECONFIG 由 entrypoint 生成; PLATFORM_KUBECONFIG 留空走 in-cluster。
+        - { name: BUSINESS_EKS_CLUSTER_NAME, value: "<BUSINESS_EKS_CLUSTER>" }
+        # PLATFORM_KUBECONFIG 不设 → in-cluster (平台集群 SA), leader election lease 放平台集群。
+        - { name: ENABLE_LEADER_ELECTION, value: "true" }
+        - { name: LEADER_ELECTION_NAMESPACE, value: "platform-system" }
+        # 首次上线安全阀: 先 true 只 log 不写 DDB, 验证无误后改 false。
+        - { name: DRY_RUN, value: "false" }
+        readinessProbe:
+          httpGet: { path: /readyz, port: 8081 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet: { path: /healthz, port: 8081 }
+          initialDelaySeconds: 15
+          periodSeconds: 30

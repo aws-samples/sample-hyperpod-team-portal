@@ -1,0 +1,15 @@
+{
+  "inference.instance_type_not_allowed": "Instance type '{instance_type}' is not among the instance types allocated to this Workspace's quota (available: {allowed}). Only instance types allocated by the Workspace ComputeQuota can be selected.",
+  "inference.allowed_none": "none",
+  "inference.forbidden_operate": "Not allowed to operate this inference service (creator, Workspace admin or platform admin only).",
+  "inference.model_location_absolute": "model_location must be a relative path (it must not start with /).",
+  "inference.model_location_dotdot": "model_location must not contain '..' (prevents escaping the authorized FSx subdirectory into another team's directory).",
+  "inference.model_source_fsx_required": "model_source_type=fsx requires the fsx field.",
+  "inference.model_source_s3_required": "model_source_type=s3 requires the s3 field.",
+  "inference.model_source_huggingface_required": "model_source_type=huggingface requires the huggingface field.",
+  "inference.display_name_length": "Length must be 3-29 characters, got {actual}",
+  "inference.stage_waiting_alb": "Waiting for an address to be assigned to the ALB.",
+  "inference.stage_sagemaker_not_created": "The SageMaker endpoint has not been created yet.",
+  "inference.stage_waiting_replicaset": "Waiting for the ReplicaSet to progress.",
+  "inference.stage_waiting_min_available": "Waiting for the replicas to reach minimum availability."
+}

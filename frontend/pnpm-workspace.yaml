@@ -1,0 +1,17 @@
+# pnpm v10+ 把 overrides 的读取位置从 package.json 的 pnpm.overrides 挪到了这里。
+# 本机/CI 用 pnpm v11, 只认此处的 overrides; 放 package.json 会被忽略,
+# 导致安全兜底版本在 lock 重算时丢失 (曾于 dev 上发生, 见 88bbb9b)。
+# 以下 7 条为前端依赖漏洞的最低安全版本兜底 (原 f825057)。
+overrides:
+  path-to-regexp: '>=8.4.0'
+  form-data: '>=4.0.6'
+  brace-expansion: '>=2.1.2 <3'
+  js-yaml: '>=4.3.0 <5'
+  axios: '>=1.18.0'
+  postcss: '>=8.5.18'
+  dompurify: '>=3.4.12'
+
+# pnpm v10+ 默认不跑依赖的 install 脚本 (v11 直接报 ERR_PNPM_IGNORED_BUILDS);
+# esbuild 需要 postinstall 校验/安装平台二进制, 显式放行。
+allowBuilds:
+  esbuild: true

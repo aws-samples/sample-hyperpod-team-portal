@@ -1,0 +1,71 @@
+{
+  "filters": {
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "localTime": "· 本地时间",
+    "searchLabel": "搜索",
+    "keyword": "关键字",
+    "regex": "正则",
+    "noMatch": "无匹配日志",
+    "startBeforeEnd": "开始时间必须早于结束时间"
+  },
+  "viewer": {
+    "loadingStreams": "加载日志流...",
+    "loadFailed": "日志加载失败: {{error}}",
+    "pipelineHint": "数据管道: Fluent Bit (HyperPod Obs Add-on) → CloudWatch。请检查 Obs Add-on 是否 ACTIVE 且集群 ARN 已写入 DB。",
+    "anyTime": "不限",
+    "openAt": "打开定位",
+    "openAtSearchTip": "搜索时从最早开始 (按时间正序), 无法切换",
+    "openAtTip": "最新: 打开看末尾最新日志; 最早: 打开看开头 (如启动/环境变量日志)",
+    "openAtLatest": "最新(末尾)",
+    "openAtEarliest": "最早(开头)",
+    "searchHintRegex": "· 区分大小写 · 正则不支持括号 ()",
+    "searchHintKeyword": "· 区分大小写 · 子串匹配, 留空=不过滤",
+    "status": {
+      "search_other": "搜索结果 · 旧→新 · 下滑加载更新 · 已加载 {{count}} 行",
+      "browse_other": "定位最新 · 上滑看更早 / 下滑追更新 · 已加载 {{count}} 行"
+    },
+    "downloadTip": "下载该 stream 完整日志",
+    "querying": "查询...",
+    "loadEarlier": "↑ 上滑加载更早",
+    "loadNewer": "↓ 下滑加载更新",
+    "reachedStart": "已到日志开头",
+    "reachedLatest": "已到最新"
+  },
+  "wholeSearch": {
+    "startPlaceholder": "近24h",
+    "endPlaceholder": "现在",
+    "hintRegex": "· 区分大小写 · 支持正则",
+    "hintKeyword": "· 区分大小写 · 子串匹配, 留空=整任务全部",
+    "truncated": "结果过多, 已截断为前 1 万行。请缩小时间窗或添加关键字。",
+    "matched_other": "命中 {{count}} 行",
+    "setConditions": "设置条件后点击「搜索」",
+    "querying": "查询中..."
+  },
+  "sources": {
+    "training": {
+      "empty": "暂无日志 (任务未产生输出, 或已过 106 天保留期)",
+      "banner": "任务日志: 跨该任务所有 Pod (Logs Insights)。异步查询, 结果单次最多 1 万行。"
+    },
+    "inference": {
+      "empty": "暂无日志 (推理未产生输出, 或已过 CloudWatch 保留期)",
+      "banner": "endpoint 日志: 跨该 endpoint 所有 Pod (Logs Insights)。异步查询, 结果单次最多 1 万行。"
+    },
+    "dynamo": {
+      "empty": "暂无日志 (多机推理未产生输出, 或已过 CloudWatch 保留期)",
+      "banner": "任务日志: 跨该多机推理所有 Pod (frontend + worker, Logs Insights)。异步查询, 结果单次最多 1 万行。"
+    },
+    "rayjob": {
+      "empty": "暂无日志 (Ray 任务未产生系统日志, 或已过 CloudWatch 保留期)",
+      "banner": "任务日志: 跨该 Ray 任务所有 Pod (head + worker, Logs Insights)。异步查询, 结果单次最多 1 万行。含 Ray 系统日志与 head 上的 driver 日志 (用户训练脚本输出)。"
+    },
+    "llmd": {
+      "empty": "暂无日志 (llm-d 推理未产生输出, 或已过 CloudWatch 保留期)",
+      "banner": "任务日志: 跨该 llm-d 所有 Pod (LWS worker + gateway, Logs Insights)。异步查询, 结果单次最多 1 万行。"
+    },
+    "devinstance": {
+      "empty": "暂无日志 (开发机未产生日志, 或已过 CloudWatch 保留期)",
+      "banner": "任务日志: 跨该开发机所有 Pod (Logs Insights)。异步查询, 结果单次最多 1 万行。含主容器 workspace 与 SSH 建连容器 direct-ssh-init 的日志。"
+    }
+  }
+}

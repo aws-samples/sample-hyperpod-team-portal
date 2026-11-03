@@ -1,0 +1,3 @@
+{
+  "user.api_token_exists": "已存在 API Token, 请先删除再生成新的"
+}

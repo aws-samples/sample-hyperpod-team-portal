@@ -1,0 +1,48 @@
+{
+  "docsMenu": {
+    "overview": "概览",
+    "workspace": "工作空间",
+    "devinstance": "开发机",
+    "training": "训练任务",
+    "inference": "推理服务",
+    "llmd": "llm-d 推理",
+    "registry": "镜像中心",
+    "sharing": "资源分享",
+    "secret": "Token 中心",
+    "quota": "管理中心",
+    "observability": "可观测性",
+    "architecture": "技术架构",
+    "permissions": "关于权限",
+    "faq": "常见问题"
+  },
+  "menu": {
+    "workspace": "工作空间",
+    "devinstance": "开发机",
+    "training": "训练任务",
+    "rayjob": "Ray 训练",
+    "inference": "单机推理",
+    "llmd": "多机推理",
+    "dynamo": "Dynamo 推理",
+    "resourceTemplates": "资源模版",
+    "assets": "资产管理",
+    "images": "镜像",
+    "taskOverview": "任务总览",
+    "priorityClass": "优先级档位",
+    "preemption": "工作空间抢占开关",
+    "fsxQuota": "FSx配额",
+    "admin": "管理中心",
+    "monitoring": "监控",
+    "fsxPerformance": "FSx性能",
+    "queue": "队列"
+  },
+  "header": {
+    "selectWorkspaceFirst": "请先选择一个工作空间",
+    "currentWorkspace": "当前工作空间",
+    "selectWorkspace": "选择工作空间",
+    "docs": "产品文档",
+    "runbook": "故障诊断手册",
+    "apiReference": "API 文档",
+    "platformAdmin": "平台管理员",
+    "workspaceAdmin": "工作空间管理员"
+  }
+}

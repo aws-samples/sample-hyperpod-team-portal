@@ -1,0 +1,3 @@
+{
+  "k8s.llmd_unsupported_kind": "llmd apply 不支持 kind={kind}"
+}
