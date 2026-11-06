@@ -1,10 +1,10 @@
-# HyperPod UI Platform
+# HyperPod Team Portal
 
 [English](README.md) | **简体中文**
 
 基于 Amazon SageMaker HyperPod + Amazon EKS 的多租户 ML 平台。用一个 Web 界面统一管理工作空间、开发机、训练任务、推理服务, 以及配额、监控与日志。
 
-## 为什么选择 HyperPod UI Platform
+## 为什么选择 HyperPod Team Portal
 
 SageMaker HyperPod 提供了高可用、可大规模扩展的 GPU 集群, 但让多个团队共享一个集群时, 每个人都得直接面对 Kubernetes YAML、`kubectl` 和 Kueue: GPU 被谁占着看不见, 任务为什么排队说不清, 一个团队还可能误删另一个团队的任务。本项目在 HyperPod 之上提供一个自助式门户: 平台管理员把集群划分成受管控的工作空间, 算法工程师在浏览器里完成开发、训练和模型部署, 全程不碰 Kubernetes。
 

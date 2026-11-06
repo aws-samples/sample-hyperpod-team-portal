@@ -1,4 +1,4 @@
-# HyperPod UI 平台 · 部署指南
+# HyperPod Team Portal · 部署指南
 
 [English](deployment-guideline.md) | **简体中文**
 

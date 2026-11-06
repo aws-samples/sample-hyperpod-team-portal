@@ -1,10 +1,10 @@
-# HyperPod UI Platform
+# HyperPod Team Portal
 
 **English** | [简体中文](README.zh-CN.md)
 
 A multi-tenant ML platform built on Amazon SageMaker HyperPod + Amazon EKS. One web portal for Workspaces, dev instances, training jobs, inference services, quotas, monitoring, and logs.
 
-## Why HyperPod UI Platform
+## Why HyperPod Team Portal
 
 SageMaker HyperPod gives you a resilient, large-scale GPU cluster. Sharing that cluster across many teams usually means everyone works with Kubernetes YAML, `kubectl`, and Kueue directly. It is hard to see who is using which GPUs or why a job is still queued, and nothing stops one team from deleting another team's job. This sample adds a self-service portal on top of HyperPod. Platform admins split the cluster into governed Workspaces, and ML engineers develop, train, and serve models from the browser without ever touching Kubernetes.
 
