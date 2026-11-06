@@ -42,7 +42,7 @@ export default function DocsOverview() {
         }}
       >
         <div style={{ fontSize: 13, opacity: 0.85, letterSpacing: 1, marginBottom: 8 }}>
-          HYPERPOD UI PLATFORM
+          HYPERPOD TEAM PORTAL
         </div>
         <div style={{ fontSize: 26, fontWeight: 600, lineHeight: '36px', marginBottom: 12 }}>
           An All-in-One Workbench for GPU Training, Inference, and Development
